@@ -9,3 +9,7 @@ gem "authing_ruby"
 ```
 ### 目前支持的功能有
 （待写）
+
+```
+irb -I lib -r authing_ruby
+```

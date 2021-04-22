@@ -16,3 +16,9 @@
 
 ## 做事方法
 * Authing 的诸多 SDK 里，更新最频繁的是 `Javascript/Node.js` SDK，所以 Ruby SDK 里会参照 JS SDK 的做法和写法。反正用法是一样的，写法也尽量一样。
+
+模块列表
+AuthenticationClient 核心模块
+QrCodeAuthenticationClient 小程序扫码登录和 APP 扫码登录
+MfaAuthenticationClient 多因素认证模块
+SocialAuthenticationClient 社会化登录模块
