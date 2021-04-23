@@ -1,10 +1,23 @@
 require "http"
 require "./lib/AuthingGraphQL/document.rb"
+require './lib/utils/main.rb'
+require './lib/common/PublicKeyManager.rb'
+require './lib/common/GraphqlClient.rb'
 
 class AuthingRuby
+  # a = AuthingRuby.new({appHost: "https://rails-demo.authing.cn"})
+  # a.pk
+  def initialize(options = {})
+    @publicKeyManager = Common::PublicKeyManager.new(options)
+  end
+  def pk
+    puts @publicKeyManager.getPublicKey()
+  end
+  
   def self.hi
     puts "Hello world!"
   end
+
   # 例子: 发一个简单的 GraphQL 请求
   # 用法：AuthingRuby.graph
   def self.graph
@@ -40,8 +53,9 @@ end
 
 
 class AuthingRuby::AuthenticationClient
-  def initialize(params = {})
-    @appId = params.fetch(:appId, nil) # 应用 ID
+  def initialize(options = {})
+    @options = options
+    @appId = options.fetch(:appId, nil) # 应用 ID
     # https://docs.authing.cn/v2/guides/faqs/get-app-id-and-secret.html
     # 如何获取应用 ID (AppID) 和应用密钥（AppSecret）
     # appHost 是 该应用的域名（AppHost），如 https://my-awesome-app.authing.cn
@@ -50,44 +64,39 @@ class AuthingRuby::AuthenticationClient
       # 提示 appId 是个必须的参数
     end
 
-    @secret = params.fetch(:secret, nil) # 应用密钥
-    @appHost = params.fetch(:appHost, nil) # 该应用的域名
-    @redirectUri = params.fetch(:redirectUri, nil) # 业务回调地址
+    @secret = options.fetch(:secret, nil) # 应用密钥
+    @appHost = options.fetch(:appHost, nil) # 该应用的域名
+    @redirectUri = options.fetch(:redirectUri, nil) # 业务回调地址
     @authing_graphql_endpoint = 'https://core.authing.cn/graphql'
+
+    # 公钥加密
+    @publicKeyManager = Common::PublicKeyManager.new(options)
+
+    # 负责发送 GraphQL (其实就是 http) 请求的工具
+    graphqlEndpoint = "#{@appHost}/graphql/v2";
+    @graphqlClient = Common::GraphqlClient.new(graphqlEndpoint, @options)
   end
 
-  def getAccessTokenByCode(code)
-  end
-
-  # 使用邮箱注册
-  # https://docs.authing.cn/v2/reference/sdk-for-node/authentication/AuthenticationClient.html
-  # 返回值: Promise<User>
-  def registerByEmail(email, password, profile, options)
-    # TODO
-    # 先从这个开始做起
+  # 使用邮箱+密码注册 (完成, 测试通过)
+  # 参照: https://docs.authing.cn/v2/reference/sdk-for-node/authentication/AuthenticationClient.html
+  # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
+  # a.registerByEmail('301@qq.com', "123456789")
+  def registerByEmail(email, password, profile = {}, options = {})
+    publicKey = @publicKeyManager.getPublicKey()
+    encryptedPassword = Utils.encrypt(password, publicKey)
     variables = {
-      "registerByEmailInput": {
+      "input": {
         "email": email,
-        "password": "puQvy+Fk246Dz8c3+oFt+erGRRDNApketWDarbX2ZMTimtrBn7WmWaCgCdLdiovIx0tFvirxII4jvl3ouhh3DN79Xpa8CpuBYYcBI9ONW3e7D/VOC98mfHom3jAciKsaOdui1f3Dn/aDInDsIgL87jkR+IZFfUrftLM4l7TwqYc="
+        "password": encryptedPassword,
       }
     }
-    # x-authing-userpool-id
-    response = HTTP.headers('x-authing-userpool-id' => "x")
-      .post(@authing_graphql_endpoint, json: {
+    json = {
       "query": AuthingGraphQL::Document.RegisterByEmailDocument,
       "variables": variables,
-    })
-    puts response.body.to_s
-    # 剩下的步骤：
-    # 1. 把 variables 构造一下
-      # 1.1 需要用公钥把密码加密一下
-      # 1.2 也需要写发请求并解析保存公钥的那个工具函数
-    # 2. 在 http header 里指定用户池 id
-    # 3. 实测一下发请求行不行
-    # 4. 
+    }
+    response = @graphqlClient.request({json: json})
+    return response
   end
-  # 使用邮箱密码注册
-  # authenticationClient.registerByEmail('test@example.com', 'passw0rd')
 
   # 使用邮箱登录
   def loginByEmail()
