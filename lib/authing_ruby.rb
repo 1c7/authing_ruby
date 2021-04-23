@@ -1,16 +1,5 @@
-# require "graphql/client"
-# require "graphql/client/http"
 require "http"
 require "./lib/AuthingGraphQL/document.rb"
-
-# 这个能用：
-# GraphQL::Client.dump_schema(API::HTTP, './api/schema.json')
-# https://github.com/github/graphql-client
-# module API
-#   HTTP = GraphQL::Client::HTTP.new('https://core.authing.cn/graphql')
-#   Schema = GraphQL::Client.load_schema(HTTP)
-#   Client = GraphQL::Client.new(schema: Schema, execute: HTTP)
-# end
 
 class AuthingRuby
   def self.hi
@@ -42,10 +31,10 @@ class AuthingRuby
     EOF
     response = HTTP.post('https://core.authing.cn/graphql', json: {
       # "query": query1,
+      # "query": query2,
       "query": AuthingGraphQL::Document.schema
     })
-    puts response.body.to_s
-    # https://github.com/httprb/http/wiki/Response-Handling
+    puts response.body.to_s # https://github.com/httprb/http/wiki/Response-Handling
   end
 end
 
@@ -86,14 +75,16 @@ class AuthingRuby::AuthenticationClient
     response = HTTP.headers('x-authing-userpool-id' => "x")
       .post(@authing_graphql_endpoint, json: {
       "query": AuthingGraphQL::Document.RegisterByEmailDocument,
-      "variables": nil
+      "variables": variables,
     })
     puts response.body.to_s
     # 剩下的步骤：
     # 1. 把 variables 构造一下
-      # 需要用公钥把密码加密一下
+      # 1.1 需要用公钥把密码加密一下
+      # 1.2 也需要写发请求并解析保存公钥的那个工具函数
     # 2. 在 http header 里指定用户池 id
     # 3. 实测一下发请求行不行
+    # 4. 
   end
   # 使用邮箱密码注册
   # authenticationClient.registerByEmail('test@example.com', 'passw0rd')
