@@ -24,10 +24,16 @@
 * Authing 的诸多 SDK 里，更新最频繁的是 [Javascript/Node.js SDK](https://github.com/authing/authing.js)，所以 Ruby SDK 里会参照 JS SDK 的做法和写法。反正用法是一样的，写法也尽量一样 (方法的命名和参数)
 * JS SDK 里功能太多，不可能一次性全做了，需要啥功能就写啥，未实现的功能就不写个名字然后标一个 `TODO` 了，直接留空就行。
 
-## 官方开发团队给出的建议
-Ruby SDK 应该先从哪个方面做起：  
+## 补充信息
+* Ruby SDK 应该先从哪个方面做起，官方开发团队给出的建议： 
 
 > 我们建议先从 AuthenticationClient 开始，AuthenticationClient 可以先实现基础的登录注册方法以及 OIDC 标准协议相关的方法。注意事项的话有自动生成 GraphQL 查询语句（参考 https://github.com/rmosolgo/graphql-ruby ) 以及如何维护 token
+
+* 旧版文档可以忽略： https://docs.authing.cn/ ，不用参照里面的信息。   
+
+比如，目前（2021-4-24）   
+正确的端点是 `https://core.authing.cn/graphql/v2`    
+而旧版文档里  `https://core.authing.cn/graphql` 是错误的     
 
 ## 为了开发这个 gem，有哪些前提要求？
 1. 了解 GraphQL 是什么
@@ -42,3 +48,6 @@ Ruby SDK 应该先从哪个方面做起：
 https://core.authing.cn/graphql/v2
 ```
 来源：（待写）
+
+## 推荐工具
+* https://studio.apollographql.com
