@@ -85,8 +85,6 @@ class AuthingRuby::AuthenticationClient
   # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
   # a.registerByEmail('301@qq.com', "123456789")
   def registerByEmail(email, password, profile = {}, options = {})
-    # TODO: 把 profile 和 options 处理一下，现在根本没用上
-
     # 第一步：构建 variables
     publicKey = @publicKeyManager.getPublicKey()
     encryptedPassword = Utils.encrypt(password, publicKey)
@@ -94,6 +92,13 @@ class AuthingRuby::AuthenticationClient
       "input": {
         "email": email,
         "password": encryptedPassword,
+
+        "profile": profile,
+        "forceLogin": options.fetch(:forceLogin, false),
+        "clientIp": options.fetch(:clientIp, nil),
+        "customData": options.fetch(:customData, nil),
+        "context": options.fetch(:context, nil),
+        "generateToken": options.fetch(:generateToken, nil),
       }
     }
     # 第二步：构建整个 payload
@@ -111,8 +116,6 @@ class AuthingRuby::AuthenticationClient
   # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
   # a.registerByUsername('agoodob', "123456789")
   def registerByUsername(username, password, profile = {}, options = {})
-    # TODO: 把 profile 和 options 处理一下，现在根本没用上
-
     # 第一步：构建 variables
     publicKey = @publicKeyManager.getPublicKey()
     encryptedPassword = Utils.encrypt(password, publicKey)
@@ -120,6 +123,13 @@ class AuthingRuby::AuthenticationClient
       "input": {
         "username": username,
         "password": encryptedPassword,
+
+        "profile": profile,
+        "forceLogin": options.fetch(:forceLogin, false),
+        "clientIp": options.fetch(:clientIp, nil),
+        "customData": options.fetch(:customData, nil),
+        "context": options.fetch(:context, nil),
+        "generateToken": options.fetch(:generateToken, nil),
       }
     }
     # 第二步：构建整个 payload
@@ -132,9 +142,27 @@ class AuthingRuby::AuthenticationClient
     return response
   end
 
+  # 发送短信验证码
+  # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b", userPoolId: "60800b8ee5b66b23128b4980"})
+  # a.sendSmsCode("13556136684")
+  def sendSmsCode(phone)
+    url = "#{@appHost}/api/v2/sms/send"
+    graphqlClient = Common::GraphqlClient.new(url, @options)
+    json = {
+      "phone": phone
+    }
+    response = graphqlClient.request({json: json})
+    #  "{\"code\":200,\"message\":\"发送成功\"}"
+    return response
+  end
+
+  # 使用手机号注册
+  def registerByPhoneCode(phone, code, password, profile = {}, options = {})
+    # TODO
+  end
+
 end
 
 # 管理模块
-class AuthingRuby::ManagementClient
-  # TODO
-end
+# class AuthingRuby::ManagementClient
+# end
