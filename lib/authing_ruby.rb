@@ -55,7 +55,9 @@ end
 class AuthingRuby::AuthenticationClient
   def initialize(options = {})
     @options = options
-    @appId = options.fetch(:appId, nil) # 应用 ID
+
+    # 应用 ID
+    @appId = options.fetch(:appId, nil) 
     # https://docs.authing.cn/v2/guides/faqs/get-app-id-and-secret.html
     # 如何获取应用 ID (AppID) 和应用密钥（AppSecret）
     # appHost 是 该应用的域名（AppHost），如 https://my-awesome-app.authing.cn
@@ -79,9 +81,13 @@ class AuthingRuby::AuthenticationClient
 
   # 使用邮箱+密码注册 (完成, 测试通过)
   # 参照: https://docs.authing.cn/v2/reference/sdk-for-node/authentication/AuthenticationClient.html
+  # 测试代码: 
   # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
   # a.registerByEmail('301@qq.com', "123456789")
   def registerByEmail(email, password, profile = {}, options = {})
+    # TODO: 把 profile 和 options 处理一下，现在根本没用上
+
+    # 第一步：构建 variables
     publicKey = @publicKeyManager.getPublicKey()
     encryptedPassword = Utils.encrypt(password, publicKey)
     variables = {
@@ -90,22 +96,40 @@ class AuthingRuby::AuthenticationClient
         "password": encryptedPassword,
       }
     }
+    # 第二步：构建整个 payload
     json = {
       "query": AuthingGraphQL::Document.RegisterByEmailDocument,
       "variables": variables,
     }
+    # 第三步：发请求
     response = @graphqlClient.request({json: json})
     return response
   end
 
-  # 使用邮箱登录
-  def loginByEmail()
-    # TODO
-  end
-
   # 使用用户名注册
-  def registerByUsername(username, password, profile, options)
-    # TODO
+  # https://docs.authing.cn/v2/reference/sdk-for-node/authentication/AuthenticationClient.html#%E4%BD%BF%E7%94%A8%E7%94%A8%E6%88%B7%E5%90%8D%E6%B3%A8%E5%86%8C
+  # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
+  # a.registerByUsername('agoodob', "123456789")
+  def registerByUsername(username, password, profile = {}, options = {})
+    # TODO: 把 profile 和 options 处理一下，现在根本没用上
+
+    # 第一步：构建 variables
+    publicKey = @publicKeyManager.getPublicKey()
+    encryptedPassword = Utils.encrypt(password, publicKey)
+    variables = {
+      "input": {
+        "username": username,
+        "password": encryptedPassword,
+      }
+    }
+    # 第二步：构建整个 payload
+    json = {
+      "query": AuthingGraphQL::Document.registerByUsername,
+      "variables": variables,
+    }
+    # 第三步：发请求
+    response = @graphqlClient.request({json: json})
+    return response
   end
 
 end
