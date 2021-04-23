@@ -38,10 +38,10 @@
 ## 为了开发这个 gem，有哪些前提要求？
 1. 了解 GraphQL 是什么
 2. 了解 Ruby Gem 怎么写
-3. 参考 Authing 的官方文档 + JS SDK
+3. 参考 Authing 的官方文档和 SDK
 
 ## 如何参与本 gem 的开发
-* 可以在 issue 中留下你的微信  
+* 可以在 issue 中留下你的微信，或者通过任何其他渠道（QQ/邮件）和我取得联系
 
 ## GraphQL API 端点
 ```
@@ -51,3 +51,10 @@ https://core.authing.cn/graphql/v2
 
 ## 推荐工具
 * https://studio.apollographql.com
+
+## 有参考价值的 SDK
+* [authing-py-sdk](https://github.com/Authing/authing-py-sdk)
+* [authing.js](https://github.com/Authing/authing.js)
+
+(因为我比较熟悉 JS 和 Python)  
+
