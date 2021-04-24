@@ -1,5 +1,7 @@
-# 写于2021-4-24
+#
 # 例子1: 通过用户名+密码注册
+#
+
 # 如何运行: ruby ./example/1.registerByEmail.rb
 
 require './lib/authing_ruby.rb' # 载入 Gem
@@ -21,6 +23,7 @@ resp = authenticationClient.registerByEmail(email, password)
 # 第三步：查看结果
 puts "返回的结果是"
 puts resp
+
 
 # 如果返回的结果类似这样, 就是成功了: 
 =begin
