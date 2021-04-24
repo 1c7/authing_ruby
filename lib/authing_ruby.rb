@@ -157,8 +157,35 @@ class AuthingRuby::AuthenticationClient
   end
 
   # 使用手机号注册
+  # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b", userPoolId: "60800b8ee5b66b23128b4980"})
+  # a.registerByPhoneCode("13556136684", "6330", "123456")
   def registerByPhoneCode(phone, code, password, profile = {}, options = {})
-    # TODO
+    # 第一步：构建 variables
+    publicKey = @publicKeyManager.getPublicKey()
+    encryptedPassword = Utils.encrypt(password, publicKey)
+    variables = {
+      "input": {
+        "phone": phone,
+        "code": code,
+        "password": encryptedPassword,
+
+        "profile": profile,
+        "forceLogin": options.fetch(:forceLogin, false),
+        "clientIp": options.fetch(:clientIp, nil),
+        "context": options.fetch(:context, nil),
+        "generateToken": options.fetch(:generateToken, nil),
+      }
+    }
+    # 第二步：构建整个 payload
+    file = File.open("./lib/queries/registerByPhoneCode.gql")
+    registerByPhoneCode = file.read
+    json = {
+      "query": registerByPhoneCode,
+      "variables": variables,
+    }
+    # 第三步：发请求
+    response = @graphqlClient.request({json: json})
+    return response
   end
 
 end
