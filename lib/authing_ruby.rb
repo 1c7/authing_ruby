@@ -243,7 +243,28 @@ class AuthingRuby::AuthenticationClient
     return response
   end
 
-  def loginByPhoneCode
+  # 使用手机号验证码登录
+  # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
+  # a.sendSmsCode("13556136684")
+  # a.loginByPhoneCode("13556136684", "1347")
+  def loginByPhoneCode(phone, code, options = {})
+    # 第一步：构建 variables
+    variables = {
+      "input": {
+        "phone": phone,
+        "code": code,
+        "clientIp": options.fetch(:clientIp, nil),
+      }
+    }
+    # 第二步：构建 payload
+    file = File.open("./lib/mutations/loginByPhoneCode.gql")
+    json = {
+      "query": file.read,
+      "variables": variables,
+    }
+    # 第三步：发请求
+    response = @graphqlClient.request({json: json})
+    return response
   end
 
   # 使用手机号密码登录
