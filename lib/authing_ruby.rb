@@ -246,7 +246,31 @@ class AuthingRuby::AuthenticationClient
   def loginByPhoneCode
   end
 
-  def loginByPhonePassword
+  # 使用手机号密码登录
+  # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
+  # a.loginByPhonePassword("13556136684", "123456")
+  def loginByPhonePassword(phone, password, options = {})
+    # 第一步：构建 variables
+    publicKey = @publicKeyManager.getPublicKey()
+    encryptedPassword = Utils.encrypt(password, publicKey)
+    variables = {
+      "input": {
+        "phone": phone,
+        "password": encryptedPassword,
+
+        "captchaCode": options.fetch(:captchaCode, nil),
+        "clientIp": options.fetch(:clientIp, nil),
+      }
+    }
+    # 第二步：构建 payload
+    file = File.open("./lib/mutations/loginByPhonePassword.gql")
+    json = {
+      "query": file.read,
+      "variables": variables,
+    }
+    # 第三步：发请求
+    response = @graphqlClient.request({json: json})
+    return response
   end
 
   def checkLoginStatus
