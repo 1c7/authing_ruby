@@ -16,7 +16,7 @@ module Common
 		def request(options)
 			headers = {
 				'content-type': 'application/json',
-				'x-authing-sdk-version': "ruby:#{Authing::VERSION}",
+				'x-authing-sdk-version': "ruby:#{AuthingRuby::VERSION}",
 				'x-authing-userpool-id': @options.fetch(:userPoolId, ''),
 				'x-authing-request-from': @options.fetch(:requestFrom, 'sdk'),
 				'x-authing-app-id': @options.fetch(:appId, ''),

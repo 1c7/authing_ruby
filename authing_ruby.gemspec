@@ -5,7 +5,7 @@ require "./lib/version"
 
 Gem::Specification.new do |s|
   s.name        = 'authing_ruby'
-  s.version     = Authing::VERSION
+  s.version     = AuthingRuby::VERSION
   s.summary     = "Authing 的 Ruby SDK (非官方,社区写的)"
   s.description = "Authing 的 Ruby SDK (非官方,社区写的)"
   s.authors     = ["郑诚(Zheng Cheng)"]
