@@ -1,4 +1,3 @@
-# 
 module AuthingRuby
 	class AuthenticationClient
 		def initialize(options = {})
