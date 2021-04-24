@@ -131,7 +131,6 @@ class AuthingRuby::AuthenticationClient
         "profile": profile,
         "forceLogin": options.fetch(:forceLogin, false),
         "clientIp": options.fetch(:clientIp, nil),
-        "customData": options.fetch(:customData, nil),
         "context": options.fetch(:context, nil),
         "generateToken": options.fetch(:generateToken, nil),
       }
