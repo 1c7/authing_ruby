@@ -3,6 +3,7 @@ require "./lib/AuthingGraphQL/document.rb"
 require './lib/utils/main.rb'
 require './lib/common/PublicKeyManager.rb'
 require './lib/common/GraphqlClient.rb'
+require './lib/authentication/AuthenticationTokenProvider.rb'
 
 class AuthingRuby
   # a = AuthingRuby.new({appHost: "https://rails-demo.authing.cn"})
@@ -77,6 +78,9 @@ class AuthingRuby::AuthenticationClient
     # 负责发送 GraphQL (其实就是 http) 请求的工具
     graphqlEndpoint = "#{@appHost}/graphql/v2";
     @graphqlClient = Common::GraphqlClient.new(graphqlEndpoint, @options)
+    
+    # tokenProvider 只是存取一下 user 和 token
+    @tokenProvider = Authentication::AuthenticationTokenProvider.new()
   end
 
   # 使用邮箱+密码注册 (完成, 测试通过)
@@ -212,6 +216,12 @@ class AuthingRuby::AuthenticationClient
     }
     # 第三步：发请求
     response = @graphqlClient.request({json: json})
+
+    # 第四步：把结果存起来
+    json = JSON.parse(response)
+    user = json['data']['loginByEmail']
+    setCurrentUser(user);
+
     return response
   end
 
@@ -240,6 +250,12 @@ class AuthingRuby::AuthenticationClient
     }
     # 第三步：发请求
     response = @graphqlClient.request({json: json})
+
+    # 第四步：把结果存起来
+    json = JSON.parse(response)
+    user = json['data']['loginByUsername']
+    setCurrentUser(user);
+
     return response
   end
 
@@ -264,6 +280,12 @@ class AuthingRuby::AuthenticationClient
     }
     # 第三步：发请求
     response = @graphqlClient.request({json: json})
+
+    # 第四步：把结果存起来
+    json = JSON.parse(response)
+    user = json['data']['loginByPhoneCode']
+    setCurrentUser(user);
+
     return response
   end
 
@@ -291,6 +313,12 @@ class AuthingRuby::AuthenticationClient
     }
     # 第三步：发请求
     response = @graphqlClient.request({json: json})
+
+    # 第四步：把结果存起来
+    json = JSON.parse(response)
+    user = json['data']['loginByPhonePassword']
+    setCurrentUser(user);
+
     return response
   end
 
@@ -319,6 +347,36 @@ class AuthingRuby::AuthenticationClient
     return response
     # "{\"data\":{\"sendEmail\":{\"message\":\"\",\"code\":200}}}\n"
   end
+
+  # 获取当前登录的用户信息
+  # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
+  # a.loginByUsername('agoodob', "123456789")
+  # a.getCurrentUser()
+  def getCurrentUser()
+    file = File.open("./lib/queries/user.gql")
+    json = {
+      "query": file.read
+    }
+    token = @tokenProvider.getToken();
+    # 第三步：发请求
+    response = @graphqlClient.request({json: json, token: token})
+    json = JSON.parse(response)
+    setCurrentUser(json['data']['user'])
+    return response
+  end
+
+  def setCurrentUser(user)
+    @tokenProvider.setUser(user);
+  end
+
+  def setToken(token)
+    @tokenProvider.setToken(token);
+  end
+
+  # a.testGetUser()
+  # def testGetUser()
+  #   @tokenProvider.getUser();
+  # end
 
 end
 
