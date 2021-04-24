@@ -243,6 +243,38 @@ class AuthingRuby::AuthenticationClient
     return response
   end
 
+  def loginByPhoneCode
+  end
+
+  def loginByPhonePassword
+  end
+
+  def checkLoginStatus
+  end
+
+  # 发送邮件
+  # 待测试
+  # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
+  # a.sendEmail('guokrfans@gmail.com', "VERIFY_EMAIL")
+  # * @param {EmailScene} scene 发送场景，可选值为 RESET_PASSWORD（发送重置密码邮件，邮件中包含验证码）、VerifyEmail（发送验证邮箱的邮件）、ChangeEmail（发送修改邮箱邮件，邮件中包含验证码）
+  def sendEmail(email, scene)
+    # 第一步：构建 variables
+    variables = {
+      "email": email,
+      "scene": scene,
+    }
+    # 第二步：构建 payload
+    file = File.open("./lib/mutations/sendEmail.gql")
+    json = {
+      "query": file.read,
+      "variables": variables,
+    }
+    # 第三步：发请求
+    response = @graphqlClient.request({json: json})
+    return response
+    # "{\"data\":{\"sendEmail\":{\"message\":\"\",\"code\":200}}}\n"
+  end
+
 end
 
 # 管理模块

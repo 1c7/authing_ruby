@@ -1,0 +1,6 @@
+mutation sendEmail($email: String!, $scene: EmailScene!){
+    sendEmail(email: $email, scene: $scene){
+        message
+        code
+    }
+}
