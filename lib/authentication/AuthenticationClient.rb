@@ -1,22 +1,15 @@
+require './lib/authentication/BaseAuthenticationClient.rb'
+
 module AuthingRuby
 	class AuthenticationClient
 		def initialize(options = {})
 			@options = options
 
-			# 应用 ID
-			@appId = options.fetch(:appId, nil) 
-			# https://docs.authing.cn/v2/guides/faqs/get-app-id-and-secret.html
-			# 如何获取应用 ID (AppID) 和应用密钥（AppSecret）
-			# appHost 是 该应用的域名（AppHost），如 https://my-awesome-app.authing.cn
-			# appHost 的获取方法：某用户池 -> 应用 -> 基础设置 -> 认证地址
-			if @appId == nil
-				# 提示 appId 是个必须的参数
-			end
-
+			@appId = options.fetch(:appId, nil) # 应用 ID
 			@secret = options.fetch(:secret, nil) # 应用密钥
 			@appHost = options.fetch(:appHost, nil) # 该应用的域名
 			@redirectUri = options.fetch(:redirectUri, nil) # 业务回调地址
-			@authing_graphql_endpoint = 'https://core.authing.cn/graphql'
+			@protocol = options.fetch(:protocol, nil) # 协议类型，可选值为 oidc、oauth、saml、cas
 
 			# 公钥加密
 			@publicKeyManager = Common::PublicKeyManager.new(options)
@@ -34,6 +27,8 @@ module AuthingRuby
 			@folder_graphql = "./lib/graphql"
 			@folder_graphql_mutation = "#{@folder_graphql}/mutations"
 			@folder_graphql_query = "#{@folder_graphql}/queries"
+
+			# @baseClient = Authentication::BaseAuthenticationClient.new(options)
 		end
 
 		# 使用邮箱+密码注册 (完成, 测试通过)
@@ -109,7 +104,7 @@ module AuthingRuby
 				"phone": phone
 			}
 			response = graphqlClient.request({json: json})
-			#  "{\"code\":200,\"message\":\"发送成功\"}"
+			# {"code":200,"message":"发送成功"}
 			return response
 		end
 
@@ -279,7 +274,6 @@ module AuthingRuby
 		end
 
 		# 发送邮件
-		# 待测试
 		# a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
 		# a.sendEmail('guokrfans@gmail.com', "VERIFY_EMAIL")
 		# * @param {EmailScene} scene 发送场景，可选值为 RESET_PASSWORD（发送重置密码邮件，邮件中包含验证码）、VerifyEmail（发送验证邮箱的邮件）、ChangeEmail（发送修改邮箱邮件，邮件中包含验证码）
@@ -298,7 +292,7 @@ module AuthingRuby
 			# 第三步：发请求
 			response = @graphqlClient.request({json: json})
 			return response
-			# "{\"data\":{\"sendEmail\":{\"message\":\"\",\"code\":200}}}\n"
+			# {"data":{"sendEmail":{"message":"","code":200}}}
 		end
 
 		# 获取当前登录的用户信息
@@ -342,5 +336,71 @@ module AuthingRuby
 			# resp = HTTP.get("#{@appHost}/api/v2/logout?app_id=#{@appId}")
 			@tokenProvider.clearUser();
 		end
+
+		# 私有函数，用于 buildAuthorizeUrl 处理 OIDC 协议
+		def _buildOidcAuthorizeUrl(options = {})
+			# TODO
+=begin
+			let map: any = {
+				appId: 'client_id',
+				scope: 'scope',
+				state: 'state',
+				nonce: 'nonce',
+				responseMode: 'response_mode',
+				responseType: 'response_type',
+				redirectUri: 'redirect_uri',
+				codeChallenge: 'code_challenge',
+				codeChallengeMethod: 'code_challenge_method'
+			};
+			let res: any = {
+				nonce: Math.random()
+					.toString()
+					.slice(2),
+				state: Math.random()
+					.toString()
+					.slice(2),
+				scope: 'openid profile email phone address',
+				client_id: this.options.appId,
+				redirect_uri: this.options.redirectUri,
+				response_type: 'code'
+			};
+			Object.keys(map).forEach(k => {
+				if (options && (options as any)[k]) {
+					if (k === 'scope' && options.scope.includes('offline_access')) {
+						res.prompt = 'consent';
+					}
+					res[map[k]] = (options as any)[k];
+				}
+			});
+			let params = new URLSearchParams(res);
+			let authorizeUrl =
+				this.baseClient.appHost + '/oidc/auth?' + params.toString();
+			return authorizeUrl;
+=end
+		end
+
+		# 生成 OIDC 协议的用户登录链接
+		# 文档: https://docs.authing.cn/v2/reference/sdk-for-node/authentication/StandardProtocol.html#%E7%94%9F%E6%88%90-oidc-%E5%8D%8F%E8%AE%AE%E7%9A%84%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E9%93%BE%E6%8E%A5
+		# 代码: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L2098
+		def buildAuthorizeUrl(options = {})
+			unless @appHost
+				throw '请在初始化 AuthenticationClient 时传入应用域名 appHost 参数，形如：https://app1.authing.cn'
+			end
+			protocol = options.fetch(:protocol, nil)
+			if protocol === 'oidc'
+				return _buildOidcAuthorizeUrl(options);
+			end
+			if protocol === 'oauth'
+				throw "oauth 协议暂未实现"
+			end
+			if protocol === 'saml'
+				throw "saml 协议暂未实现"
+			end
+			if protocol === 'cas'
+				throw "cas 协议暂未实现"
+			end
+			throw '不支持的协议类型，请在初始化 AuthenticationClient 时传入 protocol 参数，可选值为 oidc、oauth、saml、cas'
+		end
+
 	end
 end
