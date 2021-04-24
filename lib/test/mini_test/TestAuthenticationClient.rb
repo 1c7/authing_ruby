@@ -66,16 +66,16 @@ class TestAuthenticationClient < Minitest::Test
     @authenticationClient.registerByUsername(username, password)
     resp = @authenticationClient.loginByUsername(username, password)
     json = JSON.parse(resp)
-    puts json
-    assert(json.dig('data', 'loginByUsername'), "用户名+密码注册失败")
+    dig = json.dig('data', 'loginByUsername')
+    assert(dig, "用户名+密码注册失败")
   end
 
   # 测试手机号+密码登录
-  def test_loginByPhonePassword
-  end
+  # def test_loginByPhonePassword
+  # end
 
   # 测试获取当前用户
-  def test_getCurrentUser
-  end
+  # def test_getCurrentUser
+  # end
   
 end
