@@ -33,8 +33,8 @@ module AuthingRuby
 
 			# 把 GraphQL 文件夹路径放这里, 这些是私有变量
 			@folder_graphql = "./lib/graphql"
-			@folder_graphql_query = "#{@folder_graphql}/mutations"
-			@folder_graphql_mutation = "#{@folder_graphql}/queries"
+			@folder_graphql_mutation = "#{@folder_graphql}/mutations"
+			@folder_graphql_query = "#{@folder_graphql}/queries"
 		end
 
 		# 使用邮箱+密码注册 (完成, 测试通过)
