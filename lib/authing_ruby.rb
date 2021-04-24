@@ -177,10 +177,37 @@ class AuthingRuby::AuthenticationClient
       }
     }
     # 第二步：构建整个 payload
-    file = File.open("./lib/queries/registerByPhoneCode.gql")
-    registerByPhoneCode = file.read
+    file = File.open("./lib/mutations/registerByPhoneCode.gql")
     json = {
-      "query": registerByPhoneCode,
+      "query": file.read,
+      "variables": variables,
+    }
+    # 第三步：发请求
+    response = @graphqlClient.request({json: json})
+    return response
+  end
+
+  # 使用邮箱登录
+  # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b", userPoolId: "60800b8ee5b66b23128b4980"})
+  # a.loginByEmail('301@qq.com', "123456789")
+  def loginByEmail(email, password, options = {})
+    # 第一步：构建 variables
+    publicKey = @publicKeyManager.getPublicKey()
+    encryptedPassword = Utils.encrypt(password, publicKey)
+    variables = {
+      "input": {
+        "email": email,
+        "password": encryptedPassword,
+
+        "autoRegister": options.fetch(:autoRegister, nil),
+        "captchaCode": options.fetch(:captchaCode, nil),
+        "clientIp": options.fetch(:clientIp, nil),
+      }
+    }
+    # 第二步：构建整个 payload
+    file = File.open("./lib/mutations/loginByEmail.gql")
+    json = {
+      "query": file.read,
       "variables": variables,
     }
     # 第三步：发请求
