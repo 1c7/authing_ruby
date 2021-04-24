@@ -29,6 +29,8 @@ module AuthingRuby
       @folder_graphql_query = "#{@folder_graphql}/queries"
 
       # @baseClient = Authentication::BaseAuthenticationClient.new(options)
+
+      @tokenEndPointAuthMethod = options.fetch(:tokenEndPointAuthMethod, 'client_secret_post')
     end
 
     # 使用邮箱+密码注册 (完成, 测试通过)
@@ -337,6 +339,7 @@ module AuthingRuby
       @tokenProvider.clearUser();
     end
 
+    # TODO
     # 私有函数，用于 buildAuthorizeUrl 处理 OIDC 协议
     def _buildOidcAuthorizeUrl(options = {})
       # TODO
@@ -379,6 +382,7 @@ module AuthingRuby
 =end
     end
 
+    # TODO
     # 生成 OIDC 协议的用户登录链接
     # 文档: https://docs.authing.cn/v2/reference/sdk-for-node/authentication/StandardProtocol.html#%E7%94%9F%E6%88%90-oidc-%E5%8D%8F%E8%AE%AE%E7%9A%84%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E9%93%BE%E6%8E%A5
     # 代码: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L2098
@@ -400,6 +404,116 @@ module AuthingRuby
         throw "cas 协议暂未实现"
       end
       throw '不支持的协议类型，请在初始化 AuthenticationClient 时传入 protocol 参数，可选值为 oidc、oauth、saml、cas'
+    end
+
+    # TODO
+    def _getAccessTokenByCodeWithClientSecretPost
+    end
+
+    # TODO
+    # Code 换 Token
+    # 使用授权码 Code 获取用户的 Token 信息。
+    # res = a.getAccessTokenByCode('授权码 code');
+    # 参照: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L1977
+    def getAccessTokenByCode(code, options = {})
+      # 检查1
+      if ['oauth', 'oidc'].include?(@protocol) == false
+        throw '初始化 AuthenticationClient 时传入的 protocol 参数必须为 oauth 或 oidc，请检查参数'
+      end
+
+      # 检查2
+      if !@secret && @tokenEndPointAuthMethod != nil
+        throw '请在初始化 AuthenticationClient 时传入 appId 和 secret 参数'
+      end
+
+      if @tokenEndPointAuthMethod == 'client_secret_post'
+        return _getAccessTokenByCodeWithClientSecretPost(code, options.fetch(:codeVerifier, nil))
+      end
+
+      if @tokenEndPointAuthMethod == 'client_secret_basic'
+        throw "client_secret_basic 还未实现"
+        # return _getAccessTokenByCodeWithClientSecretBasic(code, options.fetch(:codeVerifier, nil))
+      end
+
+      if @tokenEndPointAuthMethod == nil
+        throw "还未实现"
+        # return _getAccessTokenByCodeWithNone(code, options.fetch(:codeVerifier, nil))
+      end
+    end
+
+    # TODO
+    # Token 换用户信息
+    # 文档: https://docs.authing.cn/v2/reference/sdk-for-node/authentication/StandardProtocol.html#token-%E6%8D%A2%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF
+    # 参考: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L2082
+    def getUserInfoByAccessToken(access_token)
+      api = nil;
+      if @protocol == 'oidc'
+        api = "#{appHost}/oidc/me";
+      elsif @protocol == 'oauth'
+        api = "#{appHost}/oauth/me";
+      end
+
+      # let userInfo = await this.naiveHttpClient.request({
+      #   method: 'POST',
+      #   url: api,
+      #   headers: {
+      #     Authorization: 'Bearer ' + accessToken
+      #   }
+      # });
+      # return userInfo;
+    end
+
+    # TODO
+    # 刷新 Access Token
+    # 代码参考: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L2296
+    def getNewAccessTokenByRefreshToken(refreshToken)
+      # 类似结构
+    end
+
+    # TODO
+    # 检查 Access Token
+    # 文档: https://docs.authing.cn/v2/reference/sdk-for-node/authentication/StandardProtocol.html#%E6%A3%80%E6%9F%A5-access-token
+    # 代码参考: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L2479
+    def introspectToken(token)
+      # 类似结构
+    end
+
+    # TODO
+    # 检验 Id Token 合法性
+    # 通过 Authing 提供的在线接口验证 Id token 或 Access token。会产生网络请求。
+    # 文档: https://docs.authing.cn/v2/reference/sdk-for-node/authentication/StandardProtocol.html#%E6%A3%80%E9%AA%8C-id-token-%E5%90%88%E6%B3%95%E6%80%A7
+    # 代码参考: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L2582
+    def validateToken(options = {})
+      if options.empty?
+        throw '请在传入的参数对象中包含 accessToken 或 idToken 字段'
+      end
+
+      @accessToken = options.fetch(:accessToken, nil)
+      @idToken = options.fetch(:idToken, nil)
+
+      if @accessToken && @idToken
+        throw "accessToken 和 idToken 只能传入一个，不能同时传入"
+      end
+
+      if @idToken
+        # const data = await this.naiveHttpClient.request({
+        #   url: `${this.baseClient.appHost}/api/v2/oidc/validate_token`,
+        #   method: 'GET',
+        #   params: {
+        #     id_token: options.idToken
+        #   }
+        # });
+        # return data;
+      elsif @accessToken
+        # const data = await this.naiveH          ttpClient.request({
+        #   url: `${this.baseClient.appHost}/api/v2/oidc/validate_token`,
+        #   method: 'GET',
+        #   params: {
+        #     access_token: options.accessToken
+        #   }
+        # });
+        # return data;
+      end
     end
 
   end

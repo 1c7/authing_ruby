@@ -9,5 +9,8 @@ module AuthingRuby
 
     # 管理员创建账号
     # https://docs.authing.cn/v2/guides/user/create-user/
+    def users
+      # return User
+    end
   end
 end
