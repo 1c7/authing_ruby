@@ -5,7 +5,7 @@ require "minitest/autorun" # Minitest
 require "./lib/authing_ruby.rb" # 模块主文件
 require "./lib/test/helper.rb" # 模块主文件
 require 'dotenv' # 载入环境变量文件
-Dotenv.load('.env.test')
+Dotenv.load('.env.test') # 你可以编辑这个文件来修改环境变量
 
 class TestAuthenticationClient < Minitest::Test
   def setup
@@ -30,18 +30,23 @@ class TestAuthenticationClient < Minitest::Test
     # 如果这个 json.data.registerByEmail 属性存在我们就认为是成功
   end
 
+  # 测试用户名+密码注册
   def test_registerByUsername
   end
 
+  # 测试邮箱+密码登录
   def test_loginByEmail
   end
 
+  # 测试用户名+密码登录
   def test_loginByUsername
   end
 
+  # 测试手机号+密码登录
   def test_loginByPhonePassword
   end
 
+  # 测试获取当前用户
   def test_getCurrentUser
   end
   
