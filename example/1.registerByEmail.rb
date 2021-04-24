@@ -1,5 +1,5 @@
 #
-# 例子1: 通过用户名+密码注册
+# 例子1: 通过邮箱地址+密码注册
 #
 
 # 如何运行: ruby ./example/1.registerByEmail.rb
