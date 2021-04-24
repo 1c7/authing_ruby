@@ -1,5 +1,4 @@
 require "http"
-require "./lib/AuthingGraphQL/document.rb"
 require './lib/utils/main.rb'
 require './lib/common/PublicKeyManager.rb'
 require './lib/common/GraphqlClient.rb'
@@ -45,8 +44,7 @@ class AuthingRuby
     EOF
     response = HTTP.post('https://core.authing.cn/graphql', json: {
       # "query": query1,
-      # "query": query2,
-      "query": AuthingGraphQL::Document.schema
+      "query": query2,
     })
     puts response.body.to_s # https://github.com/httprb/http/wiki/Response-Handling
   end
@@ -81,6 +79,8 @@ class AuthingRuby::AuthenticationClient
     
     # tokenProvider 只是存取一下 user 和 token
     @tokenProvider = Authentication::AuthenticationTokenProvider.new()
+
+    # @httpClient = HttpClient
   end
 
   # 使用邮箱+密码注册 (完成, 测试通过)
@@ -105,9 +105,10 @@ class AuthingRuby::AuthenticationClient
         "generateToken": options.fetch(:generateToken, nil),
       }
     }
-    # 第二步：构建整个 payload
+    # 第二步：构建 payload
+    file = File.open("./lib/mutations/registerByEmail.gql")
     json = {
-      "query": AuthingGraphQL::Document.RegisterByEmailDocument,
+      "query": file.read,
       "variables": variables,
     }
     # 第三步：发请求
@@ -136,9 +137,10 @@ class AuthingRuby::AuthenticationClient
         "generateToken": options.fetch(:generateToken, nil),
       }
     }
-    # 第二步：构建整个 payload
+    # 第二步：构建 payload
+    file = File.open("./lib/mutations/registerByUsername.gql")
     json = {
-      "query": AuthingGraphQL::Document.registerByUsername,
+      "query": file.read,
       "variables": variables,
     }
     # 第三步：发请求
@@ -377,6 +379,20 @@ class AuthingRuby::AuthenticationClient
   # def testGetUser()
   #   @tokenProvider.getUser();
   # end
+
+  # 退出登录
+  # TODO
+  def logout()
+    # await this.httpClient.request({
+    #   method: 'GET',
+    #   url: ,
+    #   withCredentials: true
+    # });
+    # resp = HTTP.get("#{@appHost}/api/v2/logout?app_id=#{@appId}")
+    @tokenProvider.clearUser();
+  end
+
+  
 
 end
 
