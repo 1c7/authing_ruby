@@ -22,13 +22,17 @@ module Common
 				'x-authing-app-id': @options.fetch(:appId, ''),
 				'x-authing-lang': @options.fetch(:lang, ''),
 			};
-			token = @options.fetch(:token, nil)
+			token = options.fetch(:token, nil)
 			if token
 				headers['Authorization'] = "Bearer #{token}"
 			end
+			# puts "最后的 headers 是"
+			# puts headers
 
-			json = options.fetch(:json, {})
-			response = HTTP.headers(headers).post(@endpoint, json: json) # TODO: 处理错误情况
+			json = options.fetch(:json, nil)
+			# puts "最后的 json 是"
+			# puts json
+			response = HTTP.headers(headers).post(@endpoint, json: json)
     	return response.body.to_s
 		end
 
