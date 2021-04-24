@@ -1,11 +1,14 @@
 # http://docs.seattlerb.org/minitest/
-# 如何运行 ruby ./lib/test/TestAuthenticationClient.rb
+# 如何运行 ruby ./lib/test/mini_test/TestAuthenticationClient.rb
 
 require "minitest/autorun" # Minitest
 require "./lib/authing_ruby.rb" # 模块主文件
 require "./lib/test/helper.rb" # 模块主文件
 require 'dotenv' # 载入环境变量文件
+
 Dotenv.load('.env.test') # 你可以编辑这个文件来修改环境变量
+# 不要用 staging 或 production 的用户池来测试，新建一个用户池专门做测试
+# 因为测试期间会注册随机名字的客户。
 
 class TestAuthenticationClient < Minitest::Test
   def setup
@@ -32,14 +35,39 @@ class TestAuthenticationClient < Minitest::Test
 
   # 测试用户名+密码注册
   def test_registerByUsername
+    random_string = @test_helper.randomNumString()
+    username = random_string
+    password = random_string
+    resp = @authenticationClient.registerByUsername(username, password)
+    json = JSON.parse(resp)
+    assert(json.dig('data', 'registerByUsername'), "用户名+密码注册失败")
   end
 
   # 测试邮箱+密码登录
+  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_loginByEmail
   def test_loginByEmail
+    random_string = @test_helper.randomNumString()
+    email = "#{random_string}@qq.com"
+    password = random_string
+    # 先注册
+    @authenticationClient.registerByEmail(email, password)
+    # 再登录
+    resp = @authenticationClient.loginByEmail(email, password)
+    json = JSON.parse(resp)
+    assert(json.dig('data', 'loginByEmail'), "邮箱+密码登录失败")
   end
 
   # 测试用户名+密码登录
+  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_loginByUsername
   def test_loginByUsername
+    random_string = @test_helper.randomNumString()
+    username = random_string
+    password = random_string
+    @authenticationClient.registerByUsername(username, password)
+    resp = @authenticationClient.loginByUsername(username, password)
+    json = JSON.parse(resp)
+    puts json
+    assert(json.dig('data', 'loginByUsername'), "用户名+密码注册失败")
   end
 
   # 测试手机号+密码登录
