@@ -30,6 +30,11 @@ module AuthingRuby
 			@tokenProvider = Authentication::AuthenticationTokenProvider.new()
 
 			# @httpClient = HttpClient
+
+			# 把 GraphQL 文件夹路径放这里, 这些是私有变量
+			@folder_graphql = "./lib/graphql"
+			@folder_graphql_query = "#{@folder_graphql}/mutations"
+			@folder_graphql_mutation = "#{@folder_graphql}/queries"
 		end
 
 		# 使用邮箱+密码注册 (完成, 测试通过)
@@ -54,7 +59,7 @@ module AuthingRuby
 				}
 			}
 			# 第二步：构建 payload
-			file = File.open("./lib/mutations/registerByEmail.gql")
+			file = File.open("#{@folder_graphql_mutation}/registerByEmail.gql")
 			json = {
 				"query": file.read,
 				"variables": variables,
@@ -85,7 +90,7 @@ module AuthingRuby
 				}
 			}
 			# 第二步：构建 payload
-			file = File.open("./lib/mutations/registerByUsername.gql")
+			file = File.open("#{@folder_graphql_mutation}/registerByUsername.gql")
 			json = {
 				"query": file.read,
 				"variables": variables,
@@ -130,7 +135,7 @@ module AuthingRuby
 				}
 			}
 			# 第二步：构建整个 payload
-			file = File.open("./lib/mutations/registerByPhoneCode.gql")
+			file = File.open("#{@folder_graphql_mutation}/registerByPhoneCode.gql")
 			json = {
 				"query": file.read,
 				"variables": variables,
@@ -158,7 +163,7 @@ module AuthingRuby
 				}
 			}
 			# 第二步：构建整个 payload
-			file = File.open("./lib/mutations/loginByEmail.gql")
+			file = File.open("#{@folder_graphql_mutation}/loginByEmail.gql")
 			json = {
 				"query": file.read,
 				"variables": variables,
@@ -192,7 +197,7 @@ module AuthingRuby
 				}
 			}
 			# 第二步：构建整个 payload
-			file = File.open("./lib/mutations/loginByUsername.gql")
+			file = File.open("#{@folder_graphql_mutation}/loginByUsername.gql")
 			json = {
 				"query": file.read,
 				"variables": variables,
@@ -222,7 +227,7 @@ module AuthingRuby
 				}
 			}
 			# 第二步：构建 payload
-			file = File.open("./lib/mutations/loginByPhoneCode.gql")
+			file = File.open("#{@folder_graphql_mutation}/loginByPhoneCode.gql")
 			json = {
 				"query": file.read,
 				"variables": variables,
@@ -255,7 +260,7 @@ module AuthingRuby
 				}
 			}
 			# 第二步：构建 payload
-			file = File.open("./lib/mutations/loginByPhonePassword.gql")
+			file = File.open("#{@folder_graphql_mutation}/loginByPhonePassword.gql")
 			json = {
 				"query": file.read,
 				"variables": variables,
@@ -286,7 +291,7 @@ module AuthingRuby
 				"scene": scene,
 			}
 			# 第二步：构建 payload
-			file = File.open("./lib/mutations/sendEmail.gql")
+			file = File.open("#{@folder_graphql_mutation}/sendEmail.gql")
 			json = {
 				"query": file.read,
 				"variables": variables,
@@ -302,7 +307,7 @@ module AuthingRuby
 		# a.loginByUsername('agoodob', "123456789")
 		# a.getCurrentUser()
 		def getCurrentUser()
-			file = File.open("./lib/queries/user.gql")
+			file = File.open("#{@folder_graphql_query}/user.gql")
 			json = {
 				"query": file.read
 			}
