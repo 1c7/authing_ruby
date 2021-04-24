@@ -215,6 +215,34 @@ class AuthingRuby::AuthenticationClient
     return response
   end
 
+  # 使用用户名登录
+  # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
+  # a.loginByUsername('agoodob', "123456789")
+  def loginByUsername(username, password, options = {})
+    # 第一步：构建 variables
+    publicKey = @publicKeyManager.getPublicKey()
+    encryptedPassword = Utils.encrypt(password, publicKey)
+    variables = {
+      "input": {
+        "username": username,
+        "password": encryptedPassword,
+
+        "autoRegister": options.fetch(:autoRegister, nil),
+        "captchaCode": options.fetch(:captchaCode, nil),
+        "clientIp": options.fetch(:clientIp, nil),
+      }
+    }
+    # 第二步：构建整个 payload
+    file = File.open("./lib/mutations/loginByUsername.gql")
+    json = {
+      "query": file.read,
+      "variables": variables,
+    }
+    # 第三步：发请求
+    response = @graphqlClient.request({json: json})
+    return response
+  end
+
 end
 
 # 管理模块
