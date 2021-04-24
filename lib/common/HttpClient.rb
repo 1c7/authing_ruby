@@ -9,25 +9,25 @@ require './lib/version.rb';
 require "http"
 
 module Common
-	class HttpClient
-		def initialize(options = {}, tokenProvider)
-			@options = options
-			@tokenProvider = tokenProvider
-		end
-		def request(config)
-			headers = {
-				'x-authing-sdk-version': "ruby:#{Authing::VERSION}",
-				'x-authing-userpool-id': @options.fetch(:userPoolId, ''),
-				'x-authing-request-from': @options.fetch(:requestFrom, 'sdk'),
-				'x-authing-app-id': @options.fetch(:appId, ''),
-				'x-authing-lang': @options.fetch(:lang, ''),
-			};
-			token = options.fetch(:token, nil)
-			if token
-				headers['Authorization'] = "Bearer #{token}"
-			end
-			# response = HTTP.headers(headers).post(@endpoint, json: json)
-    	# return response.body.to_s
-		end
-	end
+  class HttpClient
+    def initialize(options = {}, tokenProvider)
+      @options = options
+      @tokenProvider = tokenProvider
+    end
+    def request(config)
+      headers = {
+        'x-authing-sdk-version': "ruby:#{Authing::VERSION}",
+        'x-authing-userpool-id': @options.fetch(:userPoolId, ''),
+        'x-authing-request-from': @options.fetch(:requestFrom, 'sdk'),
+        'x-authing-app-id': @options.fetch(:appId, ''),
+        'x-authing-lang': @options.fetch(:lang, ''),
+      };
+      token = options.fetch(:token, nil)
+      if token
+        headers['Authorization'] = "Bearer #{token}"
+      end
+      # response = HTTP.headers(headers).post(@endpoint, json: json)
+      # return response.body.to_s
+    end
+  end
 end

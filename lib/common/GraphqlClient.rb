@@ -7,34 +7,34 @@ require './lib/version.rb';
 require "http"
 
 module Common
-	class GraphqlClient
-		def initialize(endpoint, options = {})
-			@endpoint = endpoint # API 端点
-			@options = options
-		end
+  class GraphqlClient
+    def initialize(endpoint, options = {})
+      @endpoint = endpoint # API 端点
+      @options = options
+    end
 
-		def request(options)
-			headers = {
-				'content-type': 'application/json',
-				'x-authing-sdk-version': "ruby:#{AuthingRuby::VERSION}",
-				'x-authing-userpool-id': @options.fetch(:userPoolId, ''),
-				'x-authing-request-from': @options.fetch(:requestFrom, 'sdk'),
-				'x-authing-app-id': @options.fetch(:appId, ''),
-				'x-authing-lang': @options.fetch(:lang, ''),
-			};
-			token = options.fetch(:token, nil)
-			if token
-				headers['Authorization'] = "Bearer #{token}"
-			end
-			# puts "最后的 headers 是"
-			# puts headers
+    def request(options)
+      headers = {
+        'content-type': 'application/json',
+        'x-authing-sdk-version': "ruby:#{AuthingRuby::VERSION}",
+        'x-authing-userpool-id': @options.fetch(:userPoolId, ''),
+        'x-authing-request-from': @options.fetch(:requestFrom, 'sdk'),
+        'x-authing-app-id': @options.fetch(:appId, ''),
+        'x-authing-lang': @options.fetch(:lang, ''),
+      };
+      token = options.fetch(:token, nil)
+      if token
+        headers['Authorization'] = "Bearer #{token}"
+      end
+      # puts "最后的 headers 是"
+      # puts headers
 
-			json = options.fetch(:json, nil)
-			# puts "最后的 json 是"
-			# puts json
-			response = HTTP.headers(headers).post(@endpoint, json: json)
-    	return response.body.to_s
-		end
+      json = options.fetch(:json, nil)
+      # puts "最后的 json 是"
+      # puts json
+      response = HTTP.headers(headers).post(@endpoint, json: json)
+      return response.body.to_s
+    end
 
-	end
+  end
 end
