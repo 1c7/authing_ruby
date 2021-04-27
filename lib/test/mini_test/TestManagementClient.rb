@@ -1,3 +1,5 @@
+# ruby ./lib/test/mini_test/TestManagementClient.rb
+
 require "minitest/autorun" # Minitest
 require "./lib/authing_ruby.rb" # 模块主文件
 require "./lib/test/helper.rb" # 模块主文件
