@@ -26,12 +26,8 @@ module Common
       if token
         headers['Authorization'] = "Bearer #{token}"
       end
-      # puts "最后的 headers 是"
-      # puts headers
 
       json = options.fetch(:json, nil)
-      # puts "最后的 json 是"
-      # puts json
       response = HTTP.headers(headers).post(@endpoint, json: json)
       return response.body.to_s
     end
