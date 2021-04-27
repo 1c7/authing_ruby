@@ -14,16 +14,14 @@ module AuthingRuby
         throw '请提供 userPoolId 或者 appId!'
       end
 
-      graphqlApiEndpointV2 = "#{@host}/graphql/v2"
+      # graphqlApiEndpointV2 = "#{@host}/graphql/v2"
 
-      if (@secret == nil && @accessToken == nil) {
-        onError(1000, 'Init Management Client failed, must provide at least secret or accessToken !')
-      end
+      # if (@secret == nil && @accessToken == nil) {
+      #   onError(1000, 'Init Management Client failed, must provide at least secret or accessToken !')
+      # end
 
-      # this.graphqlClient = new (this.options.graphqlClient || GraphqlClient)(
-      #   graphqlApiEndpointV2,
-      #   this.options
-      # );
+      # @graphqlClient = AuthingRuby::GraphqlClient.new(graphqlEndpoint, @options)
+      # @tokenProvider = Authentication::AuthenticationTokenProvider.new()
       # this.tokenProvider = new ManagementTokenProvider(
       #   this.options,
       #   this.graphqlClient
@@ -48,9 +46,9 @@ module AuthingRuby
       # );
     end
 
-    def onError(code, message)
-      throw { code, message }
-    end
+    # def onError(code, message)
+    #   throw { code, message }
+    # end
 
     # 管理员创建账号
     # https://docs.authing.cn/v2/guides/user/create-user/

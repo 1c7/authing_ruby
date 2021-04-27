@@ -8,7 +8,7 @@
 # 如何使用？
 =begin
 发送一个 POST 请求
-  httpClient = Common::HttpClient.new
+  httpClient = AuthingRuby::Common::HttpClient.new
   httpClient.request({
     method: 'POST',
     url: "https://postman-echo.com/post",
@@ -19,7 +19,7 @@
   })
 
 发送一个 GET 请求
-  httpClient = Common::HttpClient.new
+  httpClient = AuthingRuby::Common::HttpClient.new
   url = "https://postman-echo.com/get"
   resp = httpClient.request({
     method: 'GET',
@@ -35,69 +35,71 @@ require './lib/version.rb';
 require "http"
 require 'faraday'
 
-module Common
-  class HttpClient
-    METHODS = %i[get post put delete]
-    # METHODS = %i[get post put delete head patch options trace]
-    
-    def initialize(options = {}, tokenProvider = nil)
-      @options = options
-      @tokenProvider = tokenProvider
-    end
-
-    def request(config)
-      # 处理 config 里5个参数：method, url, data, params, headers
-      method = config.fetch(:method, nil)
-      if method == nil
-        throw "必须传入 method，可选值 #{METHODS.join(', ')}"
-      end
+module AuthingRuby
+  module Common
+    class HttpClient
+      METHODS = %i[get post put delete]
+      # METHODS = %i[get post put delete head patch options trace]
       
-      method_downcase = method.downcase # 转成小写
-      if METHODS.include?(method_downcase.to_sym) == false
-        throw "传入的 method 错误，可选值 #{METHODS.join(', ')}"
+      def initialize(options = {}, tokenProvider = nil)
+        @options = options
+        @tokenProvider = tokenProvider
       end
 
-      url = config.fetch(:url, nil)
-      data = config.fetch(:data, nil) # data 和 body 一回事
-      params = config.fetch(:params, nil)
-      headers = {
-        'x-authing-sdk-version': "ruby:#{AuthingRuby::VERSION}",
-        'x-authing-userpool-id': @options.fetch(:userPoolId, ''),
-        'x-authing-request-from': @options.fetch(:requestFrom, 'sdk'),
-        'x-authing-app-id': @options.fetch(:appId, ''),
-        'x-authing-lang': @options.fetch(:lang, ''),
-      };
+      def request(config)
+        # 处理 config 里5个参数：method, url, data, params, headers
+        method = config.fetch(:method, nil)
+        if method == nil
+          throw "必须传入 method，可选值 #{METHODS.join(', ')}"
+        end
+        
+        method_downcase = method.downcase # 转成小写
+        if METHODS.include?(method_downcase.to_sym) == false
+          throw "传入的 method 错误，可选值 #{METHODS.join(', ')}"
+        end
 
-      # 如果用户传了 authorization 进来。
-      config_headers_authorization = config.dig(:headers, :authorization)
-      if config_headers_authorization != nil
-        headers['Authorization'] = config_headers_authorization
-      else
-        # 如果用户不传 token，就使用 sdk 自己维护的。
-        token = @tokenProvider.getToken() if @tokenProvider
-        headers['Authorization'] = "Bearer #{token}" if token
+        url = config.fetch(:url, nil)
+        data = config.fetch(:data, nil) # data 和 body 一回事
+        params = config.fetch(:params, nil)
+        headers = {
+          'x-authing-sdk-version': "ruby:#{AuthingRuby::VERSION}",
+          'x-authing-userpool-id': @options.fetch(:userPoolId, ''),
+          'x-authing-request-from': @options.fetch(:requestFrom, 'sdk'),
+          'x-authing-app-id': @options.fetch(:appId, ''),
+          'x-authing-lang': @options.fetch(:lang, ''),
+        };
+
+        # 如果用户传了 authorization 进来。
+        config_headers_authorization = config.dig(:headers, :authorization)
+        if config_headers_authorization != nil
+          headers['Authorization'] = config_headers_authorization
+        else
+          # 如果用户不传 token，就使用 sdk 自己维护的。
+          token = @tokenProvider.getToken() if @tokenProvider
+          headers['Authorization'] = "Bearer #{token}" if token
+        end
+
+        if method_downcase == 'get'
+          conn = Faraday::Connection.new url
+          return conn.get nil, params, headers
+        end
+
+        if method_downcase == 'post'
+          conn = Faraday::Connection.new url
+          return conn.post nil, data, headers
+        end
+
+        if method_downcase == 'put'
+          conn = Faraday::Connection.new url
+          return conn.put nil, data, headers
+        end
+
+        if method_downcase == 'delete'
+          conn = Faraday::Connection.new url
+          return conn.delete nil, params, headers
+        end
+
       end
-
-      if method_downcase == 'get'
-        conn = Faraday::Connection.new url
-        return conn.get nil, params, headers
-      end
-
-      if method_downcase == 'post'
-        conn = Faraday::Connection.new url
-        return conn.post nil, data, headers
-      end
-
-      if method_downcase == 'put'
-        conn = Faraday::Connection.new url
-        return conn.put nil, data, headers
-      end
-
-      if method_downcase == 'delete'
-        conn = Faraday::Connection.new url
-        return conn.delete nil, params, headers
-      end
-
     end
   end
 end

@@ -11,12 +11,12 @@ class TestAuthenticationClient < Minitest::Test
 
 	# 测试初始化，初始化不应该报错
 	def test_init
-		httpClient = Common::HttpClient.new
+		httpClient = AuthingRuby::Common::HttpClient.new
 	end
 	
 	# 测试简单的 get 方法
 	def test_get
-		httpClient = Common::HttpClient.new
+		httpClient = AuthingRuby::Common::HttpClient.new
 		url = "https://postman-echo.com/get"
 		# url = "https://postman-echo.com/get?foo1=bar1&foo2=bar2"
 		resp = httpClient.request({
@@ -29,11 +29,13 @@ class TestAuthenticationClient < Minitest::Test
 		})
 		json = JSON.parse(resp.body)
 		puts JSON.pretty_generate(json)
+		# 这里没有 assert，只是肉眼判断 postman-echo.com 返回的 JSON 格式的结果
+		# TODO: 加个 assert
 	end
 
 	# 测试 post 方法
 	def test_post
-		httpClient = Common::HttpClient.new
+		httpClient = AuthingRuby::Common::HttpClient.new
 		url = "https://postman-echo.com/post"
 		resp = httpClient.request({
 			method: 'POST',

@@ -12,11 +12,11 @@ module AuthingRuby
       @protocol = options.fetch(:protocol, nil) # 协议类型，可选值为 oidc、oauth、saml、cas
 
       # 公钥加密
-      @publicKeyManager = Common::PublicKeyManager.new(options)
+      @publicKeyManager = AuthingRuby::Common::PublicKeyManager.new(options)
 
       # 负责发送 GraphQL (其实就是 http) 请求的工具
-      graphqlEndpoint = "#{@appHost}/graphql/v2";
-      @graphqlClient = Common::GraphqlClient.new(graphqlEndpoint, @options)
+      graphqlEndpoint = "#{@appHost}/graphql/v2"
+      @graphqlClient = AuthingRuby::Common::GraphqlClient.new(graphqlEndpoint, @options)
       
       # tokenProvider 只是存取一下 user 和 token
       @tokenProvider = Authentication::AuthenticationTokenProvider.new()
@@ -101,7 +101,7 @@ module AuthingRuby
     # a.sendSmsCode("13556136684")
     def sendSmsCode(phone)
       url = "#{@appHost}/api/v2/sms/send"
-      graphqlClient = Common::GraphqlClient.new(url, @options)
+      graphqlClient = AuthingRuby::Common::GraphqlClient.new(url, @options)
       json = {
         "phone": phone
       }
