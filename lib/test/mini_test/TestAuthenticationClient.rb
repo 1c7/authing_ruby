@@ -7,8 +7,7 @@ require "./lib/test/helper.rb" # 模块主文件
 require 'dotenv' # 载入环境变量文件
 
 Dotenv.load('.env.test') # 你可以编辑这个文件来修改环境变量
-# 不要用 staging 或 production 的用户池来测试，新建一个用户池专门做测试
-# 因为测试期间会注册随机名字的客户。
+# 不要用 staging 或 production 的用户池来测试，新建一个用户池专门做测试，因为测试期间会注册随机名字的用户
 
 class TestAuthenticationClient < Minitest::Test
   def setup
@@ -77,5 +76,55 @@ class TestAuthenticationClient < Minitest::Test
   # 测试获取当前用户
   # def test_getCurrentUser
   # end
+
+  # 测试退出登录
+  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_logout
+  def test_logout
+    # 如何测试?
+    # 1. 先登录, 用身份去做一些事情 （比如修改 username 改个名字）
+    # 2. 再登出, 做同样的事情，但是这次会失败
+
+    # 注册+登录
+    username = 'zhengcheng123'
+    password = "123456789"
+    @authenticationClient.registerByUsername(username, password)
+    @authenticationClient.loginByUsername(username, password)
+    userID = @authenticationClient.checkLoggedIn()
+    puts userID
+
+    # 更新用户信息  
+  end
+
+  # 测试: 修改用户资料
+  def test_updateProfile
+  end
+
+  # 测试: 更新用户密码
+  def test_updatePassword
+  end
+
+  # 测试: 绑定手机号
+  def test_bindPhone
+  end 
+
+  # 测试: 解绑手机号
+  def test_unbindPhone
+  end
+
+  # 测试: 更新用户手机号
+  def test_updatePhone
+  end
+
+  # 绑定邮箱
+  def test_bindEmail
+  end
+
+  # 解绑邮箱
+  def test_unbindEmail
+  end
+
+  # 检测 Token 登录状态
+  def test_checkLoginStatus
+  end
   
 end

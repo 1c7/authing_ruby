@@ -1,4 +1,5 @@
 require './lib/authentication/BaseAuthenticationClient.rb'
+require 'jwt'
 
 module AuthingRuby
   class AuthenticationClient
@@ -330,12 +331,11 @@ module AuthingRuby
     # 退出登录
     # TODO
     def logout()
-      # await this.httpClient.request({
-      #   method: 'GET',
-      #   url: ,
-      #   withCredentials: true
-      # });
-      # resp = HTTP.get("#{@appHost}/api/v2/logout?app_id=#{@appId}")
+      url = "#{@appHost}/api/v2/logout?app_id=#{@appId}"
+      @httpClient.request({
+        method: 'GET',
+        url: url,
+      });
       @tokenProvider.clearUser();
     end
 
@@ -514,6 +514,62 @@ module AuthingRuby
         # });
         # return data;
       end
+    end
+
+    # TODO
+    # 修改用户资料
+    def updateProfile(updates = {})
+      userId = checkLoggedIn();
+      puts userId
+      # updates = updates.except(:password) # (Ruby 3.0+)
+
+      # if (updates && updates.password) {
+      #   delete updates.password;
+      # }
+
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      variables = {
+        "id": userId,
+        "input": updates
+      }
+      res = graphqlAPI.updateUser(@graphqlClient, @tokenProvider, variables)
+      return res
+
+      # updateUser
+      # this.setCurrentUser(updated);
+      # return updated;
+    end
+
+    # TODO
+    # 1. 看一下哪些地方在用这个方法
+    def checkLoggedIn()
+      user = @tokenProvider.getUser();
+  
+      if user
+        # puts "有用户 #{user}"
+        return user.fetch("id", nil)
+        # 608966b08b4af522620d2e59
+      end
+  
+      token = @tokenProvider.getToken();
+      if !token
+        throw '请先登录！'
+      end
+
+      decoded_token_array = JWT.decode token, nil, false
+      payload = decoded_token_array[0]
+
+      userId = nil
+      authing_sub = payload.fetch("sub", nil)
+      id = payload.dig("data", "id")
+
+      if authing_sub
+        userId = authing_sub
+      else
+        userId = id
+      end
+
+      return userId
     end
 
   end
