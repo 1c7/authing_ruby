@@ -1,4 +1,4 @@
-# GraphqlClient 负责发 HTTP 请求
+# GraphqlClient 负责发 GraphQL 请求 (其实就是 HTTP POST)
 # 必须要这个是因为发请求要带上 'x-authing-userpool-id' 和 'x-authing-app-id 等 Header
 # 模仿的是: 
 # https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/common/GraphqlClient.ts#L6
@@ -29,6 +29,7 @@ module AuthingRuby
         end
 
         json = options.fetch(:json, nil)
+        # puts "@endpoint 是 #{@endpoint}"
         response = HTTP.headers(headers).post(@endpoint, json: json)
         return response.body.to_s
       end
