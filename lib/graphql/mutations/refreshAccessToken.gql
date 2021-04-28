@@ -1,0 +1,7 @@
+mutation refreshAccessToken($accessToken: String){
+    refreshAccessToken(accessToken: $accessToken){
+        accessToken
+        exp
+        iat
+    }
+}

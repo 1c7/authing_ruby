@@ -10,12 +10,21 @@ module AuthingRuby
 
 		def initialize()
       @folder_graphql = "./lib/graphql"
-      @folder_graphql_mutation = "#{@folder_graphql}/mutations"
-      @folder_graphql_query = "#{@folder_graphql}/queries"
+      @folder_mutation = "#{@folder_graphql}/mutations"
+      @folder_query = "#{@folder_graphql}/queries"
 		end
 
 		def getAccessToken(garpqhlClient, variables)
-			file = File.open("#{@folder_graphql_query}/accessToken.gql");
+			file = File.open("#{@folder_query}/accessToken.gql");
+      json = {
+        "query": file.read,
+        "variables": variables,
+      }
+			return garpqhlClient.request({json: json})
+		end
+
+		def refreshAccessToken(garpqhlClient, variables)
+			file = File.open("#{@folder_mutation}/refreshAccessToken.gql");
       json = {
         "query": file.read,
         "variables": variables,
