@@ -1,6 +1,7 @@
 # 管理模块
 require './lib/management/ManagementTokenProvider.rb'
 require './lib/management/UsersManagementClient.rb'
+require './lib/management/ApplicationsManagementClient.rb'
 
 module AuthingRuby
   class ManagementClient
@@ -29,10 +30,22 @@ module AuthingRuby
         @tokenProvider,
         @publicKeyManager
       );
+
+      @applications = AuthingRuby::ApplicationsManagementClient.new(
+        options,
+        @httpClient,
+        @graphqlClient,
+        @tokenProvider,
+      );
+
     end
 
     def users
       return @users
+    end
+
+    def applications
+      return @applications
     end
     
   end
