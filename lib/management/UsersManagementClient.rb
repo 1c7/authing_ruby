@@ -109,7 +109,7 @@ module AuthingRuby
       if username == nil && email == nil && phone == nil
         throw "缺少参数, 请至少传入一个选项: username, email, phone"
       end
-      
+
       variables = {
         "username": username,
         "email": email,
@@ -119,6 +119,28 @@ module AuthingRuby
       res = graphqlAPI.isUserExists(@graphqlClient, @tokenProvider, variables)
       json = JSON.parse(res)
       return json.dig('data', "isUserExists")
+    end
+
+    # 查找用户
+    def find(options = {})
+      username = options.fetch(:username, nil)
+      email = options.fetch(:email, nil)
+      phone = options.fetch(:phone, nil)
+      externalId = options.fetch(:externalId, nil)
+      if username == nil && email == nil && phone == nil && externalId == nil
+        throw "缺少参数, 请至少传入一个选项: username, email, phone, externalId"
+      end
+
+      variables = {
+        "username": username,
+        "email": email,
+        "phone": phone,
+        "externalId": externalId,
+      }
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.findUser(@graphqlClient, @tokenProvider, variables)
+      json = JSON.parse(res)
+      return json
     end
 
     # TODO

@@ -119,4 +119,18 @@ class TestManagementClient < Minitest::Test
     # 这里就不写 assert() 了，测试的时候自己填名字人工测一下就行
   end
 
+  # 测试 查找用户
+  # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_find
+  def test_find
+    managementClient = AuthingRuby::ManagementClient.new(@options)
+    options = { 
+      "username": "bob",
+      # "email": "haha2@qq.com",
+      # "phone": "13700001111",
+    }
+    result = managementClient.users.find(options)
+    # puts result
+    assert(result.dig("data", "findUser"), result)
+  end
+
 end
