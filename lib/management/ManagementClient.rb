@@ -2,6 +2,9 @@
 require './lib/management/ManagementTokenProvider.rb'
 require './lib/management/UsersManagementClient.rb'
 require './lib/management/ApplicationsManagementClient.rb'
+require './lib/management/AclManagementClient.rb'
+require './lib/management/UserpoolManagementClient.rb'
+require './lib/management/RolesManagementClient.rb'
 
 module AuthingRuby
   class ManagementClient
@@ -38,6 +41,13 @@ module AuthingRuby
         @tokenProvider,
       );
 
+      @acl = AuthingRuby::AclManagementClient.new(
+        options,
+        @httpClient,
+        @graphqlClient,
+        @tokenProvider,
+      );
+
     end
 
     def users
@@ -46,6 +56,10 @@ module AuthingRuby
 
     def applications
       return @applications
+    end
+
+    def acl
+      return @acl
     end
     
   end

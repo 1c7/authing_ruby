@@ -77,6 +77,7 @@ class TestAuthenticationClient < Minitest::Test
   # def test_getCurrentUser
   # end
 
+  # TODO
   # 测试退出登录
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_logout
   def test_logout

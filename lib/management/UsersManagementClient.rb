@@ -151,5 +151,11 @@ module AuthingRuby
     def refreshToken
     end
 
+    # TODO
+    # 返回用户的所有角色
+    # https://docs.authing.cn/v2/guides/basics/authenticate-first-user/how-to-implement-access-control.html#%E5%9C%A8%E5%90%8E%E7%AB%AF%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E8%A7%92%E8%89%B2%E6%8E%A7%E5%88%B6%E6%9D%83%E9%99%90
+    def listRoles(user_id)
+    end
+
   end
 end
