@@ -45,7 +45,7 @@ module AuthingRuby
       file = File.open("#{@folder_graphql_mutation}/createUser.gql")
       json = {
         "query": file.read,
-				"token": @tokenProvider.getToken()
+				"token": @tokenProvider.getToken(),
         "variables": variables,
       }
       # 第三步：发请求
