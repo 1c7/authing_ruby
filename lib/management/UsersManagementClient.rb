@@ -102,7 +102,23 @@ module AuthingRuby
     end
 
     # 检查用户是否存在
-    def exists
+    def exists(options = {})
+      username = options.fetch(:username, nil)
+      email = options.fetch(:email, nil)
+      phone = options.fetch(:phone, nil)
+      if username == nil && email == nil && phone == nil
+        throw "缺少参数, 请至少传入一个选项: username, email, phone"
+      end
+      
+      variables = {
+        "username": username,
+        "email": email,
+        "phone": phone,
+      }
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.isUserExists(@graphqlClient, @tokenProvider, variables)
+      json = JSON.parse(res)
+      return json.dig('data', "isUserExists")
     end
 
     # TODO

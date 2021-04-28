@@ -63,6 +63,7 @@ class TestManagementClient < Minitest::Test
     puts res
   end
 
+  # 测试通过 ID 获取用户信息
   # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_detail
   def test_detail
     managementClient = AuthingRuby::ManagementClient.new(@options)
@@ -72,6 +73,7 @@ class TestManagementClient < Minitest::Test
     puts res
   end
   
+  # 测试删除用户
   # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_delete
   def test_delete
     managementClient = AuthingRuby::ManagementClient.new(@options)
@@ -81,6 +83,7 @@ class TestManagementClient < Minitest::Test
     # {"data":{"deleteUser":{"message":"删除成功！","code":200}}}
   end
 
+  # 测试删除多个用户
   # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_deleteMany
   def test_deleteMany
     managementClient = AuthingRuby::ManagementClient.new(@options)
@@ -90,11 +93,30 @@ class TestManagementClient < Minitest::Test
     # {"data":{"deleteUsers":{"message":"删除成功！","code":200}}}
   end
 
+  # 测试获取用户列表
   # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_list
   def test_list
     managementClient = AuthingRuby::ManagementClient.new(@options)
     res = managementClient.users.list()
     puts res
+  end
+
+  # 测试 检查用户是否存在
+  # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_exists
+  def test_exists
+    managementClient = AuthingRuby::ManagementClient.new(@options)
+    options = { 
+      "username": "bob",
+      # "email": "haha2@qq.com",
+      # "phone": "13700001111",
+    }
+    boolean = managementClient.users.exists(options)
+    if boolean
+      puts "该用户存在"
+    else
+      puts "该用户不存在"
+    end
+    # 这里就不写 assert() 了，测试的时候自己填名字人工测一下就行
   end
 
 end

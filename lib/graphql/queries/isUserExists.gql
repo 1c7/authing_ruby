@@ -1,0 +1,13 @@
+query isUserExists(
+  $email: String
+  $phone: String
+  $username: String
+  $externalId: String
+) {
+  isUserExists(
+    email: $email
+    phone: $phone
+    username: $username
+    externalId: $externalId
+  )
+}
