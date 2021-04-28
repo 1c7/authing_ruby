@@ -76,4 +76,18 @@ class TestManagementClient < Minitest::Test
     puts res
   end
 
+  # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_detail
+  def test_detail
+    options = {
+      host: 'https://core.authing.cn',
+      userPoolId: ENV["userPoolId"],
+      secret: ENV["secret"],
+    }
+    managementClient = AuthingRuby::ManagementClient.new(options)
+    user_id = "6088decdcc904f5c993d6226"
+    # user_id = '[请填写用户 id]'
+    res = managementClient.users.detail(user_id)
+    puts res
+  end
+
 end

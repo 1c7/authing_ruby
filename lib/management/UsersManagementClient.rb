@@ -13,7 +13,6 @@ module AuthingRuby
     end
 
     # 创建用户
-    # 代码参考: https://github.com/Authing/authing.js/blob/master/src/lib/management/UsersManagementClient.ts#L99
     def create(userInfo = {}, options = {})
       keepPassword = options.fetch(:keepPassword, false)
       password = userInfo.fetch(:password, nil)
@@ -35,7 +34,6 @@ module AuthingRuby
     end
 
     # 修改用户资料
-    # 代码参考 https://github.com/Authing/authing.js/blob/master/src/lib/management/UsersManagementClient.ts#L189
     def update(id, updates = {})
       # 预处理密码（如果有的话）
       password = updates.fetch(:password, nil)
@@ -55,8 +53,14 @@ module AuthingRuby
       return res
     end
 
-    # TODO
-    def detail
+    # 通过 ID 获取用户信息
+    def detail(user_id)
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      variables = {
+        "id": user_id,
+      }
+      res = graphqlAPI.user(@graphqlClient, @tokenProvider, variables)
+      return res
     end
 
     # TODO
