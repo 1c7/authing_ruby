@@ -90,4 +90,11 @@ class TestManagementClient < Minitest::Test
     # {"data":{"deleteUsers":{"message":"删除成功！","code":200}}}
   end
 
+  # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_list
+  def test_list
+    managementClient = AuthingRuby::ManagementClient.new(@options)
+    res = managementClient.users.list()
+    puts res
+  end
+
 end

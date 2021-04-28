@@ -85,14 +85,20 @@ module AuthingRuby
       # {"data":{"deleteUsers":{"message":"删除成功！","code":200}}}
     end
 
+    # 获取用户列表
+    def list(page = 1, limit = 10)
+      variables = {
+        "page": page,
+        "limit": limit,
+      }
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.users(@graphqlClient, @tokenProvider, variables)
+      return res
+    end
+
     # TODO
     # 批量获取用户
     def batch
-    end
-    
-    # TODO
-    # 获取用户列表
-    def list
     end
 
     # 检查用户是否存在
