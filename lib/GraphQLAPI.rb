@@ -42,5 +42,15 @@ module AuthingRuby
       return garpqhlClient.request({json: json, token: token});
     end
 
+    def updateUser(garpqhlClient, tokenProvider = nil, variables = nil)
+      file = File.open("#{@folder_mutation}/updateUser.gql");
+      token = tokenProvider.getToken();
+      json = {
+        "query": file.read,
+        "variables": variables,
+      }
+      return garpqhlClient.request({json: json, token: token});
+    end
+
   end
 end

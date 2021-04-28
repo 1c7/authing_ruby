@@ -34,27 +34,25 @@ module AuthingRuby
       return res
     end
 
-    # 这是干嘛？
-    # 发了一个 GraphQL 请求
-    # TODO
-    # export const createUser = async (
-    # 	garpqhlClient: GraphqlClient,
-    # 	tokenProvider: ManagementTokenProvider | AuthenticationTokenProvider,
-    # 	variables: CreateUserVariables
-    # ): Promise<CreateUserResponse> => {
-    # 	const query = CreateUserDocument;
-    # 	const token = await tokenProvider.getToken();
-    # 	return garpqhlClient.request({
-    # 		query,
-    # 		token,
-    # 		variables
-    # 	});
-    # };
-
-    # TODO
     # 修改用户资料
     # 代码参考 https://github.com/Authing/authing.js/blob/master/src/lib/management/UsersManagementClient.ts#L189
-    def update
+    def update(id, updates = {})
+      # 预处理密码（如果有的话）
+      password = updates.fetch(:password, nil)
+      if password
+        publicKey = @publicKeyManager.getPublicKey()
+        encryptedPassword = Utils.encrypt(password, publicKey)
+        updates[:password] = encryptedPassword
+      end
+
+      # 然后再发请求
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      variables = {
+        "id": id,
+        "input": updates
+      }
+      res = graphqlAPI.updateUser(@graphqlClient, @tokenProvider, variables)
+      return res
     end
 
     # TODO

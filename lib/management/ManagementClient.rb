@@ -34,12 +34,6 @@ module AuthingRuby
     def users
       return @users
     end
-
-    # def onError(code, message)
-    #   throw { code, message }
-    # end
-
-    # 管理员创建账号
-    # https://docs.authing.cn/v2/guides/user/create-user/
+    
   end
 end
