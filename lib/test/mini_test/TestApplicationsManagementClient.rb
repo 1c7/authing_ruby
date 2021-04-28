@@ -50,7 +50,13 @@ class TestApplicationsManagementClient < Minitest::Test
   end
 
   # 获取应用详情
+  # ruby ./lib/test/mini_test/TestApplicationsManagementClient.rb -n test_findById
   def test_findById
+    appid = "60800b9151d040af9016d60b"
+    managementClient = AuthingRuby::ManagementClient.new(@options)
+    res = managementClient.applications.findById(appid)
+    json = JSON.parse(res.body)
+    assert(json["code"] == 200, res.body)
   end
 
 end

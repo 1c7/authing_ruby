@@ -65,6 +65,15 @@ module AuthingRuby
 			return result
 		end
 
+		# 获取应用详情
+		def findById(appid)
+			url = "#{@options.fetch(:host, nil)}/api/v2/applications/#{appid}"
+			result = @httpClient.request({
+				url: url,
+				method: 'GET'
+			});
+			return result
+		end
 
 	end
 end
