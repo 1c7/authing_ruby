@@ -89,5 +89,19 @@ class TestManagementClient < Minitest::Test
     res = managementClient.users.detail(user_id)
     puts res
   end
+  
+  # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_delete
+  def test_delete
+    options = {
+      host: 'https://core.authing.cn',
+      userPoolId: ENV["userPoolId"],
+      secret: ENV["secret"],
+    }
+    managementClient = AuthingRuby::ManagementClient.new(options)
+    user_id = "6088decdcc904f5c993d6226"
+    res = managementClient.users.delete(user_id)
+    puts res
+    # {"data":{"deleteUser":{"message":"删除成功！","code":200}}}
+  end
 
 end
