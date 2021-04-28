@@ -12,45 +12,26 @@ module AuthingRuby
 			@publicKeyManager = publicKeyManager
 		end
 
-		# TODO
 		# 创建用户
 		# 代码参考: https://github.com/Authing/authing.js/blob/master/src/lib/management/UsersManagementClient.ts#L99
 		def create(userInfo = {}, options = {})
 			keepPassword = options.fetch(:keepPassword, false)
 			password = userInfo.fetch(:password, nil)
+			# 先对密码进行处理
 			if password
 				publicKey = @publicKeyManager.getPublicKey()
 				encryptedPassword = Utils.encrypt(password, publicKey)
 				userInfo[:password] = encryptedPassword
 			end
-			puts userInfo
 
-			# TODO
-			# const { createUser: user } = await createUser(
-			# 	this.graphqlClient,
-			# 	this.tokenProvider,
-			# 	{
-			# 		userInfo,
-			# 		keepPassword
-			# 	}
-			# );
-			# return user;
-
-      # 第一步：构建 variables
-      variables = {
+			# 然后再发请求
+			graphqlAPI = AuthingRuby::GraphQLAPI.new
+			variables = {
 				"userInfo": userInfo,
 				"keepPassword": keepPassword,
-      }
-      # 第二步：构建 payload
-      file = File.open("#{@folder_graphql_mutation}/createUser.gql")
-      json = {
-        "query": file.read,
-				"token": @tokenProvider.getToken(),
-        "variables": variables,
-      }
-      # 第三步：发请求
-      response = @graphqlClient.request({json: json})
-      return response
+			}
+      res = graphqlAPI.createUser(@graphqlClient, @tokenProvider, variables)
+			return res
 		end
 
 		# 这是干嘛？

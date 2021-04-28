@@ -7,22 +7,20 @@ require 'dotenv' # 载入环境变量文件
 Dotenv.load('.env.test') # 你可以编辑这个文件来修改环境变量
 
 class TestManagementClient < Minitest::Test
-	
-	def setup
-	end
 
 	# 测试创建用户
-	# TODO
 	def test_users_create
 		options = {
+			host: 'https://core.authing.cn',
       userPoolId: ENV["userPoolId"],
       secret: ENV["secret"],
     }
 		managementClient = AuthingRuby::ManagementClient.new(options)
-    managementClient.users.create({
-			username: 'bob',
+    res = managementClient.users.create({
+			username: 'SpongeBob',
 			password: 'passw0rd',
 		})
+		puts res
 	end
 
 end

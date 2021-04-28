@@ -13,14 +13,14 @@ module AuthingRuby
       @accessToken = options.fetch(:accessToken, nil)
       
       if @userPoolId == nil && @appId == nil
-        throw '请提供 userPoolId 或者 appId!'
+        throw '请提供 userPoolId 或 appId!'
       end
 
       graphqlApiEndpointV2 = "#{@host}/graphql/v2"
       @graphqlClient = AuthingRuby::Common::GraphqlClient.new(graphqlApiEndpointV2, options)
       @tokenProvider = AuthingRuby::ManagementTokenProvider.new(options, @graphqlClient)
       @httpClient = AuthingRuby::Common::HttpClient.new(options, @tokenProvider)
-      @publicKeyManager = AuthingRuby::Common::PublicKeyManager.new(options, @httpClient)
+      @publicKeyManager = AuthingRuby::Common::PublicKeyManager.new(options)
 
       @users = AuthingRuby::UsersManagementClient.new(
         options,
@@ -31,7 +31,6 @@ module AuthingRuby
       );
     end
 
-    # TODO: 先做用户相关的操作
     def users
       return @users
     end

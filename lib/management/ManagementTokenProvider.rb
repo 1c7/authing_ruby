@@ -28,8 +28,8 @@ module AuthingRuby
 			end
 		end
 
-		# done
-		# 得先把这个做了, users.create 才能用
+		# 用途：获取 access token，如果没过期就直接返回缓存的版本
+		# 如果过期了就重新去获取
 		def getToken()
 			accessToken = @options.fetch(:accessToken, nil)
 			return accessToken if accessToken
@@ -43,7 +43,7 @@ module AuthingRuby
 			return _getAccessTokenFromServer();
 		end
 
-		# done
+		# 用途：发请求，从服务器获取新的 AccessToken
 		def _getAccessTokenFromServer
 			accessToken = nil;
 			secret = @options.fetch(:secret, nil)
