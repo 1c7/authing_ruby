@@ -27,6 +27,7 @@ module AuthingRuby
 			# );
 		end
 
+		# 获取应用列表
 		def list(page = 1, limit = 10)
 			data = @httpClient.request({
 				method: 'GET',

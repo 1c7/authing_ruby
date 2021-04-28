@@ -41,8 +41,12 @@ class TestApplicationsManagementClient < Minitest::Test
   end
 
   # 获取应用列表
+  # ruby ./lib/test/mini_test/TestApplicationsManagementClient.rb -n test_list
   def test_list
-    
+    managementClient = AuthingRuby::ManagementClient.new(@options)
+    res = managementClient.applications.list()
+    json = JSON.parse(res.body)
+    assert(json["code"] == 200, res.body)
   end
 
   # 获取应用详情
