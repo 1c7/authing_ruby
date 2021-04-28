@@ -39,6 +39,7 @@ module AuthingRuby
 			return data;
 		end
 
+		# 创建应用
 		def create(options = {})
 			result = @httpClient.request({
 				method: 'POST',
@@ -51,6 +52,16 @@ module AuthingRuby
 				}
 			});
 			return result;
+		end
+
+		# 删除应用
+		def delete(appid)
+			url = "#{@options.fetch(:host, nil)}/api/v2/applications/#{appid}"
+			result = @httpClient.request({
+				method: 'DELETE',
+				url: url,
+			});
+			return result
 		end
 
 

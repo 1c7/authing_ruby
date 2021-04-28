@@ -29,6 +29,22 @@
       "b": 4,
     }
   })
+
+处理返回结果
+  result = @httpClient.request({
+    method: 'POST',
+    url: "#{@options.fetch(:host, nil)}/api/v2/applications",
+    data: {
+      "name": options.fetch(:name, nil),
+      "identifier": options.fetch(:identifier, nil),
+      "redirectUris": options.fetch(:redirectUris, nil),
+      "logo": options.fetch(:logo, nil),
+    }
+  });
+  return result; # #<Faraday::Response:0x00007fcfce0ce450>
+  return result.body # 这个才是返回, 不过是 String 类型
+  JSON.parse(result.body)
+
 =end
 
 require './lib/version.rb';
