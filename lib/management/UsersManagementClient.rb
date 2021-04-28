@@ -74,8 +74,15 @@ module AuthingRuby
       # {"data":{"deleteUser":{"message":"删除成功！","code":200}}}
     end
 
-    # TODO
-    def deleteMany(userIds = [])
+    # 批量删除用户
+    def deleteMany(user_ids = [])
+      variables = {
+        "ids": user_ids,
+      }
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.deleteUsers(@graphqlClient, @tokenProvider, variables)
+      return res
+      # {"data":{"deleteUsers":{"message":"删除成功！","code":200}}}
     end
 
     # TODO

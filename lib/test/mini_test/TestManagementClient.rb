@@ -7,15 +7,17 @@ require 'dotenv' # 载入环境变量文件
 Dotenv.load('.env.test') # 你可以编辑这个文件来修改环境变量
 
 class TestManagementClient < Minitest::Test
-
-  # 创建用户
-  def test_users_create
-    options = {
+  def setup
+    @options = {
       host: 'https://core.authing.cn',
       userPoolId: ENV["userPoolId"],
       secret: ENV["secret"],
     }
-    managementClient = AuthingRuby::ManagementClient.new(options)
+  end
+
+  # 创建用户
+  def test_users_create
+    managementClient = AuthingRuby::ManagementClient.new(@options)
     res = managementClient.users.create({
       username: 'SpongeBob',
       password: 'passw0rd',
@@ -26,12 +28,7 @@ class TestManagementClient < Minitest::Test
   # 创建用户
   # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_user_create_2
   def test_user_create_2
-    options = {
-      host: 'https://core.authing.cn',
-      userPoolId: ENV["userPoolId"],
-      secret: ENV["secret"],
-    }
-    managementClient = AuthingRuby::ManagementClient.new(options)
+    managementClient = AuthingRuby::ManagementClient.new(@options)
     res = managementClient.users.create({
       nickname: 'Nick Water',
       phone: '176xxxx6754', # 由于是管理员操作，所以不需要检验手机号验证码, 如果你需要检验，请使用  AuthenticationClient
@@ -44,12 +41,7 @@ class TestManagementClient < Minitest::Test
   # 更新用户
   # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_update_user
   def test_update_user
-    options = {
-      host: 'https://core.authing.cn',
-      userPoolId: ENV["userPoolId"],
-      secret: ENV["secret"],
-    }
-    managementClient = AuthingRuby::ManagementClient.new(options)
+    managementClient = AuthingRuby::ManagementClient.new(@options)
     user_id = "6088decdcc904f5c993d6226"
     # user_id = '[请填写用户 id]'
     res = managementClient.users.update(user_id, {
@@ -61,12 +53,7 @@ class TestManagementClient < Minitest::Test
   # 更新用户
   # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_update_user_2
   def test_update_user_2
-    options = {
-      host: 'https://core.authing.cn',
-      userPoolId: ENV["userPoolId"],
-      secret: ENV["secret"],
-    }
-    managementClient = AuthingRuby::ManagementClient.new(options)
+    managementClient = AuthingRuby::ManagementClient.new(@options)
     user_id = "6088decdcc904f5c993d6226"
     # user_id = '[请填写用户 id]'
     res = managementClient.users.update(user_id, {
@@ -78,12 +65,7 @@ class TestManagementClient < Minitest::Test
 
   # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_detail
   def test_detail
-    options = {
-      host: 'https://core.authing.cn',
-      userPoolId: ENV["userPoolId"],
-      secret: ENV["secret"],
-    }
-    managementClient = AuthingRuby::ManagementClient.new(options)
+    managementClient = AuthingRuby::ManagementClient.new(@options)
     user_id = "6088decdcc904f5c993d6226"
     # user_id = '[请填写用户 id]'
     res = managementClient.users.detail(user_id)
@@ -92,16 +74,20 @@ class TestManagementClient < Minitest::Test
   
   # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_delete
   def test_delete
-    options = {
-      host: 'https://core.authing.cn',
-      userPoolId: ENV["userPoolId"],
-      secret: ENV["secret"],
-    }
-    managementClient = AuthingRuby::ManagementClient.new(options)
+    managementClient = AuthingRuby::ManagementClient.new(@options)
     user_id = "6088decdcc904f5c993d6226"
     res = managementClient.users.delete(user_id)
     puts res
     # {"data":{"deleteUser":{"message":"删除成功！","code":200}}}
+  end
+
+  # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_deleteMany
+  def test_deleteMany
+    managementClient = AuthingRuby::ManagementClient.new(@options)
+    user_ids = ["6088dd92940121678457ca76", "6083fd304bed72c74b8e3c49"]
+    res = managementClient.users.deleteMany(user_ids)
+    puts res
+    # {"data":{"deleteUsers":{"message":"删除成功！","code":200}}}
   end
 
 end
