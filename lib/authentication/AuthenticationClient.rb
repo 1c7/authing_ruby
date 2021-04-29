@@ -517,7 +517,7 @@ module AuthingRuby
 
     # 修改用户资料
     def updateProfile(updates = {})
-      userId = checkLoggedIn();
+      userId = checkLoggedIn()
       graphqlAPI = AuthingRuby::GraphQLAPI.new
       variables = {
         "id": userId,
@@ -527,24 +527,29 @@ module AuthingRuby
       json = JSON.parse(res)
       updated_user = json.dig('data', 'updateUser')
       if updated_user
+        # 如果更新成功，返回更新后的用户
         setCurrentUser(updated_user)
         return updated_user
       else
+        # 如果更新失败，返回原结果
+        # {"errors"=>[{"message"=>{"code"=>2020, "message"=>"尚未登录，无访问权限"}, "locations"=>[{"line"=>2, "column"=>3}], "path"=>["updateUser"], "extensions"=>{"code"=>"INTERNAL_SERVER_ERROR"}}], "data"=>nil}
         return json
       end
     end
 
+    # checkLoggedIn 解释: 
     # 如果登录了，会返回唯一 id (userId)
     # 如果没登录，会抛出错误
+    # 注意: 如果 logout 了再次调用 checkLoggedIn 会报错
     def checkLoggedIn()
       # 有 user 就直接返回 id
-      user = @tokenProvider.getUser();
+      user = @tokenProvider.getUser()
       if user
         return user.fetch("id", nil) # 608966b08b4af522620d2e59
       end
   
-      # 试着获取 token
-      token = @tokenProvider.getToken();
+      # 尝试获取 token
+      token = @tokenProvider.getToken()
       if !token
         throw '请先登录！'
       end
