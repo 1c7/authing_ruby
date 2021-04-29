@@ -18,14 +18,24 @@ Dotenv.load('.env.test')
 
 class TestSMSandEmail < Minitest::Test
 	def setup
-    options = {
+    # 新建一个用户侧的
+    authenticationClient_options = {
       appHost: ENV["appHost"], # "https://rails-demo.authing.cn", 
       appId: ENV["appId"], # "60800b9151d040af9016d60b"
     }
-    @authenticationClient = AuthingRuby::AuthenticationClient.new(options)
+    @authenticationClient = AuthingRuby::AuthenticationClient.new(authenticationClient_options)
+
+    # 新建一个管理侧的
+    managementClient_options = {
+      host: 'https://core.authing.cn',
+      userPoolId: ENV["userPoolId"],
+      secret: ENV["secret"],
+    }
+    @managementClient = AuthingRuby::ManagementClient.new(managementClient_options)
+
     @helper = Test::Helper.new
 
-    @phone = '13556136684' # 测发短信的时候可能需要改一下这里
+    @phone = '13556136684' # 测发短信时需要改一下这里, 填你自己的手机号，这样才能收到短信
   end
 
   # 手动发送短信
@@ -39,11 +49,17 @@ class TestSMSandEmail < Minitest::Test
   # 通过短信验证码重置密码
   # ruby ./lib/test/mini_test/TestSMSandEmail.rb -n test_resetPasswordByPhoneCode
   def test_resetPasswordByPhoneCode
-    phone = @phone
-    code = '7326' # 记得先发验证码
-    newPassword = '123456789'
-    res = @authenticationClient.resetPasswordByPhoneCode(phone, code, newPassword)
-		assert(res.dig("code") == 200, res)
+    # 前提条件：先确保有一个用户是自己的手机号，可以直接进 Authing 手工新建一个用户。
+
+    phone = @phone # 手机号
+    phoneCode = nil # 先保持为 nil 运行一次, 触发 manual_send_SMS 发个短信，然后自己填一下 phoneCode 为手机短信收到的验证码
+    if phoneCode == nil
+      manual_send_SMS(phone)
+    else
+      newPassword = '123456789'
+      res = @authenticationClient.resetPasswordByPhoneCode(phone, phoneCode, newPassword)
+      assert(res.dig("code") == 200, res)
+    end
     # 如果成功
     # {"message":"重置密码成功！","code":200}
 
@@ -60,23 +76,27 @@ class TestSMSandEmail < Minitest::Test
     # 第一步：用户名注册用户
     username = "test_bindPhone_#{@helper.randomString()}"
     password = "123456789"
-    @authenticationClient.registerByUsername(username, password)
+    user = @authenticationClient.registerByUsername(username, password)
 
     # 第二步：登录用户
     @authenticationClient.loginByUsername(username, password)
 
     # 第三步
-    phoneCode = "8760" # 自己填一下这里
+    phoneCode = nil # 先保持为 nil 运行一次, 触发 manual_send_SMS 发个短信，然后自己填一下 phoneCode 为手机短信收到的验证码
     if phoneCode == nil
       manual_send_SMS(@phone)
     else
       res = @authenticationClient.bindPhone(@phone, phoneCode)
-      puts res
-      # 错误情况
-      # {"errors":[{"message":{"code":500,"message":"该手机号已被绑定"},"locations":[{"line":2,"column":3}],"path":["bindPhone"],"extensions":{"code":"INTERNAL_SERVER_ERROR"}}],"data":null}
-
       assert(res.dig('id') != nil)
+
+      # 错误情况
+      # puts res
+      # {"errors":[{"message":{"code":500,"message":"该手机号已被绑定"},"locations":[{"line":2,"column":3}],"path":["bindPhone"],"extensions":{"code":"INTERNAL_SERVER_ERROR"}}],"data":null}
     end
+
+    # 清理工作：测完了删除第一步注册的用户
+    user_id = user['id']
+    @managementClient.users.delete(user_id)
   end 
 
 end

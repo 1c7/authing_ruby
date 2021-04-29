@@ -628,7 +628,7 @@ module AuthingRuby
         setCurrentUser(user);
         return user;
       else
-        return res
+        return json
       end
     end
 

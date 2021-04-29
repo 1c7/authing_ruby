@@ -13,7 +13,7 @@ module AuthingRuby
       @userPoolId = options.fetch(:userPoolId, nil)
       @secret = options.fetch(:secret, nil)
       @appId = options.fetch(:appId, nil)
-      @host = options.fetch(:host, nil) # TODO
+      @host = options.fetch(:host, nil)
       @accessToken = options.fetch(:accessToken, nil)
       
       if @userPoolId == nil && @appId == nil
