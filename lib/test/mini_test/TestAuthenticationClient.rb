@@ -77,12 +77,11 @@ class TestAuthenticationClient < Minitest::Test
   # def test_getCurrentUser
   # end
 
-  # TODO
   # 测试退出登录
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_logout
   def test_logout
     # 如何测试?
-    # 1. 先登录, 用身份去做一些事情 （比如修改 username 改个名字）
+    # 1. 先登录, 用身份去做一些事情 （比如修改 nickname）
     # 2. 再登出, 做同样的事情，但是这次会失败
 
     # 注册+登录
@@ -93,18 +92,17 @@ class TestAuthenticationClient < Minitest::Test
 
     # 更新用户信息  
     res1 = @authenticationClient.updateProfile({
-      nickname: '昵称-1'
+      nickname: '昵称修改-这次会成功'
     })
 
     # 退出登录
     @authenticationClient.logout()
 
+    # 更新用户信息
     res2 = @authenticationClient.updateProfile({
-      nickname: '昵称-2'
+      nickname: '昵称-这次会失败'
     })
-
     puts res2
-
   end
 
   # 测试: 修改用户资料

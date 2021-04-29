@@ -22,7 +22,7 @@ module AuthingRuby
       # tokenProvider 只是存取一下 user 和 token
       @tokenProvider = Authentication::AuthenticationTokenProvider.new()
 
-      # @httpClient = HttpClient
+      @httpClient = AuthingRuby::Common::HttpClient.new(options, @tokenProvider)
 
       # 把 GraphQL 文件夹路径放这里, 这些是私有变量
       @folder_graphql = "./lib/graphql"
@@ -329,7 +329,6 @@ module AuthingRuby
     # end
 
     # 退出登录
-    # TODO
     def logout()
       url = "#{@appHost}/api/v2/logout?app_id=#{@appId}"
       @httpClient.request({
@@ -527,28 +526,34 @@ module AuthingRuby
       res = graphqlAPI.updateUser(@graphqlClient, @tokenProvider, variables)
       json = JSON.parse(res)
       updated_user = json.dig('data', 'updateUser')
-      setCurrentUser(updated_user)
-      return updated_user
+      if updated_user
+        setCurrentUser(updated_user)
+        return updated_user
+      else
+        return json
+      end
     end
 
-    # 1. 看一下哪些地方在用这个方法
+    # 如果登录了，会返回唯一 id (userId)
+    # 如果没登录，会抛出错误
     def checkLoggedIn()
+      # 有 user 就直接返回 id
       user = @tokenProvider.getUser();
-  
       if user
-        # puts "有用户 #{user}"
-        return user.fetch("id", nil)
-        # 608966b08b4af522620d2e59
+        return user.fetch("id", nil) # 608966b08b4af522620d2e59
       end
   
+      # 试着获取 token
       token = @tokenProvider.getToken();
       if !token
         throw '请先登录！'
       end
 
+      # 解码 token
       decoded_token_array = JWT.decode token, nil, false
       payload = decoded_token_array[0]
 
+      # 从 token 中获取 user_id 并返回
       userId = nil
       authing_sub = payload.fetch("sub", nil)
       id = payload.dig("data", "id")
