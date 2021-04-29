@@ -531,7 +531,6 @@ module AuthingRuby
       return updated_user
     end
 
-    # TODO
     # 1. 看一下哪些地方在用这个方法
     def checkLoggedIn()
       user = @tokenProvider.getUser();

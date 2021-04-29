@@ -90,14 +90,21 @@ class TestAuthenticationClient < Minitest::Test
     password = "123456789"
     @authenticationClient.registerByUsername(username, password)
     @authenticationClient.loginByUsername(username, password)
-    # userID = @authenticationClient.checkLoggedIn()
-    # puts userID
 
     # 更新用户信息  
-    res = @authenticationClient.updateProfile({
-      nickname: 'Nick-2021-4-29 第一次'
+    res1 = @authenticationClient.updateProfile({
+      nickname: '昵称-1'
     })
-    puts res
+
+    # 退出登录
+    @authenticationClient.logout()
+
+    res2 = @authenticationClient.updateProfile({
+      nickname: '昵称-2'
+    })
+
+    puts res2
+
   end
 
   # 测试: 修改用户资料
