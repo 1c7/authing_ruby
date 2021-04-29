@@ -559,7 +559,7 @@ module AuthingRuby
       # 尝试获取 token
       token = @tokenProvider.getToken()
       if !token
-        throw '请先登录！' # 例子: 如果 logout 了再次调用 checkLoggedIn 会报错，就是这里报错
+        raise '请先登录!' # 例子: 如果 logout 了再次调用 checkLoggedIn 会报错，就是这里报错
       end
 
       # 解码 token

@@ -87,7 +87,6 @@ class TestAuthenticationClient < Minitest::Test
     assert(user.dig("id"), user)
   end
 
-  # TODO: 补上 assert()
   # 测试退出登录
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_logout
   def test_logout
@@ -110,35 +109,45 @@ class TestAuthenticationClient < Minitest::Test
     @authenticationClient.logout()
 
     # 更新用户信息
-    res2 = @authenticationClient.updateProfile({
-      nickname: '昵称-这次会失败'
-    })
-    puts res2
+    begin
+      res2 = @authenticationClient.updateProfile({
+        nickname: '昵称-这次会失败'
+      })
+      puts res2
+    rescue => e
+      assert(e.message == '请先登录!')
+    end
   end
 
-  # TODO: 补上 assert()
   # 测试: 修改用户资料
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_updateProfile
   def test_updateProfile
+    # 先登录
     username = 'zhengcheng123'
     password = "123456789"
     @authenticationClient.loginByUsername(username, password)
-    res = @authenticationClient.updateProfile({
+
+    # 进行第一次修改
+    @authenticationClient.updateProfile({
       nickname: '第一次修改'
     })
-    res = @authenticationClient.updateProfile({
-      nickname: '第二次修改'
+
+    # 进行第二次修改
+    nickname = '第二次修改'
+    user = @authenticationClient.updateProfile({
+      nickname: nickname
     })
-    puts res
+    user_nickname = user.dig('nickname')
+    assert(user_nickname == nickname)
   end
 
-  # TODO: 补上 assert()
   # 测试: 检查密码强度
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_checkPasswordStrength
+  # 注意, 在 Authing 用户池里 -> "扩展能力" -> "自定义密码加密"，选的是 "用户可使用任意非空字符串作为密码"
   def test_checkPasswordStrength
     password = "123"
     r = @authenticationClient.checkPasswordStrength(password)
-    puts r
+    assert(r['valid'], r)
 
     # 默认情况下：用户可使用任意非空字符串作为密码，返回是
     # {"valid"=>true, "message"=>"密码验证成功"}
@@ -149,8 +158,8 @@ class TestAuthenticationClient < Minitest::Test
     # 如果传递一个空字符串
     password = ""
     r = @authenticationClient.checkPasswordStrength(password)
-    puts r
     # {"valid"=>false, "message"=>"请输入密码"}
+    assert(r['valid'] == false, r)
   end
 
   # 测试: 更新用户密码
@@ -200,7 +209,6 @@ class TestAuthenticationClient < Minitest::Test
   def test_unbindEmail
   end
 
-  # TODO: 补上 assert()
   # 测试: 检测 Token 登录状态
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_checkLoginStatus
   def test_checkLoginStatus
@@ -208,21 +216,22 @@ class TestAuthenticationClient < Minitest::Test
     username = 'zhengcheng123'
     password = "123456789"
     user = @authenticationClient.loginByUsername(username, password)
-    json = JSON.parse(user)
-    token = json.dig('data', 'loginByUsername', "token")
+    token = user.dig("token")
 
     # 第二步：检测 Token 登录状态
     result1 = @authenticationClient.checkLoginStatus(token)
-    puts result1
+    # puts result1
     # {"code"=>200, "message"=>"已登录", "status"=>true, "exp"=>1620911894, "iat"=>1619702294, "data"=>{"id"=>"608966b08b4af522620d2e59", "userPoolId"=>"60800b8ee5b66b23128b4980", "arn"=>nil}
+    assert(result1['code'] == 200, result1)
 
     # 第三步：登出
     @authenticationClient.logout()
 
     # 第四步：再次检测
     result2 = @authenticationClient.checkLoginStatus(token)
-    puts result2
-    # "code"=>2206, "message"=>"登录信息已过期", "status"=>false, "exp"=>nil, "iat"=>nil, "data"=>nil}
+    # puts result2
+    # {"code"=>2206, "message"=>"登录信息已过期", "status"=>false, "exp"=>nil, "iat"=>nil, "data"=>nil}
+    assert(result2['code'] == 2206, result2)
   end
   
 end
