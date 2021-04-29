@@ -650,6 +650,10 @@ module AuthingRuby
       return json
     end
 
+    # TODO
+    def generateCodeChallenge()
+    end
+
 
   end
 end

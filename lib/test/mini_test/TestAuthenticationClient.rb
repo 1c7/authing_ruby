@@ -1,13 +1,12 @@
-# http://docs.seattlerb.org/minitest/
-# 如何运行 ruby ./lib/test/mini_test/TestAuthenticationClient.rb
+# 测试内容: 用户认证模块-认证核心模块
+# 如何运行: ruby ./lib/test/mini_test/TestAuthenticationClient.rb
 
 require "minitest/autorun" # Minitest
 require "./lib/authing_ruby.rb" # 模块主文件
-require "./lib/test/helper.rb" # 模块主文件
-require 'dotenv' # 载入环境变量文件
-
+require "./lib/test/helper.rb"
+require 'dotenv'
 Dotenv.load('.env.test') # 你可以编辑这个文件来修改环境变量
-# 不要用 staging 或 production 的用户池来测试，新建一个用户池专门做测试，因为测试期间会注册随机名字的用户
+# 备注: 不要用 staging 或 production 环境的用户池来测试，新建一个用户池专门做测试，因为测试期间会注册随机名字的用户
 
 class TestAuthenticationClient < Minitest::Test
   def setup
