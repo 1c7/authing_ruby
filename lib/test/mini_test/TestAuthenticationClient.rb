@@ -120,6 +120,26 @@ class TestAuthenticationClient < Minitest::Test
     puts res
   end
 
+  # 测试: 检查密码强度
+  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_checkPasswordStrength
+  def test_checkPasswordStrength
+    password = "123"
+    r = @authenticationClient.checkPasswordStrength(password)
+    puts r
+
+    # 默认情况下：用户可使用任意非空字符串作为密码，返回是
+    # {"data"=>{"checkPasswordStrength"=>{"valid"=>true, "message"=>"密码验证成功"}}}
+    
+    # 如果修改为：用户须使用至少 6 位字符作为密码，返回是：
+    # {"data"=>{"checkPasswordStrength"=>{"valid"=>false, "message"=>"密码长度不能少于 6 位"}}}
+
+    # 如果传递一个空字符串
+    password = ""
+    r = @authenticationClient.checkPasswordStrength(password)
+    puts r
+    # {"data"=>{"checkPasswordStrength"=>{"valid"=>false, "message"=>"请输入密码"}}}
+  end
+
   # 测试: 更新用户密码
   def test_updatePassword
   end

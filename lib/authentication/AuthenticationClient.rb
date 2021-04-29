@@ -540,7 +540,6 @@ module AuthingRuby
     # checkLoggedIn 解释: 
     # 如果登录了，会返回唯一 id (userId)
     # 如果没登录，会抛出错误
-    # 注意: 如果 logout 了再次调用 checkLoggedIn 会报错
     def checkLoggedIn()
       # 有 user 就直接返回 id
       user = @tokenProvider.getUser()
@@ -551,7 +550,7 @@ module AuthingRuby
       # 尝试获取 token
       token = @tokenProvider.getToken()
       if !token
-        throw '请先登录！'
+        throw '请先登录！' # 例子: 如果 logout 了再次调用 checkLoggedIn 会报错，就是这里报错
       end
 
       # 解码 token
@@ -570,6 +569,15 @@ module AuthingRuby
       end
 
       return userId
+    end
+
+    # 检查密码强度
+    def checkPasswordStrength(password)
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      variables = { "password": password }
+      res = graphqlAPI.checkPasswordStrength(@graphqlClient, @tokenProvider, variables)
+      json = JSON.parse(res)
+      return json
     end
 
   end

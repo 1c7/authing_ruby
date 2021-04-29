@@ -112,5 +112,16 @@ module AuthingRuby
       return garpqhlClient.request({json: json, token: token});
     end
 
+    # 检查密码强度
+    def checkPasswordStrength(garpqhlClient, tokenProvider = nil, variables = nil)
+      file = File.open("#{@folder_query}/checkPasswordStrength.gql");
+      token = tokenProvider.getToken();
+      json = {
+        "query": file.read,
+        "variables": variables,
+      };
+      return garpqhlClient.request({json: json, token: token});
+    end
+
   end
 end
