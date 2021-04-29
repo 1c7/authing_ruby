@@ -299,9 +299,7 @@ module AuthingRuby
     end
 
     # 获取当前登录的用户信息
-    # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
-    # a.loginByUsername('agoodob', "123456789")
-    # a.getCurrentUser()
+    # 返回：用户信息
     def getCurrentUser()
       file = File.open("#{@folder_graphql_query}/user.gql")
       json = {
@@ -311,8 +309,9 @@ module AuthingRuby
       # 第三步：发请求
       response = @graphqlClient.request({json: json, token: token})
       json = JSON.parse(response)
-      setCurrentUser(json['data']['user'])
-      return response
+      user = json.dig("data", "user")
+      setCurrentUser(user)
+      return user
     end
 
     def setCurrentUser(user)
@@ -602,6 +601,11 @@ module AuthingRuby
       res = graphqlAPI.updatePassword(@graphqlClient, @tokenProvider, variables)
       json = JSON.parse(res)
       return json.dig("data", "updatePassword")
+    end
+
+    # 绑定手机号
+    # 用户初次绑定手机号，如果需要修改手机号请使用 updatePhone 方法。如果该手机号已被绑定，将会绑定失败。发送验证码请使用 sendSmsCode 方法。
+    def bindPhone(phone, phoneCode)
     end
 
   end

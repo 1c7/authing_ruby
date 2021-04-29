@@ -74,8 +74,18 @@ class TestAuthenticationClient < Minitest::Test
   # end
 
   # 测试获取当前用户
-  # def test_getCurrentUser
-  # end
+  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_getCurrentUser
+  def test_getCurrentUser
+    # 注册+登录
+    username = "test_getCurrentUser_#{@helper.randomString()}"
+    password = "123456789"
+    @authenticationClient.registerByUsername(username, password)
+    @authenticationClient.loginByUsername(username, password)
+
+    # 获取用户信息
+    user = @authenticationClient.getCurrentUser()
+    assert(user.dig("id"), user)
+  end
 
   # 测试退出登录
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_logout
