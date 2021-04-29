@@ -577,7 +577,16 @@ module AuthingRuby
       variables = { "password": password }
       res = graphqlAPI.checkPasswordStrength(@graphqlClient, @tokenProvider, variables)
       json = JSON.parse(res)
-      return json
+      return json.dig("data", "checkPasswordStrength")
+    end
+
+    # 检测 Token 登录状态
+    def checkLoginStatus(token)
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      variables = { "token": token }
+      res = graphqlAPI.checkLoginStatus(@graphqlClient, @tokenProvider, variables)
+      json = JSON.parse(res)
+      return json.dig("data", "checkLoginStatus")
     end
 
   end

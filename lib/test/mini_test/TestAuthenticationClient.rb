@@ -128,16 +128,16 @@ class TestAuthenticationClient < Minitest::Test
     puts r
 
     # 默认情况下：用户可使用任意非空字符串作为密码，返回是
-    # {"data"=>{"checkPasswordStrength"=>{"valid"=>true, "message"=>"密码验证成功"}}}
+    # {"valid"=>true, "message"=>"密码验证成功"}
     
     # 如果修改为：用户须使用至少 6 位字符作为密码，返回是：
-    # {"data"=>{"checkPasswordStrength"=>{"valid"=>false, "message"=>"密码长度不能少于 6 位"}}}
+    # {"valid"=>false, "message"=>"密码长度不能少于 6 位"}
 
     # 如果传递一个空字符串
     password = ""
     r = @authenticationClient.checkPasswordStrength(password)
     puts r
-    # {"data"=>{"checkPasswordStrength"=>{"valid"=>false, "message"=>"请输入密码"}}}
+    # {"valid"=>false, "message"=>"请输入密码"}
   end
 
   # 测试: 更新用户密码
@@ -164,8 +164,28 @@ class TestAuthenticationClient < Minitest::Test
   def test_unbindEmail
   end
 
-  # 检测 Token 登录状态
+  # 测试: 检测 Token 登录状态
+  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_checkLoginStatus
   def test_checkLoginStatus
+    # 第一步：先登录然后获取 token
+    username = 'zhengcheng123'
+    password = "123456789"
+    user = @authenticationClient.loginByUsername(username, password)
+    json = JSON.parse(user)
+    token = json.dig('data', 'loginByUsername', "token")
+
+    # 第二步：检测 Token 登录状态
+    result1 = @authenticationClient.checkLoginStatus(token)
+    puts result1
+    # {"code"=>200, "message"=>"已登录", "status"=>true, "exp"=>1620911894, "iat"=>1619702294, "data"=>{"id"=>"608966b08b4af522620d2e59", "userPoolId"=>"60800b8ee5b66b23128b4980", "arn"=>nil}
+
+    # 第三步：登出
+    @authenticationClient.logout()
+
+    # 第四步：再次检测
+    result2 = @authenticationClient.checkLoginStatus(token)
+    puts result2
+    # "code"=>2206, "message"=>"登录信息已过期", "status"=>false, "exp"=>nil, "iat"=>nil, "data"=>nil}
   end
   
 end

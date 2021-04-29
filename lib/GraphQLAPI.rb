@@ -123,5 +123,17 @@ module AuthingRuby
       return garpqhlClient.request({json: json, token: token});
     end
 
+    # 检测 Token 登录状态
+    def checkLoginStatus(garpqhlClient, tokenProvider = nil, variables = nil)
+      file = File.open("#{@folder_query}/checkLoginStatus.gql");
+      token = tokenProvider.getToken();
+      json = {
+        "query": file.read,
+        "variables": variables,
+      };
+      return garpqhlClient.request({json: json, token: token});
+    end
+
+    
   end
 end
