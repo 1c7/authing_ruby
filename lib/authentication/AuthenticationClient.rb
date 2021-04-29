@@ -608,5 +608,24 @@ module AuthingRuby
     def bindPhone(phone, phoneCode)
     end
 
+    # 通过短信验证码重置密码
+    def resetPasswordByPhoneCode(phone, code, newPassword)
+      publicKey = @publicKeyManager.getPublicKey()
+      newPasswordEncrypted = Utils.encrypt(newPassword, publicKey)
+
+      variables = {
+        "phone": phone,
+        "code": code,
+        "newPassword": newPasswordEncrypted,
+      }
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      resp = graphqlAPI.resetPassword(@graphqlClient, @tokenProvider, variables)
+      json = JSON.parse(resp)
+      result = json.dig("data", "resetPassword") # {"message":"重置密码成功！","code":200}
+      return result if result
+      return json
+    end
+
+
   end
 end

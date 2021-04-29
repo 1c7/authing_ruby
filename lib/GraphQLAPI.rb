@@ -111,6 +111,11 @@ module AuthingRuby
       return _graphql_mutation_request("updatePassword", garpqhlClient, tokenProvider, variables)
     end
 
+    # 重置密码
+    def resetPassword(garpqhlClient, tokenProvider = nil, variables = nil)
+      return _graphql_mutation_request("resetPassword", garpqhlClient, tokenProvider, variables)
+    end
+
     # 太多同样写法的 method 了，稍微抽象一下
     # 这个负责发 mutation 的 request
     def _graphql_mutation_request(gql_file_name, garpqhlClient, tokenProvider, variables)
