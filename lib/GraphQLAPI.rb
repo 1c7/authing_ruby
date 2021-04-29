@@ -15,71 +15,31 @@ module AuthingRuby
     end
 
     def getAccessToken(garpqhlClient, variables)
-      file = File.open("#{@folder_query}/accessToken.gql");
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      return garpqhlClient.request({json: json})
+      return _graphql_query_request("accessToken", garpqhlClient, nil, variables)
     end
 
     def refreshAccessToken(garpqhlClient, variables)
-      file = File.open("#{@folder_mutation}/refreshAccessToken.gql");
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      return garpqhlClient.request({json: json})
+      return _graphql_mutation_request("refreshAccessToken", garpqhlClient, nil, variables)
     end
 
     def createUser(garpqhlClient, tokenProvider = nil, variables = nil)
-      file = File.open("#{@folder_mutation}/createUser.gql");
-      token = tokenProvider.getToken();
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      return garpqhlClient.request({json: json, token: token});
+      return _graphql_mutation_request("createUser", garpqhlClient, tokenProvider, variables)
     end
 
     def updateUser(garpqhlClient, tokenProvider = nil, variables = nil)
-      file = File.open("#{@folder_mutation}/updateUser.gql");
-      token = tokenProvider.getToken();
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      return garpqhlClient.request({json: json, token: token});
+      return _graphql_mutation_request("updateUser", garpqhlClient, tokenProvider, variables)
     end
 
     def user(garpqhlClient, tokenProvider = nil, variables = nil)
-      file = File.open("#{@folder_query}/user.gql");
-      token = tokenProvider.getToken();
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      return garpqhlClient.request({json: json, token: token});
+      return _graphql_query_request("user", garpqhlClient, tokenProvider, variables)
     end
 
     def deleteUser(garpqhlClient, tokenProvider = nil, variables = nil)
-      file = File.open("#{@folder_mutation}/deleteUser.gql");
-      token = tokenProvider.getToken();
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      return garpqhlClient.request({json: json, token: token});
+      return _graphql_mutation_request("deleteUser", garpqhlClient, tokenProvider, variables)
     end
 
     def deleteUsers(garpqhlClient, tokenProvider = nil, variables = nil)
-      file = File.open("#{@folder_mutation}/deleteUsers.gql");
-      token = tokenProvider.getToken();
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      return garpqhlClient.request({json: json, token: token});
+      return _graphql_mutation_request("deleteUsers", garpqhlClient, tokenProvider, variables)
     end
 
     def users(garpqhlClient, tokenProvider = nil, variables = nil);
@@ -129,13 +89,22 @@ module AuthingRuby
       return _graphql_request(file, garpqhlClient, tokenProvider, variables)
     end
 
-    def _graphql_request(file, garpqhlClient, tokenProvider, variables)
-      token = tokenProvider.getToken();
+    def _graphql_request(file, garpqhlClient, tokenProvider = nil, variables)
       json = {
         "query": file.read,
         "variables": variables,
       }
-      return garpqhlClient.request({json: json, token: token});
+      request_params = {
+        json: json
+      }
+      
+      # 如果有 token 
+      if tokenProvider != nil
+        token = tokenProvider.getToken();
+        request_params[:token] = token if token
+      end
+
+      return garpqhlClient.request(request_params);
     end
     
   end

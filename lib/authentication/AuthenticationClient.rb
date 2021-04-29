@@ -63,7 +63,10 @@ module AuthingRuby
       }
       # 第三步：发请求
       response = @graphqlClient.request({json: json})
-      return response
+      json = JSON.parse(response)
+      user = json.dig("data", "registerByEmail")
+      return user if user
+      return json
     end
 
     # 使用用户名注册
@@ -94,7 +97,10 @@ module AuthingRuby
       }
       # 第三步：发请求
       response = @graphqlClient.request({json: json})
-      return response
+      json = JSON.parse(response)
+      user = json.dig("data", "registerByUsername")
+      return user if user
+      return json
     end
 
     # 发送短信验证码
@@ -170,10 +176,12 @@ module AuthingRuby
 
       # 第四步：把结果存起来
       json = JSON.parse(response)
-      user = json['data']['loginByEmail']
-      setCurrentUser(user);
-
-      return response
+      user = json.dig('data', 'loginByEmail')
+      if user
+        setCurrentUser(user);
+        return user
+      end
+      return json
     end
 
     # 使用用户名登录
@@ -204,10 +212,12 @@ module AuthingRuby
 
       # 第四步：把结果存起来
       json = JSON.parse(response)
-      user = json['data']['loginByUsername']
-      setCurrentUser(user);
-
-      return response
+      user = json.dig('data', 'loginByUsername')
+      if user
+        setCurrentUser(user);
+        return user
+      end
+      return json
     end
 
     # 使用手机号验证码登录

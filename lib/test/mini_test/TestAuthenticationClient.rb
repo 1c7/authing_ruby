@@ -20,53 +20,53 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试邮箱+密码注册
+  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_registerByEmail
   def test_registerByEmail
     random_string = @helper.randomNumString()
     email = "#{random_string}@qq.com"
     password = "12345678"
     resp = @authenticationClient.registerByEmail(email, password)
-    json = JSON.parse(resp)
-    # example_error_2026 = {"errors"=>[{"message"=>{"code"=>2026, "message"=>"用户已存在，请直接登录！"}, "locations"=>[{"line"=>2, "column"=>3}], "path"=>["registerByEmail"], "extensions"=>{"code"=>"INTERNAL_SERVER_ERROR"}}], "data"=>{"registerByEmail"=>nil}}
-    # example_success = {"data"=>{"registerByEmail"=>{"id"=>"6083842709f7934053e988f6", "arn"=>"arn:cn:authing:60800b8ee5b66b23128b4980:user:6083842709f7934053e988f6", "userPoolId"=>"60800b8ee5b66b23128b4980", "status"=>"Activated", "username"=>nil, "email"=>"401@qq.com", "emailVerified"=>false, "phone"=>nil, "phoneVerified"=>false, "unionid"=>nil, "openid"=>nil, "nickname"=>nil, "registerSource"=>["basic:email"], "photo"=>"default-user-avatar.png", "password"=>"ec0bad9e7bbdf8d71c8e717849954520", "oauth"=>nil, "token"=>nil, "tokenExpiredAt"=>nil, "loginsCount"=>0, "lastLogin"=>nil, "lastIP"=>nil, "signedUp"=>nil, "blocked"=>false, "isDeleted"=>false, "device"=>nil, "browser"=>nil, "company"=>nil, "name"=>nil, "givenName"=>nil, "familyName"=>nil, "middleName"=>nil, "profile"=>nil, "preferredUsername"=>nil, "website"=>nil, "gender"=>"U", "birthdate"=>nil, "zoneinfo"=>nil, "locale"=>nil, "address"=>nil, "formatted"=>nil, "streetAddress"=>nil, "locality"=>nil, "region"=>nil, "postalCode"=>nil, "city"=>nil, "province"=>nil, "country"=>nil, "createdAt"=>"2021-04-24T02:36:23+00:00", "updatedAt"=>"2021-04-24T02:36:23+00:00", "externalId"=>nil}}}
-    assert(json.dig('data', 'registerByEmail'), "邮箱+密码注册失败")
-    # 如果这个 json.data.registerByEmail 属性存在我们就认为是成功
+    # 如果失败
+    # {"errors"=>[{"message"=>{"code"=>2026, "message"=>"用户已存在，请直接登录！"}, "locations"=>[{"line"=>2, "column"=>3}], "path"=>["registerByEmail"], "extensions"=>{"code"=>"INTERNAL_SERVER_ERROR"}}], "data"=>{"registerByEmail"=>nil}}
+    
+    # 如果成功
+    # {"id"=>"6083842709f7934053e988f6", "arn"=>"arn:cn:authing:60800b8ee5b66b23128b4980:user:6083842709f7934053e988f6", "userPoolId"=>"60800b8ee5b66b23128b4980", "status"=>"Activated", "username"=>nil, "email"=>"401@qq.com", "emailVerified"=>false, "phone"=>nil, "phoneVerified"=>false, "unionid"=>nil, "openid"=>nil, "nickname"=>nil, "registerSource"=>["basic:email"], "photo"=>"default-user-avatar.png", "password"=>"ec0bad9e7bbdf8d71c8e717849954520", "oauth"=>nil, "token"=>nil, "tokenExpiredAt"=>nil, "loginsCount"=>0, "lastLogin"=>nil, "lastIP"=>nil, "signedUp"=>nil, "blocked"=>false, "isDeleted"=>false, "device"=>nil, "browser"=>nil, "company"=>nil, "name"=>nil, "givenName"=>nil, "familyName"=>nil, "middleName"=>nil, "profile"=>nil, "preferredUsername"=>nil, "website"=>nil, "gender"=>"U", "birthdate"=>nil, "zoneinfo"=>nil, "locale"=>nil, "address"=>nil, "formatted"=>nil, "streetAddress"=>nil, "locality"=>nil, "region"=>nil, "postalCode"=>nil, "city"=>nil, "province"=>nil, "country"=>nil, "createdAt"=>"2021-04-24T02:36:23+00:00", "updatedAt"=>"2021-04-24T02:36:23+00:00", "externalId"=>nil}
+    assert(resp.dig('id'), resp)
   end
 
   # 测试用户名+密码注册
+  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_registerByUsername
   def test_registerByUsername
-    random_string = @helper.randomNumString()
+    random_string = @helper.randomString(9)
     username = random_string
     password = random_string
     resp = @authenticationClient.registerByUsername(username, password)
-    json = JSON.parse(resp)
-    assert(json.dig('data', 'registerByUsername'), "用户名+密码注册失败")
+    assert(resp.dig('id'), resp)
   end
 
   # 测试邮箱+密码登录
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_loginByEmail
   def test_loginByEmail
-    random_string = @helper.randomNumString()
+    # 第一步：先注册
+    random_string = @helper.randomString(9)
     email = "#{random_string}@qq.com"
     password = random_string
-    # 先注册
     @authenticationClient.registerByEmail(email, password)
-    # 再登录
+
+    # 第二步：登录
     resp = @authenticationClient.loginByEmail(email, password)
-    json = JSON.parse(resp)
-    assert(json.dig('data', 'loginByEmail'), "邮箱+密码登录失败")
+    assert(resp.dig('id'), resp)
   end
 
   # 测试用户名+密码登录
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_loginByUsername
   def test_loginByUsername
-    random_string = @helper.randomNumString()
+    random_string = @helper.randomString(9)
     username = random_string
     password = random_string
     @authenticationClient.registerByUsername(username, password)
     resp = @authenticationClient.loginByUsername(username, password)
-    json = JSON.parse(resp)
-    dig = json.dig('data', 'loginByUsername')
-    assert(dig, "用户名+密码注册失败")
+    assert(resp.dig('id'), resp)
   end
 
   # 测试手机号+密码登录
@@ -87,6 +87,7 @@ class TestAuthenticationClient < Minitest::Test
     assert(user.dig("id"), user)
   end
 
+  # TODO: 补上 assert()
   # 测试退出登录
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_logout
   def test_logout
@@ -115,6 +116,7 @@ class TestAuthenticationClient < Minitest::Test
     puts res2
   end
 
+  # TODO: 补上 assert()
   # 测试: 修改用户资料
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_updateProfile
   def test_updateProfile
@@ -130,6 +132,7 @@ class TestAuthenticationClient < Minitest::Test
     puts res
   end
 
+  # TODO: 补上 assert()
   # 测试: 检查密码强度
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_checkPasswordStrength
   def test_checkPasswordStrength
@@ -197,6 +200,7 @@ class TestAuthenticationClient < Minitest::Test
   def test_unbindEmail
   end
 
+  # TODO: 补上 assert()
   # 测试: 检测 Token 登录状态
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_checkLoginStatus
   def test_checkLoginStatus
