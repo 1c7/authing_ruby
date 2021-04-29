@@ -189,10 +189,6 @@ class TestAuthenticationClient < Minitest::Test
     assert(result.dig('id') != nil, result)
   end
 
-  # 测试: 绑定手机号
-  def test_bindPhone
-  end 
-
   # 测试: 解绑手机号
   def test_unbindPhone
   end

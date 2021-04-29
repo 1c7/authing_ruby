@@ -616,6 +616,20 @@ module AuthingRuby
     # 绑定手机号
     # 用户初次绑定手机号，如果需要修改手机号请使用 updatePhone 方法。如果该手机号已被绑定，将会绑定失败。发送验证码请使用 sendSmsCode 方法。
     def bindPhone(phone, phoneCode)
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      variables = {
+        "phone": phone,
+        "phoneCode": phoneCode,
+      }
+      res = graphqlAPI.bindPhone(@graphqlClient, @tokenProvider, variables)
+      json = JSON.parse(res)
+      user = json.dig("data", "bindPhone")
+      if user
+        setCurrentUser(user);
+        return user;
+      else
+        return res
+      end
     end
 
     # 通过短信验证码重置密码
