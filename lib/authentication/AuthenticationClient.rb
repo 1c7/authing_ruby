@@ -516,28 +516,19 @@ module AuthingRuby
       end
     end
 
-    # TODO
     # 修改用户资料
     def updateProfile(updates = {})
       userId = checkLoggedIn();
-      puts userId
-      # updates = updates.except(:password) # (Ruby 3.0+)
-
-      # if (updates && updates.password) {
-      #   delete updates.password;
-      # }
-
       graphqlAPI = AuthingRuby::GraphQLAPI.new
       variables = {
         "id": userId,
         "input": updates
       }
       res = graphqlAPI.updateUser(@graphqlClient, @tokenProvider, variables)
-      return res
-
-      # updateUser
-      # this.setCurrentUser(updated);
-      # return updated;
+      json = JSON.parse(res)
+      updated_user = json.dig('data', 'updateUser')
+      setCurrentUser(updated_user)
+      return updated_user
     end
 
     # TODO

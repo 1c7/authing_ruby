@@ -90,14 +90,29 @@ class TestAuthenticationClient < Minitest::Test
     password = "123456789"
     @authenticationClient.registerByUsername(username, password)
     @authenticationClient.loginByUsername(username, password)
-    userID = @authenticationClient.checkLoggedIn()
-    puts userID
+    # userID = @authenticationClient.checkLoggedIn()
+    # puts userID
 
     # 更新用户信息  
+    res = @authenticationClient.updateProfile({
+      nickname: 'Nick-2021-4-29 第一次'
+    })
+    puts res
   end
 
   # 测试: 修改用户资料
+  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_updateProfile
   def test_updateProfile
+    username = 'zhengcheng123'
+    password = "123456789"
+    @authenticationClient.loginByUsername(username, password)
+    res = @authenticationClient.updateProfile({
+      nickname: '第一次修改'
+    })
+    res = @authenticationClient.updateProfile({
+      nickname: '第二次修改'
+    })
+    puts res
   end
 
   # 测试: 更新用户密码
