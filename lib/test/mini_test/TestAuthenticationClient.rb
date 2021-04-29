@@ -16,12 +16,12 @@ class TestAuthenticationClient < Minitest::Test
       appId: ENV["appId"], # "60800b9151d040af9016d60b"
     }
     @authenticationClient = AuthingRuby::AuthenticationClient.new(options)
-    @test_helper = Test::Helper.new
+    @helper = Test::Helper.new
   end
 
   # 测试邮箱+密码注册
   def test_registerByEmail
-    random_string = @test_helper.randomNumString()
+    random_string = @helper.randomNumString()
     email = "#{random_string}@qq.com"
     password = "12345678"
     resp = @authenticationClient.registerByEmail(email, password)
@@ -34,7 +34,7 @@ class TestAuthenticationClient < Minitest::Test
 
   # 测试用户名+密码注册
   def test_registerByUsername
-    random_string = @test_helper.randomNumString()
+    random_string = @helper.randomNumString()
     username = random_string
     password = random_string
     resp = @authenticationClient.registerByUsername(username, password)
@@ -45,7 +45,7 @@ class TestAuthenticationClient < Minitest::Test
   # 测试邮箱+密码登录
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_loginByEmail
   def test_loginByEmail
-    random_string = @test_helper.randomNumString()
+    random_string = @helper.randomNumString()
     email = "#{random_string}@qq.com"
     password = random_string
     # 先注册
@@ -59,7 +59,7 @@ class TestAuthenticationClient < Minitest::Test
   # 测试用户名+密码登录
   # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_loginByUsername
   def test_loginByUsername
-    random_string = @test_helper.randomNumString()
+    random_string = @helper.randomNumString()
     username = random_string
     password = random_string
     @authenticationClient.registerByUsername(username, password)
@@ -141,7 +141,30 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试: 更新用户密码
+  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_updatePassword
   def test_updatePassword
+    # 例子1：如果不登陆，直接改，会提示尚未登录
+    # oldPassword = "123456789"
+    # newPassword = "123456789-ABC"
+    # res = @authenticationClient.updatePassword(newPassword, oldPassword)
+    # puts res
+    # {"errors"=>[{"message"=>{"code"=>2020, "message"=>"尚未登录，无访问权限"}, "locations"=>[{"line"=>2, "column"=>3}], "path"=>["updatePassword"], "extensions"=>{"code"=>"INTERNAL_SERVER_ERROR"}}], "data"=>nil}
+
+    # 第一步：注册用户
+    username = "username_test_updatePassword_#{@helper.randomString()}"
+    password = "123456789"
+    @authenticationClient.registerByUsername(username, password)
+
+    # 第二步：登录用户
+    @authenticationClient.loginByUsername(username, password)
+
+    # 第三步：更新密码
+    oldPassword = password
+    newPassword = "987654321"
+    result = @authenticationClient.updatePassword(newPassword, oldPassword)
+
+    # 第四步：看返回结果对不对
+    assert(result.dig('id') != nil, result)
   end
 
   # 测试: 绑定手机号

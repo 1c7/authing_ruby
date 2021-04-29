@@ -1,8 +1,8 @@
 
 module Test
 	class Helper
-		# 随机字母字符串，默认8位长度
-		def randomString(length = 8)
+		# 随机字母字符串，默认 6 位长度
+		def randomString(length = 6)
 			endIndex = length % 26
 			('a'..'z').to_a.shuffle[0,endIndex].join
 		end

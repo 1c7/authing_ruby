@@ -589,5 +589,20 @@ module AuthingRuby
       return json.dig("data", "checkLoginStatus")
     end
 
+    # 更新用户密码
+    def updatePassword(newPassword, oldPassword)
+      publicKey = @publicKeyManager.getPublicKey()
+      newPasswordEncrypted = Utils.encrypt(newPassword, publicKey)
+      oldPasswordEncrypted = Utils.encrypt(oldPassword, publicKey)
+      variables = { 
+        "newPassword": newPasswordEncrypted,
+        "oldPassword": oldPasswordEncrypted,
+      }
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.updatePassword(@graphqlClient, @tokenProvider, variables)
+      json = JSON.parse(res)
+      return json.dig("data", "updatePassword")
+    end
+
   end
 end
