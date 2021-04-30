@@ -9,11 +9,41 @@ module AuthingRuby
   class GraphQLAPI
 
     def initialize()
-      # @folder_graphql = "./lib/authing_ruby/graphql"
       @folder_graphql = File.join(File.dirname(File.expand_path(__FILE__)), "/graphql")
-      puts "路径是#{@folder_graphql}"
       @folder_mutation = "#{@folder_graphql}/mutations"
       @folder_query = "#{@folder_graphql}/queries"
+    end
+
+    def getCurrentUser(garpqhlClient, tokenProvider, variables)
+      return _graphql_query_request("getCurrentUser", garpqhlClient, nil, variables)
+    end
+
+    def sendEmail(garpqhlClient, variables)
+      return _graphql_mutation_request("sendEmail", garpqhlClient, nil, variables)
+    end
+
+    def loginByPhonePassword(garpqhlClient, variables)
+      return _graphql_mutation_request("loginByPhonePassword", garpqhlClient, nil, variables)
+    end
+
+    def loginByPhoneCode(garpqhlClient, variables)
+      return _graphql_mutation_request("loginByPhoneCode", garpqhlClient, nil, variables)
+    end
+    
+    def loginByUsername(garpqhlClient, variables)
+      return _graphql_mutation_request("loginByUsername", garpqhlClient, nil, variables)
+    end
+
+    def loginByEmail(garpqhlClient, variables)
+      return _graphql_mutation_request("loginByEmail", garpqhlClient, nil, variables)
+    end
+
+    def registerByPhoneCode(garpqhlClient, variables)
+      return _graphql_mutation_request("registerByPhoneCode", garpqhlClient, nil, variables)
+    end
+
+    def registerByUsername(garpqhlClient, variables)
+      return _graphql_mutation_request("registerByUsername", garpqhlClient, nil, variables)
     end
 
     def registerByEmail(garpqhlClient, variables)

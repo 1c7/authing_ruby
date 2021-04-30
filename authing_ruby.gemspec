@@ -10,15 +10,16 @@ Gem::Specification.new do |s|
   s.authors     = ["郑诚(Zheng Cheng)"]
   # 如果你参与了开发，请在作者列表里留下你的名字
 
-  s.email       = 'chengzheng.apply@gmail.com'
+  s.email       = ['chengzheng.apply@gmail.com']
   s.files       = Dir['lib/**/*', 'authing_ruby.gemspec']
 
   # 运行时依赖
   s.add_runtime_dependency 'minitest', ['~> 5.14', '>= 5.14.4']
-  s.add_runtime_dependency 'faraday'
-  s.add_runtime_dependency 'http'
-  s.add_runtime_dependency 'jwt'
+  s.add_runtime_dependency 'faraday', ['~> 1.4', '>= 1.4.1']
+  s.add_runtime_dependency 'http', ['~> 4.4', '>= 4.4.1']
+  s.add_runtime_dependency 'jwt', ['~> 2.2', '>= 2.2.3']
   s.add_runtime_dependency 'uri-query_params', ['~> 0.7.2']
+  s.add_runtime_dependency 'logging', ['~> 2.3']
 
   # 开发时依赖
   s.add_development_dependency 'dotenv', ['~> 2.7', '>= 2.7.6']

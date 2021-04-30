@@ -12,4 +12,5 @@ gem "http"
 gem 'jwt'
 gem 'rake', '~> 13.0', '>= 13.0.3' # https://github.com/ruby/rake
 
-gem 'uri-query_params', '~> 0.7.2'
+gem 'uri-query_params', '~> 0.7.2' # 处理 URL 参数
+gem 'logging', '~> 2.3' # 做日志

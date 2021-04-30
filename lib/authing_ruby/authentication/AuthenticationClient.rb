@@ -90,16 +90,10 @@ module AuthingRuby
           "generateToken": options.fetch(:generateToken, nil),
         }
       }
-      # 第二步：构建 payload
-      file = File.open("#{@folder_graphql_mutation}/registerByUsername.gql")
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      # 第三步：发请求
-      response = @graphqlClient.request({json: json})
-      json = JSON.parse(response)
-      user = json.dig("data", "registerByUsername")
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.registerByEmail(@graphqlClient, variables)
+      json = JSON.parse(res)
+      user = json.dig('data', 'registerByEmail')
       return user if user
       return json
     end
@@ -138,15 +132,12 @@ module AuthingRuby
           "generateToken": options.fetch(:generateToken, nil),
         }
       }
-      # 第二步：构建整个 payload
-      file = File.open("#{@folder_graphql_mutation}/registerByPhoneCode.gql")
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      # 第三步：发请求
-      response = @graphqlClient.request({json: json})
-      return response
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.registerByPhoneCode(@graphqlClient, variables)
+      json = JSON.parse(res)
+      user = json.dig('data', 'registerByPhoneCode')
+      return user if user
+      return json
     end
 
     # 使用邮箱登录
@@ -166,21 +157,13 @@ module AuthingRuby
           "clientIp": options.fetch(:clientIp, nil),
         }
       }
-      # 第二步：构建整个 payload
-      file = File.open("#{@folder_graphql_mutation}/loginByEmail.gql")
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      # 第三步：发请求
-      response = @graphqlClient.request({json: json})
-
-      # 第四步：把结果存起来
-      json = JSON.parse(response)
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.loginByEmail(@graphqlClient, variables)
+      json = JSON.parse(res)
       user = json.dig('data', 'loginByEmail')
       if user
         setCurrentUser(user);
-        return user
+        return user 
       end
       return json
     end
@@ -202,21 +185,13 @@ module AuthingRuby
           "clientIp": options.fetch(:clientIp, nil),
         }
       }
-      # 第二步：构建整个 payload
-      file = File.open("#{@folder_graphql_mutation}/loginByUsername.gql")
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      # 第三步：发请求
-      response = @graphqlClient.request({json: json})
-
-      # 第四步：把结果存起来
-      json = JSON.parse(response)
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.loginByUsername(@graphqlClient, variables)
+      json = JSON.parse(res)
       user = json.dig('data', 'loginByUsername')
       if user
         setCurrentUser(user);
-        return user
+        return user 
       end
       return json
     end
@@ -234,21 +209,15 @@ module AuthingRuby
           "clientIp": options.fetch(:clientIp, nil),
         }
       }
-      # 第二步：构建 payload
-      file = File.open("#{@folder_graphql_mutation}/loginByPhoneCode.gql")
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      # 第三步：发请求
-      response = @graphqlClient.request({json: json})
-
-      # 第四步：把结果存起来
-      json = JSON.parse(response)
-      user = json['data']['loginByPhoneCode']
-      setCurrentUser(user);
-
-      return response
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.loginByPhoneCode(@graphqlClient, variables)
+      json = JSON.parse(res)
+      user = json.dig('data', 'loginByPhoneCode')
+      if user
+        setCurrentUser(user);
+        return user 
+      end
+      return json
     end
 
     # 使用手机号密码登录
@@ -267,21 +236,15 @@ module AuthingRuby
           "clientIp": options.fetch(:clientIp, nil),
         }
       }
-      # 第二步：构建 payload
-      file = File.open("#{@folder_graphql_mutation}/loginByPhonePassword.gql")
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      # 第三步：发请求
-      response = @graphqlClient.request({json: json})
-
-      # 第四步：把结果存起来
-      json = JSON.parse(response)
-      user = json['data']['loginByPhonePassword']
-      setCurrentUser(user);
-
-      return response
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.loginByPhonePassword(@graphqlClient, variables)
+      json = JSON.parse(res)
+      user = json.dig('data', 'loginByPhonePassword')
+      if user
+        setCurrentUser(user);
+        return user 
+      end
+      return json
     end
 
     def checkLoginStatus
@@ -292,37 +255,32 @@ module AuthingRuby
     # a.sendEmail('guokrfans@gmail.com', "VERIFY_EMAIL")
     # * @param {EmailScene} scene 发送场景，可选值为 RESET_PASSWORD（发送重置密码邮件，邮件中包含验证码）、VerifyEmail（发送验证邮箱的邮件）、ChangeEmail（发送修改邮箱邮件，邮件中包含验证码）
     def sendEmail(email, scene)
-      # 第一步：构建 variables
       variables = {
         "email": email,
         "scene": scene,
       }
-      # 第二步：构建 payload
-      file = File.open("#{@folder_graphql_mutation}/sendEmail.gql")
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      # 第三步：发请求
-      response = @graphqlClient.request({json: json})
-      return response
-      # {"data":{"sendEmail":{"message":"","code":200}}}
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.sendEmail(@graphqlClient, variables)
+      json = JSON.parse(res)
+      data = json.dig('data')
+      return data if data
+      return json
+      # {"sendEmail":{"message":"","code":200}}
     end
 
     # 获取当前登录的用户信息
     # 返回：用户信息
     def getCurrentUser()
-      file = File.open("#{@folder_graphql_query}/user.gql")
-      json = {
-        "query": file.read
-      }
-      token = @tokenProvider.getToken();
-      # 第三步：发请求
-      response = @graphqlClient.request({json: json, token: token})
-      json = JSON.parse(response)
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.getCurrentUser(@graphqlClient, @tokenProvider, variables)
+      json = JSON.parse(res)
       user = json.dig("data", "user")
-      setCurrentUser(user)
-      return user
+      if user
+        setCurrentUser(user)
+        return user
+      else
+        return json
+      end
     end
 
     def setCurrentUser(user)
@@ -332,11 +290,6 @@ module AuthingRuby
     def setToken(token)
       @tokenProvider.setToken(token);
     end
-
-    # a.testGetUser()
-    # def testGetUser()
-    #   @tokenProvider.getUser();
-    # end
 
     # 退出登录
     def logout()
