@@ -487,26 +487,25 @@ module AuthingRuby
       end
     end
 
-    # TODO
     # Token 换用户信息
     # 文档: https://docs.authing.cn/v2/reference/sdk-for-node/authentication/StandardProtocol.html#token-%E6%8D%A2%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF
     # 参考: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L2082
     def getUserInfoByAccessToken(access_token)
       api = nil;
       if @protocol == 'oidc'
-        api = "#{appHost}/oidc/me";
+        api = "#{@appHost}/oidc/me";
       elsif @protocol == 'oauth'
-        api = "#{appHost}/oauth/me";
+        api = "#{@appHost}/oauth/me";
       end
 
-      # let userInfo = await this.naiveHttpClient.request({
-      #   method: 'POST',
-      #   url: api,
-      #   headers: {
-      #     Authorization: 'Bearer ' + accessToken
-      #   }
-      # });
-      # return userInfo;
+      userInfo = @naiveHttpClient.request({
+        method: 'POST',
+        url: api,
+        headers: {
+          Authorization: 'Bearer ' + access_token
+        }
+      });
+      return userInfo
     end
 
     # TODO

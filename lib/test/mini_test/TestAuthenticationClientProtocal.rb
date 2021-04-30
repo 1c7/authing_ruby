@@ -13,16 +13,14 @@ Dotenv.load('.env.test')
 
 class TestAuthenticationClientProtocal < Minitest::Test
 
-	# 测试初始化
-	# ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb -n test_init
-	def test_init
-    options = {
-      appHost: ENV["appHost"], # "https://rails-demo.authing.cn", 
-      appId: ENV["appId"], # "60800b9151d040af9016d60b"
-			secret: ENV["secret"],
+	def setup
+		options = {
+      appId: ENV["appId"],
+      secret: ENV["appSecret"],
+      appHost: ENV["appHost"],
 			redirectUri: ENV["redirectUri"],
-    }
-		AuthingRuby::AuthenticationClient.new(options)
+		}
+		@authenticationClient = AuthingRuby::AuthenticationClient.new(options)
 	end
 
 	# 【需手工测试】
@@ -87,20 +85,12 @@ class TestAuthenticationClientProtocal < Minitest::Test
 	# 测试 Code 换 Token
 	# ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb -n test_getAccessTokenByCode
 	def test_getAccessTokenByCode
-		client_options = {
-      appId: ENV["appId"],
-      secret: ENV["appSecret"],
-      appHost: ENV["appHost"],
-			redirectUri: ENV["redirectUri"],
-		}
-		client = AuthingRuby::AuthenticationClient.new(client_options)
-
 		# 比如登录成功后跳转到了这个 URL
 		# http://localhost:3000/authing_callback?code=BRWx1zB95MSSi_n3ZeC0t_Rnpyx8-ZvG7Afq7A1pEWP&state=5119168221224539
 
 		# 那么把 code 复制过来
 		code = 'BRWx1zB95MSSi_n3ZeC0t_Rnpyx8-ZvG7Afq7A1pEWP' #【你需要填写这里】
-		resp = client.getAccessTokenByCode(code);
+		resp = @authenticationClient.getAccessTokenByCode(code);
 		# 如果失败：（比如 secret 填写成了用户池密钥是错的，应该填应用密钥）
 		# {"error":"invalid_client","error_description":"client authentication failed"}
 
@@ -117,6 +107,32 @@ class TestAuthenticationClientProtocal < Minitest::Test
     assert(json.dig('id_token') != nil)
     assert(json.dig('scope') != nil)
     assert(json.dig('token_type') != nil)
+	end
+
+	# Token 换用户信息
+	# ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb -n test_getUserInfoByAccessToken
+	def test_getUserInfoByAccessToken
+		# 1. 获得登录页面的 url，浏览器访问
+		# ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb -n test_buildAuthorizeUrl
+		
+		# 2. 登录并获得 code
+		code = "IAf-hgTKExt7d3RtVT-vSSADeycotgqqa2omB6fRvUY"
+
+		# 3. code 得到 token
+		resp = @authenticationClient.getAccessTokenByCode(code);
+		json = JSON.parse(resp.body)
+		access_token = json.dig('access_token')
+		
+		if access_token == nil
+			puts json
+    else
+			# 4. token 获取用户信息 
+			puts "accessToken 是 #{access_token}"
+			userInfo = @authenticationClient.getUserInfoByAccessToken(access_token)
+			userInfoJson = JSON.parse(userInfo.body)
+			puts userInfoJson
+			# {"sub"=>"608b9b52414bd3b71fad04ef", "birthdate"=>nil, "family_name"=>nil, "gender"=>"U", "given_name"=>nil, "locale"=>nil, "middle_name"=>nil, "name"=>nil, "nickname"=>nil, "picture"=>"https://files.authing.co/authing-console/default-user-avatar.png", "preferred_username"=>nil, "profile"=>nil, "updated_at"=>"2021-04-30T05:53:26.782Z", "website"=>nil, "zoneinfo"=>nil}
+		end
 	end
 
 end
