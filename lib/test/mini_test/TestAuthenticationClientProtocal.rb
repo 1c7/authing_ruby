@@ -41,7 +41,22 @@ class TestAuthenticationClientProtocal < Minitest::Test
 		}
 		url = client.buildAuthorizeUrl(options)
 		puts url
-		# 测试方法：手工把输出的 url 粘贴到浏览器里访问，如果可以正常访问就是成功
+		# 测试方法1：手工把输出的 url 粘贴到浏览器里访问，如果可以正常访问就是成功
+
+		# 测试方法2：照搬 JS SDK 里 src/lib/authentication/AuthenticationClient.spec.ts 的测试
+		# 把生成的 url 检查一下里面的参数（以下是 js 代码）
+		# t.assert(url1Data.hostname === 'oidc1.authing.cn');
+		# t.assert(url1Data.pathname === '/oidc/auth');
+		# t.assert(typeof parseInt(url1Data.searchParams.get('nonce')) === 'number');
+		# t.assert(typeof parseInt(url1Data.searchParams.get('state')) === 'number');
+		# t.assert(
+		# 	url1Data.searchParams.get('scope') === 'openid profile offline_access'
+		# );
+		# t.assert(url1Data.searchParams.get('client_id') === '9072248490655972');
+		# t.assert(url1Data.searchParams.get('redirect_uri') === 'https://baidu.com');
+		# t.assert(url1Data.searchParams.get('response_type') === 'code');
+		# t.assert(url1Data.searchParams.get('prompt') === 'consent');
+		# t.falsy(url1Data.searchParams.get('code_verifier'));
 	end
 
 	# PKCE 场景使用示例
