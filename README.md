@@ -57,3 +57,10 @@ puts resp # 返回注册成功的用户信息
 * `example/` 代码例子
 * `lib/` 本库的所有源码，包括测试代码。  
 * 根目录下的 `.env` 文件都是提供环境变量的
+
+### 假设你要用某个功能（比如 Authing JS SDK 文档里 "管理用户自定义字段"）
+但是发现 Ruby SDK 里没有实现，怎么办？
+
+1. (自己实现）fork 一份 Github repo 然后实现，最后发个 PR 合并进来。
+2. (提出问题) 在 issue 里发一条，问某功能实现了没有。 
+3. (如果实在很急, 等不及 PR 合并) fork 完代码实现完之后，自己 publish 一个 gem，名字如 `authing_ruby_fork_[你的名字/公司名/任意名]`，然后用这个新的 gem，后续等 `authing_ruby` gem 合并了你的 PR 再换回来。
