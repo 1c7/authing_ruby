@@ -1,5 +1,6 @@
 require './lib/authentication/BaseAuthenticationClient.rb'
 require 'jwt'
+require 'uri/query_params'
 
 module AuthingRuby
   class AuthenticationClient
@@ -29,7 +30,7 @@ module AuthingRuby
       @folder_graphql_mutation = "#{@folder_graphql}/mutations"
       @folder_graphql_query = "#{@folder_graphql}/queries"
 
-      # @baseClient = Authentication::BaseAuthenticationClient.new(options)
+      @baseClient = Authentication::BaseAuthenticationClient.new(options)
 
       # 以下几个参数主要用于 "标准协议认证模块"
       @tokenEndPointAuthMethod = options.fetch(:tokenEndPointAuthMethod, 'client_secret_post')
@@ -350,12 +351,11 @@ module AuthingRuby
       @tokenProvider.clearUser();
     end
 
-    # TODO
     # 私有函数，用于 buildAuthorizeUrl 处理 OIDC 协议
+    # 写法是完全参照的 JS SDK
     def _buildOidcAuthorizeUrl(options = {})
-      # TODO
-=begin
-      let map: any = {
+      # 名字的映射
+      map = {
         appId: 'client_id',
         scope: 'scope',
         state: 'state',
@@ -366,31 +366,27 @@ module AuthingRuby
         codeChallenge: 'code_challenge',
         codeChallengeMethod: 'code_challenge_method'
       };
-      let res: any = {
-        nonce: Math.random()
-          .toString()
-          .slice(2),
-        state: Math.random()
-          .toString()
-          .slice(2),
+      # 用来构造 url
+      res = {
+        nonce: AuthingRuby::Utils.randomNumberString(16),
+        state: AuthingRuby::Utils.randomNumberString(16),
         scope: 'openid profile email phone address',
-        client_id: this.options.appId,
-        redirect_uri: this.options.redirectUri,
-        response_type: 'code'
+        client_id: @appId,
+        redirect_uri: @redirectUri,
+        response_type: 'code',
       };
-      Object.keys(map).forEach(k => {
-        if (options && (options as any)[k]) {
-          if (k === 'scope' && options.scope.includes('offline_access')) {
-            res.prompt = 'consent';
-          }
-          res[map[k]] = (options as any)[k];
-        }
-      });
-      let params = new URLSearchParams(res);
-      let authorizeUrl =
-        this.baseClient.appHost + '/oidc/auth?' + params.toString();
-      return authorizeUrl;
-=end
+
+      map.each do |key, value|
+        if options[key]
+          if key == 'scope' && options[:scope].include?("offline_access")
+            res[:prompt] = 'consent'
+          end
+          res[value.to_sym] = options[key]
+        end
+      end
+
+      authorizeUrl = @baseClient.appHost + '/oidc/auth?' + URI::QueryParams.dump(res)
+      return authorizeUrl
     end
 
     # TODO
@@ -399,9 +395,9 @@ module AuthingRuby
     # 代码: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L2098
     def buildAuthorizeUrl(options = {})
       unless @appHost
-        throw '请在初始化 AuthenticationClient 时传入应用域名 appHost 参数，形如：https://app1.authing.cn'
+        raise '请在初始化 AuthenticationClient 时传入应用域名 appHost 参数，形如：https://app1.authing.cn'
       end
-      protocol = options.fetch(:protocol, nil)
+      protocol = @options.fetch(:protocol, nil)
       if protocol === 'oidc'
         return _buildOidcAuthorizeUrl(options);
       end
@@ -414,7 +410,7 @@ module AuthingRuby
       if protocol === 'cas'
         throw "cas 协议暂未实现"
       end
-      throw '不支持的协议类型，请在初始化 AuthenticationClient 时传入 protocol 参数，可选值为 oidc、oauth、saml、cas'
+      raise '不支持的协议类型，请在初始化 AuthenticationClient 时传入 protocol 参数，可选值为 oidc、oauth、saml、cas'
     end
 
     # TODO
@@ -653,9 +649,8 @@ module AuthingRuby
       return json
     end
 
-    # TODO
     def generateCodeChallenge()
-      return generateRandomString(43);
+      return AuthingRuby::Utils.generateRandomString(43);
     end
 
   end

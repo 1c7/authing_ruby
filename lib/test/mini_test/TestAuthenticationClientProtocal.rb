@@ -25,30 +25,23 @@ class TestAuthenticationClientProtocal < Minitest::Test
 		AuthingRuby::AuthenticationClient.new(options)
 	end
 
-	# TODO
 	# 生成 OIDC 协议的用户登录链接
 	# 用户可以通过此链接访问 Authing 的在线登录页面
 	# ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb -n test_buildAuthorizeUrl
 	def test_buildAuthorizeUrl
-		# 拼接 OIDC 授权链接
-		options = {
+		client_options = {
       appHost: ENV["appHost"],
       appId: ENV["appId"],
 			redirectUri: ENV["redirectUri"],
 			protocol: 'oidc',
 		};
-		@authenticationClient = AuthingRuby::AuthenticationClient.new(options)
-		@authenticationClient.buildAuthorizeUrl({ scope: 'openid profile offline_access' });
-		
-		# PKCE 场景使用示例
-		# 生成一个 code_verifier
-		# codeChallenge = @authenticationClient.generateCodeChallenge()
-		# puts codeChallenge
-
-		# // 计算 code_verifier 的 SHA256 摘要
-		# let codeChallengeDigest = client.getCodeChallengeDigest({ codeChallenge, method: 'S256' })
-		# // 构造 OIDC 授权码 + PKCE 模式登录 URL
-		# let url2 = client.buildAuthorizeUrl({ codeChallenge: codeChallengeDigest, codeChallengeMethod: 'S256' });
+		@authenticationClient = AuthingRuby::AuthenticationClient.new(client_options)
+		options = { 
+			scope: 'openid profile offline_access',
+		}
+		url = @authenticationClient.buildAuthorizeUrl(options);
+		puts url
+		# 测试方法：手工把输出的 url 粘贴到浏览器里访问，如果可以正常访问就是成功
 	end
 
 end
