@@ -1,10 +1,10 @@
 # ruby ./lib/test/mini_test/TestManagementTokenProvider.rb
 
-require "minitest/autorun" # Minitest
-require "./lib/authing_ruby.rb" # 模块主文件
-require "./lib/test/helper.rb" # 模块主文件
-require 'dotenv' # 载入环境变量文件
-Dotenv.load('.env.test') # 你可以编辑这个文件来修改环境变量
+require "minitest/autorun"
+require "./lib/authing_ruby.rb"
+require "./lib/test/helper.rb"
+require 'dotenv'
+Dotenv.load('.env.test') 
 
 class TestManagementTokenProvider < Minitest::Test
 

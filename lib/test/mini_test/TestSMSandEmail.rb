@@ -9,11 +9,10 @@
 # 我们将这些测试统一放到这个文件里，方便查找
 # 因为这些方法需要手工测试，无法自动化
 
-require "minitest/autorun" # Minitest
-require "./lib/authing_ruby.rb" # 模块主文件
-require "./lib/test/helper.rb" # 模块主文件
-require 'dotenv' # 载入环境变量文件
-
+require "minitest/autorun"
+require "./lib/authing_ruby.rb"
+require "./lib/test/helper.rb"
+require 'dotenv'
 Dotenv.load('.env.test') 
 
 class TestSMSandEmail < Minitest::Test

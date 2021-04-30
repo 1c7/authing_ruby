@@ -1,7 +1,7 @@
 # 测试 lib/common/HttpClient.rb
 # 运行: ruby ./lib/test/mini_test/TestHttpClient.rb
 
-require "minitest/autorun" # Minitest
+require "minitest/autorun"
 require './lib/common/HttpClient.rb'
 
 
