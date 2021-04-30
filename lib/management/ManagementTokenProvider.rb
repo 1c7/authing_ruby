@@ -1,8 +1,7 @@
-# 复刻一个 JS SDK 里的 ManagementTokenProvider （方法名字，返回值，参数的数量和顺序，都尽量保持一致）
-# 这玩意的目的就是管理 accessToken
+# 复刻一个 JS SDK 里的 ManagementTokenProvider（方法名字，返回值，参数的数量和顺序，都尽量保持一致）
+# 用途：管理 accessToken
 
 # authing.js/src/lib/management/ManagementTokenProvider.ts
-# https://github.com/Authing/authing.js/blob/fad3b5ba03de36968422f23971b281dbb7de2187/src/lib/management/ManagementTokenProvider.ts#L6
 
 require './lib/GraphQLAPI.rb'
 require 'jwt'
@@ -75,7 +74,7 @@ module AuthingRuby
       return hash.dig("data", "accessToken", "accessToken")
     end
 
-    # TODO
+    # TODO 还需要做什么？
     def refreshToken
       api = AuthingRuby::GraphQLAPI.new
       res = api.refreshAccessToken(@graphqlClient, {
