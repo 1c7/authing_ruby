@@ -198,4 +198,27 @@ class TestAuthenticationClientProtocal < Minitest::Test
     # {"active"=>true, "sub"=>"608b9b52414bd3b71fad04ef", "client_id"=>"60800b9151d040af9016d60b", "exp"=>1620991246, "iat"=>1619781646, "iss"=>"https://core.authing.cn/oidc", "jti"=>"QaAveORqCeKrt-ZOMaQIV", "scope"=>"openid profile offline_access", "token_type"=>"Bearer"}
   end
 
+
+  # 检验 Id Token 或 Access Token 的合法性
+  # ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb -n test_validateToken
+  def test_validateToken
+    idToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDhiOWI1MjQxNGJkM2I3MWZhZDA0ZWYiLCJiaXJ0aGRhdGUiOm51bGwsImZhbWlseV9uYW1lIjpudWxsLCJnZW5kZXIiOiJVIiwiZ2l2ZW5fbmFtZSI6bnVsbCwibG9jYWxlIjpudWxsLCJtaWRkbGVfbmFtZSI6bnVsbCwibmFtZSI6bnVsbCwibmlja25hbWUiOm51bGwsInBpY3R1cmUiOiJodHRwczovL2ZpbGVzLmF1dGhpbmcuY28vYXV0aGluZy1jb25zb2xlL2RlZmF1bHQtdXNlci1hdmF0YXIucG5nIiwicHJlZmVycmVkX3VzZXJuYW1lIjpudWxsLCJwcm9maWxlIjpudWxsLCJ1cGRhdGVkX2F0IjoiMjAyMS0wNC0zMFQwNTo1MzoyNi43ODJaIiwid2Vic2l0ZSI6bnVsbCwiem9uZWluZm8iOm51bGwsIm5vbmNlIjoiNDc1MzQ0NDcyNDczODA5MCIsImF0X2hhc2giOiJMUE90dlpiR2lBSjMzanJ5OW9GQ2t3IiwiYXVkIjoiNjA4MDBiOTE1MWQwNDBhZjkwMTZkNjBiIiwiZXhwIjoxNjIwOTkxMjQ2LCJpYXQiOjE2MTk3ODE2NDYsImlzcyI6Imh0dHBzOi8vcmFpbHMtZGVtby5hdXRoaW5nLmNuL29pZGMifQ.u44mKaDN_zAEBuoIXcXH9Nfxx6HSwOzduu5TtOR18VQ"
+    options = {
+      idToken: idToken
+    }
+    res = @authenticationClient.validateToken(options)
+    json = JSON.parse(res.body)
+    puts json
+    # {"sub"=>"608b9b52414bd3b71fad04ef", "birthdate"=>nil, "family_name"=>nil, "gender"=>"U", "given_name"=>nil, "locale"=>nil, "middle_name"=>nil, "name"=>nil, "nickname"=>nil, "picture"=>"https://files.authing.co/authing-console/default-user-avatar.png", "preferred_username"=>nil, "profile"=>nil, "updated_at"=>"2021-04-30T05:53:26.782Z", "website"=>nil, "zoneinfo"=>nil, "nonce"=>"4753444724738090", "at_hash"=>"LPOtvZbGiAJ33jry9oFCkw", "aud"=>"60800b9151d040af9016d60b", "exp"=>1620991246, "iat"=>1619781646, "iss"=>"https://rails-demo.authing.cn/oidc"
+
+    accessToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZ6S0U4TUlidkVkdl9Mb3N5a1dHTjdNTmpqbjlQMldvVmxtN0pIcFVZUFUifQ.eyJqdGkiOiJRYUF2ZU9ScUNlS3J0LVpPTWFRSVYiLCJzdWIiOiI2MDhiOWI1MjQxNGJkM2I3MWZhZDA0ZWYiLCJpYXQiOjE2MTk3ODE2NDYsImV4cCI6MTYyMDk5MTI0Niwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyIsImlzcyI6Imh0dHBzOi8vcmFpbHMtZGVtby5hdXRoaW5nLmNuL29pZGMiLCJhdWQiOiI2MDgwMGI5MTUxZDA0MGFmOTAxNmQ2MGIifQ.WNwR3yOx4XoPU-xGwPxPDlJI7V-EZ6aKwxk5tPg1bpfhhxkMW-o6mJU4_n7ZCMSeXJqikD0e5phGkg79brawGCkmBfW6khS5d5xCiPJg20Ru7NQZMVBTrsislnXIZn18cSrZz8MeDLOQTYCNW686Uz-D0eJu_JTeocjijHq3uwZX_5YR7yOgl2lbjZ2jo1zpbtkCrNHMO3HXVvv1zpNFLg6e11u5xFjGq_HugEvbeL-YSCT9g83_C0IAqg-letoJTWxUkWkxlPWrVAnv9KIjPuGaynQTYc0GEuvASt58uS1dzRRQ73G2x5fKHfX8E-0qyuqfsRr5_CpjIlLHMt2c8Q"
+    options = {
+      accessToken: accessToken
+    }
+    res = @authenticationClient.validateToken(options)
+    json = JSON.parse(res.body)
+    puts json
+    # {"jti"=>"QaAveORqCeKrt-ZOMaQIV", "sub"=>"608b9b52414bd3b71fad04ef", "iat"=>1619781646, "exp"=>1620991246, "scope"=>"openid profile offline_access", "iss"=>"https://rails-demo.authing.cn/oidc", "aud"=>"60800b9151d040af9016d60b"}
+  end
+
 end

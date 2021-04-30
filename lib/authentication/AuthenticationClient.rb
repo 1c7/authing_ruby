@@ -618,34 +618,34 @@ module AuthingRuby
     # 代码参考: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L2582
     def validateToken(options = {})
       if options.empty?
-        throw '请在传入的参数对象中包含 accessToken 或 idToken 字段'
+        raise '请在传入的参数对象中包含 accessToken 或 idToken 字段'
       end
 
-      @accessToken = options.fetch(:accessToken, nil)
-      @idToken = options.fetch(:idToken, nil)
+      accessToken = options.fetch(:accessToken, nil)
+      idToken = options.fetch(:idToken, nil)
 
-      if @accessToken && @idToken
-        throw "accessToken 和 idToken 只能传入一个，不能同时传入"
+      if accessToken != nil && idToken != nil
+        raise "accessToken 和 idToken 只能传入一个，不能同时传入"
       end
 
-      if @idToken
-        # const data = await this.naiveHttpClient.request({
-        #   url: `${this.baseClient.appHost}/api/v2/oidc/validate_token`,
-        #   method: 'GET',
-        #   params: {
-        #     id_token: options.idToken
-        #   }
-        # });
-        # return data;
-      elsif @accessToken
-        # const data = await this.naiveH          ttpClient.request({
-        #   url: `${this.baseClient.appHost}/api/v2/oidc/validate_token`,
-        #   method: 'GET',
-        #   params: {
-        #     access_token: options.accessToken
-        #   }
-        # });
-        # return data;
+      if idToken
+        data = @naiveHttpClient.request({
+          url: "#{@baseClient.appHost}/api/v2/oidc/validate_token",
+          method: 'GET',
+          params: {
+            id_token: idToken
+          }
+        })
+        return data
+      elsif accessToken
+        data = @naiveHttpClient.request({
+          url: "#{@baseClient.appHost}/api/v2/oidc/validate_token",
+          method: 'GET',
+          params: {
+            access_token: accessToken
+          }
+        });
+        return data
       end
     end
 
