@@ -38,6 +38,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
+    uri-query_params (0.7.2)
 
 PLATFORMS
   ruby
@@ -48,6 +49,8 @@ DEPENDENCIES
   http
   jwt
   minitest (~> 5.14, >= 5.14.4)
+  rake (~> 13.0, >= 13.0.3)
+  uri-query_params (~> 0.7.2)
 
 BUNDLED WITH
    2.0.2

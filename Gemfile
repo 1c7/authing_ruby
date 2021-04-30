@@ -11,3 +11,5 @@ gem "http"
 
 gem 'jwt'
 gem 'rake', '~> 13.0', '>= 13.0.3' # https://github.com/ruby/rake
+
+gem 'uri-query_params', '~> 0.7.2'
