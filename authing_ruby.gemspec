@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-require "./lib/version"
+require "./lib/authing_ruby/version"
 
 Gem::Specification.new do |s|
   s.name        = 'authing_ruby'
@@ -12,6 +12,18 @@ Gem::Specification.new do |s|
 
   s.email       = 'chengzheng.apply@gmail.com'
   s.files       = Dir['lib/**/*', 'authing_ruby.gemspec']
+
+  # 运行时依赖
+  s.add_runtime_dependency 'minitest', ['~> 5.14', '>= 5.14.4']
+  s.add_runtime_dependency 'faraday'
+  s.add_runtime_dependency 'http'
+  s.add_runtime_dependency 'jwt'
+  s.add_runtime_dependency 'uri-query_params', ['~> 0.7.2']
+
+  # 开发时依赖
+  s.add_development_dependency 'dotenv', ['~> 2.7', '>= 2.7.6']
+  s.add_development_dependency 'rake', ['~> 13.0', '>= 13.0.3']
+
   s.homepage    = 'https://github.com/1c7/authing_ruby'
   s.license     = 'MIT'
 end
