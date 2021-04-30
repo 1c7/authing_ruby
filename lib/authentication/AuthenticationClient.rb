@@ -1,6 +1,8 @@
 require './lib/authentication/BaseAuthenticationClient.rb'
 require 'jwt'
 require 'uri/query_params'
+require 'digest'
+require "base64"
 
 module AuthingRuby
   class AuthenticationClient
@@ -377,7 +379,7 @@ module AuthingRuby
       };
 
       map.each do |key, value|
-        if options[key]
+        if options[key.to_sym]
           if key == 'scope' && options[:scope].include?("offline_access")
             res[:prompt] = 'consent'
           end
@@ -425,12 +427,12 @@ module AuthingRuby
     def getAccessTokenByCode(code, options = {})
       # 检查1
       if ['oauth', 'oidc'].include?(@protocol) == false
-        throw '初始化 AuthenticationClient 时传入的 protocol 参数必须为 oauth 或 oidc，请检查参数'
+        raise '初始化 AuthenticationClient 时传入的 protocol 参数必须为 oauth 或 oidc，请检查参数'
       end
 
       # 检查2
       if !@secret && @tokenEndPointAuthMethod != nil
-        throw '请在初始化 AuthenticationClient 时传入 appId 和 secret 参数'
+        raise '请在初始化 AuthenticationClient 时传入 appId 和 secret 参数'
       end
 
       if @tokenEndPointAuthMethod == 'client_secret_post'
@@ -438,12 +440,12 @@ module AuthingRuby
       end
 
       if @tokenEndPointAuthMethod == 'client_secret_basic'
-        throw "client_secret_basic 还未实现"
+        raise "client_secret_basic 还未实现"
         # return _getAccessTokenByCodeWithClientSecretBasic(code, options.fetch(:codeVerifier, nil))
       end
 
       if @tokenEndPointAuthMethod == nil
-        throw "还未实现"
+        raise "还未实现"
         # return _getAccessTokenByCodeWithNone(code, options.fetch(:codeVerifier, nil))
       end
     end
@@ -651,6 +653,29 @@ module AuthingRuby
 
     def generateCodeChallenge()
       return AuthingRuby::Utils.generateRandomString(43);
+    end
+
+    # 照搬 JS SDK 的逻辑
+    def getCodeChallengeDigest(options = {})
+      if options.empty?
+        raise '请提供 options 参数，options.codeChallenge 为一个长度大于等于 43 的字符串，options.method 可选值为 S256、plain'
+      end
+      codeChallenge = options.fetch(:codeChallenge, nil)
+      method = options.fetch(:method, 'S256')
+
+      if codeChallenge == nil
+        raise '请提供 options.codeChallenge，值为一个长度大于等于 43 的字符串'
+      end
+
+      if method === 'S256'
+        base64 = Digest::SHA256.base64digest codeChallenge
+        result = base64.gsub(/\+/, '-').gsub(/\//, '-').gsub(/=/, '')
+        return result
+      end
+      if method === 'plain'
+        return options.codeChallenge;
+      end
+      raise '不支持的 options.method，可选值为 S256、plain'
     end
 
   end
