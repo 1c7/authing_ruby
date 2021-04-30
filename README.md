@@ -6,10 +6,27 @@
 gem "authing_ruby"
 ```
 
+## 基本例子
+```ruby
+require 'authing_ruby'
+
+options = {
+  appId: "appId 填写应用 id, 如 60800b9151d040af9016d60b, 应用->App ID",
+  appHost: "appHost 例子: https://rails-demo.authing.cn, 应用->基础设置->认证地址",
+}
+authenticationClient = AuthingRuby::AuthenticationClient.new(options)
+username = "user#{rand(0...9999)}" # 用户名
+password = "12345678" # 密码
+resp = authenticationClient.registerByUsername(username, password)
+puts resp # 返回注册成功的用户信息
+```
+这个例子来自于 [example/2.registerByUsername.rb](./example/2.registerByUsername.rb)
+
 ## 如何使用
-1. (关于功能) 这个 Authing Ruby SDK 目前 `1.0.0` 版实现了最常用最基础的功能，而不是 100% 的 Authing API (因为实在太多了)，具体实现了什么功能，参照 [`doc/README.md`](./doc/README.md)
-2. `example/` 目录里有一些基本使用例子
+1. [`example/`](example/) 目录里有一些基本使用例子。
+2. Ruby SDK 是参照的 JS SDK。方法名，参数等完全一致，所以可以翻阅 JS SDK 文档进行参考
 3. 也可以参照测试代码 `lib/test/mini_test/` 进行使用。
+2. (关于功能) `1.0.0` 版实现了最常用最基础的功能，而不是 100% 的 Authing API (因为实在太多了)，具体实现了什么功能，参照 [`doc/README.md`](./doc/README.md)
 
 ## 当前最新进展：已发布第一版 `1.0.0`
 
