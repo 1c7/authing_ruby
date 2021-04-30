@@ -25,5 +25,16 @@ module AuthingRuby
       return result
     end
 
+    # 生成一个纯数字的随机字符串
+    def self.randomNumberString(length = 8)
+      result = ""
+      chars = '0123456789'
+      for i in 0..length-1
+        random_index = rand(0..chars.length-1)
+        result += chars[random_index]
+      end
+      return result
+    end
+
   end
 end
