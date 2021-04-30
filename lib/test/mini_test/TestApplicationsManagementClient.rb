@@ -16,26 +16,39 @@ class TestApplicationsManagementClient < Minitest::Test
       userPoolId: ENV["userPoolId"],
       secret: ENV["secret"],
     }
+    @managementClient = AuthingRuby::ManagementClient.new(@options)
   end
 
   # 创建应用
   # ruby ./lib/test/mini_test/TestApplicationsManagementClient.rb -n test_create
   def test_create
-    managementClient = AuthingRuby::ManagementClient.new(@options)
-    res = managementClient.applications.create({
-			name: '应用名称4',
-			identifier: 'app4',
+    res = @managementClient.applications.create({
+			name: '应用名称1000',
+			identifier: 'app1000',
 		})
     json = JSON.parse(res.body)
     assert(json["code"] == 200, res.body)
+    # 错误情况1
+    # {"code":2039,"message":"域名已被占用"}
+
+    # 清理工作：删掉这个应用
+    appid = json.dig("data", "id")
+    @managementClient.applications.delete(appid)
   end
 
   # 删除应用
   # ruby ./lib/test/mini_test/TestApplicationsManagementClient.rb -n test_delete
   def test_delete
-    appid = "60893b8db4486990c1b0a79c"
-    managementClient = AuthingRuby::ManagementClient.new(@options)
-    res = managementClient.applications.delete(appid)
+    # 先创建一个应用
+    res = @managementClient.applications.create({
+			name: '应用名称10',
+			identifier: 'app10',
+		})
+    json = JSON.parse(res.body)
+    appid = json.dig("data", "id")
+
+    # 然后删除这个应用
+    res = @managementClient.applications.delete(appid)
     json = JSON.parse(res.body)
     assert(json["code"] == 200, res.body)
   end
@@ -52,11 +65,21 @@ class TestApplicationsManagementClient < Minitest::Test
   # 获取应用详情
   # ruby ./lib/test/mini_test/TestApplicationsManagementClient.rb -n test_findById
   def test_findById
-    appid = "60800b9151d040af9016d60b"
-    managementClient = AuthingRuby::ManagementClient.new(@options)
-    res = managementClient.applications.findById(appid)
+    # 先创建应用
+    res = @managementClient.applications.create({
+			name: '应用名称20',
+			identifier: 'app20',
+		})
+    json = JSON.parse(res.body)
+    appid = json.dig("data", "id")
+
+    # 然后查询这个应用
+    res = @managementClient.applications.findById(appid)
     json = JSON.parse(res.body)
     assert(json["code"] == 200, res.body)
+
+    # 清理工作：最后删除掉这个应用
+    @managementClient.applications.delete(appid)
   end
 
 end
