@@ -25,6 +25,7 @@ class TestAuthenticationClientProtocal < Minitest::Test
 		AuthingRuby::AuthenticationClient.new(options)
 	end
 
+	# 【需手工测试】
 	# 生成 OIDC 协议的用户登录链接
 	# 用户可以通过此链接访问 Authing 的在线登录页面
 	# ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb -n test_buildAuthorizeUrl
@@ -59,6 +60,7 @@ class TestAuthenticationClientProtocal < Minitest::Test
 		# t.falsy(url1Data.searchParams.get('code_verifier'));
 	end
 
+	# 需手工测试
 	# PKCE 场景使用示例
 	# ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb -n test_buildAuthorizeUrl_2
 	def test_buildAuthorizeUrl_2
@@ -78,6 +80,43 @@ class TestAuthenticationClientProtocal < Minitest::Test
 		# 构造 OIDC 授权码 + PKCE 模式登录 URL
 		url2 = client.buildAuthorizeUrl({ codeChallenge: codeChallengeDigest, codeChallengeMethod: 'S256' })
 		puts url2
+		# 测试方法同样是把 url2 复制粘贴到浏览器里访问
+	end
+
+	# 需手工测试
+	# 测试 Code 换 Token
+	# ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb -n test_getAccessTokenByCode
+	def test_getAccessTokenByCode
+		client_options = {
+      appId: ENV["appId"],
+      secret: ENV["appSecret"],
+      appHost: ENV["appHost"],
+			redirectUri: ENV["redirectUri"],
+		}
+		client = AuthingRuby::AuthenticationClient.new(client_options)
+
+		# 比如登录成功后跳转到了这个 URL
+		# http://localhost:3000/authing_callback?code=BRWx1zB95MSSi_n3ZeC0t_Rnpyx8-ZvG7Afq7A1pEWP&state=5119168221224539
+
+		# 那么把 code 复制过来
+		code = 'BRWx1zB95MSSi_n3ZeC0t_Rnpyx8-ZvG7Afq7A1pEWP' #【你需要填写这里】
+		resp = client.getAccessTokenByCode(code);
+		# 如果失败：（比如 secret 填写成了用户池密钥是错的，应该填应用密钥）
+		# {"error":"invalid_client","error_description":"client authentication failed"}
+
+		# 如果 code 第二次使用（也会失败）
+		# {"error"=>"invalid_grant", "error_description"=>"grant request is invalid"}
+
+		# 如果成功
+		# {"access_token":"[省略]","expires_in":1209600,"id_token":"[省略]","scope":"openid profile","token_type":"Bearer"}
+    json = JSON.parse(resp.body)
+		# puts JSON.pretty_generate(json)
+
+    assert(json.dig('access_token') != nil)
+    assert(json.dig('expires_in') != nil)
+    assert(json.dig('id_token') != nil)
+    assert(json.dig('scope') != nil)
+    assert(json.dig('token_type') != nil)
 	end
 
 end

@@ -53,6 +53,7 @@ require 'faraday'
 
 module AuthingRuby
   module Common
+
     class HttpClient
       METHODS = %i[get post put delete]
       # METHODS = %i[get post put delete head patch options trace]
@@ -62,18 +63,49 @@ module AuthingRuby
         @tokenProvider = tokenProvider
       end
 
-      def request(config)
-        # 处理 config 里5个参数：method, url, data, params, headers
+      # 目的: 把 Faraday 稍微封装一下，因为 Faraday 不能动态指定方法（文档里没写），不像 js 的 axios。
+      # https://github.com/lostisland/faraday/blob/main/lib/faraday/connection.rb
+      # https://www.rubydoc.info/github/lostisland/faraday/Faraday/Connection
+      # 返回 <Faraday::Response>
+      def faraday_conn(config = {})
         method = config.fetch(:method, nil)
         if method == nil
-          throw "必须传入 method，可选值 #{METHODS.join(', ')}"
+          raise "必须传入 method，可选值 #{METHODS.join(', ')}"
         end
-        
         method_downcase = method.downcase # 转成小写
         if METHODS.include?(method_downcase.to_sym) == false
-          throw "传入的 method 错误，可选值 #{METHODS.join(', ')}"
+          raise "传入的 method 错误，可选值 #{METHODS.join(', ')}"
         end
 
+        url = config.fetch(:url, nil)
+        data = config.fetch(:data, nil) # data 和 body 一回事
+        params = config.fetch(:params, nil)
+        headers = config.fetch(:headers, nil)
+
+        if method_downcase == 'get'
+          conn = Faraday::Connection.new url
+          return conn.get nil, params, headers
+        end
+
+        if method_downcase == 'post'
+          conn = Faraday::Connection.new url
+          return conn.post nil, data, headers
+        end
+
+        if method_downcase == 'put'
+          conn = Faraday::Connection.new url
+          return conn.put nil, data, headers
+        end
+
+        if method_downcase == 'delete'
+          conn = Faraday::Connection.new url
+          return conn.delete nil, params, headers
+        end
+      end
+
+      def request(config = {})
+        # 处理 config 里5个参数：method, url, data, params, headers
+        method = config.fetch(:method, nil)
         url = config.fetch(:url, nil)
         data = config.fetch(:data, nil) # data 和 body 一回事
         params = config.fetch(:params, nil)
@@ -95,28 +127,52 @@ module AuthingRuby
           headers['Authorization'] = "Bearer #{token}" if token
         end
 
-        if method_downcase == 'get'
-          conn = Faraday::Connection.new url
-          return conn.get nil, params, headers
-        end
+        resp = faraday_conn({
+          method: method,
+          params: params,
+          url: url,
+          data: data,
+          headers: headers,
+        })
 
-        if method_downcase == 'post'
-          conn = Faraday::Connection.new url
-          return conn.post nil, data, headers
-        end
+        # const { code, message } = data;
+        # if (code !== 200) {
+        #   this.options.onError(code, message, data.data);
+        #   throw new Error(JSON.stringify({ code, message, data: data.data }));
+        # }
+        # return data.data;
 
-        if method_downcase == 'put'
-          conn = Faraday::Connection.new url
-          return conn.put nil, data, headers
-        end
+        return resp
+      end
 
-        if method_downcase == 'delete'
-          conn = Faraday::Connection.new url
-          return conn.delete nil, params, headers
-        end
+    end
 
+    # JS SDK 里
+    # NaiveHttpClient 和 HttpClient 的区别:  HttpClient 会处理 onError 回调函数，也会从返回的 data 中处理 code, message
+    # NaiveHttpClient 只返回 data，也不带请求头 Authorization
+    class NaiveHttpClient < HttpClient
+      def initialize(options = {}, tokenProvider = nil)
+        super(options, tokenProvider)
+      end
+    
+      def request(config = {})
+        headers = {
+          'x-authing-sdk-version': "ruby:#{AuthingRuby::VERSION}",
+          'x-authing-userpool-id': @options.fetch(:userPoolId, ''),
+          'x-authing-request-from': @options.fetch(:requestFrom, 'sdk'),
+          'x-authing-app-id': @options.fetch(:appId, ''),
+          'x-authing-lang': @options.fetch(:lang, ''),
+        };
+        headers_merge = headers.merge(config.fetch(:headers, {}))
+        # 先把 header 合并一下，把用户传进来的和这里默认的合并一下
+
+        config = config.merge({headers: headers_merge})
+        # 再把 config 处理一下，把最终 header 合并进去
+
+        return faraday_conn(config)
       end
     end
+
   end
 end
 

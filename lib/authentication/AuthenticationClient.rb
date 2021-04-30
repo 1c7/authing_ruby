@@ -13,7 +13,7 @@ module AuthingRuby
       @secret = options.fetch(:secret, nil) # 应用密钥
       @appHost = options.fetch(:appHost, nil) # 该应用的域名
       @redirectUri = options.fetch(:redirectUri, nil) # 业务回调地址
-      @protocol = options.fetch(:protocol, nil) # 协议类型，可选值为 oidc、oauth、saml、cas
+      @protocol = options.fetch(:protocol, 'oidc') # 协议类型，可选值为 oidc、oauth、saml、cas
 
       # 公钥加密
       @publicKeyManager = AuthingRuby::Common::PublicKeyManager.new(options)
@@ -26,6 +26,7 @@ module AuthingRuby
       @tokenProvider = Authentication::AuthenticationTokenProvider.new()
 
       @httpClient = AuthingRuby::Common::HttpClient.new(options, @tokenProvider)
+      @naiveHttpClient = AuthingRuby::Common::NaiveHttpClient.new(options, @tokenProvider)
 
       # 把 GraphQL 文件夹路径放这里, 这些是私有变量
       @folder_graphql = "./lib/graphql"
@@ -415,36 +416,72 @@ module AuthingRuby
       raise '不支持的协议类型，请在初始化 AuthenticationClient 时传入 protocol 参数，可选值为 oidc、oauth、saml、cas'
     end
 
-    # TODO
-    def _getAccessTokenByCodeWithClientSecretPost
+    # 逻辑参照 JS SDK
+    # 目的: 把 params 这个 hash 里 value 为空的值全部删掉
+    # 最后返回一个 url params 字符串
+    def _generateTokenRequest(params)
+      ret = {}
+      params.each do |key, value|
+        if value
+          ret[key] = value
+        end
+      end
+      return URI::QueryParams.dump(ret)
     end
 
-    # TODO
+    def _getAccessTokenByCodeWithClientSecretPost(code, options = {})
+      codeVerifier = options.fetch(:codeVerifier, nil)
+      qstr = _generateTokenRequest({
+        client_id: @appId,
+        client_secret: @secret,
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: @redirectUri,
+        code_verifier: codeVerifier,
+      })
+
+      api = ''
+      if @protocol == 'oidc'
+        api = "#{@baseClient.appHost}/oidc/token"
+      elsif @protocol == 'oauth'
+        api = "#{@baseClient.appHost}/oauth/token"
+      end
+      tokenSet = @naiveHttpClient.request({
+        method: 'POST',
+        url: api,
+        data: qstr,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      return tokenSet
+    end
+
     # Code 换 Token
     # 使用授权码 Code 获取用户的 Token 信息。
     # res = a.getAccessTokenByCode('授权码 code');
     # 参照: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L1977
     def getAccessTokenByCode(code, options = {})
-      # 检查1
+      # 检查参数合法性
       if ['oauth', 'oidc'].include?(@protocol) == false
         raise '初始化 AuthenticationClient 时传入的 protocol 参数必须为 oauth 或 oidc，请检查参数'
       end
-
-      # 检查2
       if !@secret && @tokenEndPointAuthMethod != nil
         raise '请在初始化 AuthenticationClient 时传入 appId 和 secret 参数'
       end
 
       if @tokenEndPointAuthMethod == 'client_secret_post'
-        return _getAccessTokenByCodeWithClientSecretPost(code, options.fetch(:codeVerifier, nil))
+        return _getAccessTokenByCodeWithClientSecretPost(code, options)
       end
 
       if @tokenEndPointAuthMethod == 'client_secret_basic'
+        # TODO
         raise "client_secret_basic 还未实现"
         # return _getAccessTokenByCodeWithClientSecretBasic(code, options.fetch(:codeVerifier, nil))
       end
 
       if @tokenEndPointAuthMethod == nil
+        # TODO
         raise "还未实现"
         # return _getAccessTokenByCodeWithNone(code, options.fetch(:codeVerifier, nil))
       end

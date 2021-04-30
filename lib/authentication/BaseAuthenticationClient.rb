@@ -7,7 +7,7 @@ module AuthingRuby
         @options = options
       end
 
-      def appHost()
+      def appHost
         # 最新版本，传入 appHost
         appHost = @options.fetch(:appHost, nil)
         return appHost if appHost != nil
