@@ -221,4 +221,18 @@ class TestAuthenticationClientProtocal < Minitest::Test
     # {"jti"=>"QaAveORqCeKrt-ZOMaQIV", "sub"=>"608b9b52414bd3b71fad04ef", "iat"=>1619781646, "exp"=>1620991246, "scope"=>"openid profile offline_access", "iss"=>"https://rails-demo.authing.cn/oidc", "aud"=>"60800b9151d040af9016d60b"}
   end
 
+  # 撤回 Access Token 或 Refresh token
+  # ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb -n test_revokeToken
+  def test_revokeToken
+    accessToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZ6S0U4TUlidkVkdl9Mb3N5a1dHTjdNTmpqbjlQMldvVmxtN0pIcFVZUFUifQ.eyJqdGkiOiJRYUF2ZU9ScUNlS3J0LVpPTWFRSVYiLCJzdWIiOiI2MDhiOWI1MjQxNGJkM2I3MWZhZDA0ZWYiLCJpYXQiOjE2MTk3ODE2NDYsImV4cCI6MTYyMDk5MTI0Niwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyIsImlzcyI6Imh0dHBzOi8vcmFpbHMtZGVtby5hdXRoaW5nLmNuL29pZGMiLCJhdWQiOiI2MDgwMGI5MTUxZDA0MGFmOTAxNmQ2MGIifQ.WNwR3yOx4XoPU-xGwPxPDlJI7V-EZ6aKwxk5tPg1bpfhhxkMW-o6mJU4_n7ZCMSeXJqikD0e5phGkg79brawGCkmBfW6khS5d5xCiPJg20Ru7NQZMVBTrsislnXIZn18cSrZz8MeDLOQTYCNW686Uz-D0eJu_JTeocjijHq3uwZX_5YR7yOgl2lbjZ2jo1zpbtkCrNHMO3HXVvv1zpNFLg6e11u5xFjGq_HugEvbeL-YSCT9g83_C0IAqg-letoJTWxUkWkxlPWrVAnv9KIjPuGaynQTYc0GEuvASt58uS1dzRRQ73G2x5fKHfX8E-0qyuqfsRr5_CpjIlLHMt2c8Q"
+    # accessToken = "auefaouea222"
+    result = @authenticationClient.revokeToken(accessToken)
+    if result.class == Faraday::Response
+      puts "body 是 #{result.body}"
+    else
+      puts result
+    end
+    # 这个没法测, 瞎写一个 accessToken 也不会报错，算了不管它
+  end
+
 end

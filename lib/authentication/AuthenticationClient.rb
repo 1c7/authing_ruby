@@ -802,5 +802,53 @@ module AuthingRuby
       raise '不支持的 options.method，可选值为 S256、plain'
     end
 
+    def _revokeTokenWithClientSecretPost(token)
+      qstr = _generateTokenRequest({
+        client_id: @appId,
+        client_secret: @secret,
+        token: token,
+      });
+      api = '';
+      if @protocol === 'oidc'
+        api = "#{@baseClient.appHost}/oidc/token/revocation";
+      elsif @protocol === 'oauth'
+        api = "#{@baseClient.appHost}/oauth/token/revocation";
+      end
+      tokenSet = @naiveHttpClient.request({
+        method: 'POST',
+        url: api,
+        data: qstr,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
+      return tokenSet;
+    end
+
+    # 撤回 Access Token 或 Refresh token
+    def revokeToken(token)
+      # 检查参数合法性
+      if ['oauth', 'oidc'].include?(@protocol) == false
+        raise '初始化 AuthenticationClient 时传入的 protocol 参数必须为 oauth 或 oidc，请检查参数'
+      end
+      if !@secret && @tokenEndPointAuthMethod != nil
+        raise '请在初始化 AuthenticationClient 时传入 appId 和 secret 参数'
+      end
+
+      if @revocationEndPointAuthMethod == 'client_secret_post'
+        _revokeTokenWithClientSecretPost(token) # 实测这个请求啥也不返回, 空的, 所以把这个直接 return 返回没啥用
+        return true;
+      end
+      if @revocationEndPointAuthMethod == 'client_secret_basic'
+        # await this._revokeTokenWithClientSecretBasic(token);
+        # return true;
+      end
+      if @revocationEndPointAuthMethod == 'none'
+        # await this._revokeTokenWithNone(token);
+        # return true;
+      end
+      raise '初始化 AuthenticationClient 时传入的 revocationEndPointAuthMethod 参数可选值为 client_secret_base、client_secret_post、none，请检查参数'
+    end
+
   end
 end
