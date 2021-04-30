@@ -10,3 +10,4 @@ gem "http"
 # 是先用了 http，发现不够用，才加上 faraday
 
 gem 'jwt'
+gem 'rake', '~> 13.0', '>= 13.0.3' # https://github.com/ruby/rake
