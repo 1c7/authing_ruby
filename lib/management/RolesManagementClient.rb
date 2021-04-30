@@ -1,4 +1,5 @@
 # 管理角色
+# TODO: 这个只写了个架子，具体的还没实现
 
 module AuthingRuby
   class RolesManagementClient

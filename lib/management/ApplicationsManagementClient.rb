@@ -1,4 +1,4 @@
-
+# 管理应用
 
 module AuthingRuby	
   class ApplicationsManagementClient

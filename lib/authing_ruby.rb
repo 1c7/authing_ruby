@@ -1,4 +1,4 @@
-# 引入各种东西
+# 主文件，引入各种东西
 require './lib/utils/utils.rb' # 工具
 require './lib/common/PublicKeyManager.rb' # 公钥
 require './lib/common/GraphqlClient.rb' # 发 GraphQL 请求的工具
@@ -10,3 +10,5 @@ require './lib/authentication/AuthenticationClient.rb'
 
 require './lib/management/ManagementClient.rb'
 # ManagementClient 以管理员（Administrator）的身份进行请求，用于管理用户池资源和执行管理任务，提供了管理用户、角色、应用、资源等方法；一般来说，你在 Authing 控制台 (opens new window)中能做的所有操作，都能用此模块完成。
+
+# 所有的代码都放在 AuthingRuby 这个 module 下，作为命名空间
