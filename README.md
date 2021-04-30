@@ -1,9 +1,6 @@
 # Authing Ruby SDK
 这里是 [Authing](https://www.authing.cn/) 的 Ruby SDK  
 
-## 公告
-在修复问题，暂时不能用，修好之后发一个 `1.0.x` 版
-
 ## 如何安装
 Gemfile 中写上
 ```
@@ -35,8 +32,8 @@ puts resp # 返回注册成功的用户信息
 1. [`example/`](example/) 目录有使用例子
 1. Ruby SDK 是参照 JS SDK 实现的。方法名，参数完全一致，可以翻阅 [JS/Node SDK 文档](https://docs.authing.cn/v2/reference/sdk-for-node/) 参考
 1. 也可以参照测试代码 [`lib/test/mini_test/`](./lib/test/mini_test) 进行使用。
-1. (关于功能) `1.0.3` 版实现了最常用最基础的功能，而不是 100% 的 Authing API (因为实在太多了)，具体实现了什么功能，参照 [`doc/README.md`](./doc/README.md)
+1. (关于功能) `1.0.5` 版实现了最常用最基础的功能，而不是 100% 的 Authing API (因为实在太多了)，具体实现了什么功能，参照 [`doc/README.md`](./doc/README.md)
 1. 这个 gem 说到底只是一个 SDK，重点是使用 Authing 本身，所以请花些时间阅读 Authing 的文档，理解核心概念和流程。
 
-## 当前最新进展：已发布第一版 `1.0.3`
+## 当前最新进展：已发布第一版 `1.0.5`
 [更多文档请阅读](doc/)
