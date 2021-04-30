@@ -3,7 +3,7 @@
 # https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/common/PublicKeyManager.ts#L28
 # authing.js/src/lib/common/PublicKeyManager.ts 
 require "http"
-require './lib/authentication/BaseAuthenticationClient.rb'
+require_relative '../authentication/BaseAuthenticationClient.rb'
 
 module AuthingRuby
   module Common

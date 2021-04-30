@@ -1,10 +1,10 @@
 # 管理模块
-require './lib/management/ManagementTokenProvider.rb'
-require './lib/management/UsersManagementClient.rb'
-require './lib/management/ApplicationsManagementClient.rb'
-require './lib/management/AclManagementClient.rb'
-require './lib/management/UserpoolManagementClient.rb'
-require './lib/management/RolesManagementClient.rb'
+require_relative './ManagementTokenProvider.rb'
+require_relative './UsersManagementClient.rb'
+require_relative './ApplicationsManagementClient.rb'
+require_relative './AclManagementClient.rb'
+require_relative './UserpoolManagementClient.rb'
+require_relative './RolesManagementClient.rb'
 
 module AuthingRuby
   class ManagementClient

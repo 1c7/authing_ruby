@@ -47,9 +47,9 @@
 
 =end
 
-require './lib/version.rb';
 require "http"
 require 'faraday'
+require_relative '../version.rb'
 
 module AuthingRuby
   module Common

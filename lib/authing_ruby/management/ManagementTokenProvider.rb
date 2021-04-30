@@ -3,7 +3,7 @@
 
 # authing.js/src/lib/management/ManagementTokenProvider.ts
 
-require './lib/GraphQLAPI.rb'
+require_relative '../GraphQLAPI.rb'
 require 'jwt'
 
 module AuthingRuby

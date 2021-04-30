@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   # 如果你参与了开发，请在作者列表里留下你的名字
 
   s.email       = 'chengzheng.apply@gmail.com'
-  s.files       = ["lib/authing_ruby.rb"]
+  s.files       = Dir['lib/**/*', 'authing_ruby.gemspec']
   s.homepage    = 'https://github.com/1c7/authing_ruby'
   s.license     = 'MIT'
 end

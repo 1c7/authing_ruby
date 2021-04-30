@@ -9,9 +9,15 @@ module AuthingRuby
   class GraphQLAPI
 
     def initialize()
-      @folder_graphql = "./lib/graphql"
+      # @folder_graphql = "./lib/authing_ruby/graphql"
+      @folder_graphql = File.join(File.dirname(File.expand_path(__FILE__)), "/graphql")
+      puts "路径是#{@folder_graphql}"
       @folder_mutation = "#{@folder_graphql}/mutations"
       @folder_query = "#{@folder_graphql}/queries"
+    end
+
+    def registerByEmail(garpqhlClient, variables)
+      return _graphql_mutation_request("registerByEmail", garpqhlClient, nil, variables)
     end
 
     def getAccessToken(garpqhlClient, variables)

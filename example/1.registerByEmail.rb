@@ -4,7 +4,8 @@
 
 # 如何运行: ruby ./example/1.registerByEmail.rb
 
-require 'authing_ruby'
+require './lib/authing_ruby'
+# require 'authing_ruby'
 require 'dotenv'
 Dotenv.load('.env.example') # 载入环境变量文件
 

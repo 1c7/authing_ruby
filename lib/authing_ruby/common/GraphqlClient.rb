@@ -3,8 +3,8 @@
 # 模仿的是: 
 # https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/common/GraphqlClient.ts#L6
 
-require './lib/version.rb';
 require "http"
+require_relative '../version.rb'
 
 module AuthingRuby
   module Common

@@ -1,4 +1,4 @@
-require './lib/authentication/BaseAuthenticationClient.rb'
+require_relative './BaseAuthenticationClient.rb'
 require 'jwt'
 require 'uri/query_params'
 require 'digest'
@@ -62,16 +62,10 @@ module AuthingRuby
           "generateToken": options.fetch(:generateToken, nil),
         }
       }
-      # 第二步：构建 payload
-      file = File.open("#{@folder_graphql_mutation}/registerByEmail.gql")
-      json = {
-        "query": file.read,
-        "variables": variables,
-      }
-      # 第三步：发请求
-      response = @graphqlClient.request({json: json})
-      json = JSON.parse(response)
-      user = json.dig("data", "registerByEmail")
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      res = graphqlAPI.registerByEmail(@graphqlClient, variables)
+      json = JSON.parse(res)
+      user = json.dig('data', 'registerByEmail')
       return user if user
       return json
     end
