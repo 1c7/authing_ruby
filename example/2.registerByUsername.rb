@@ -5,7 +5,7 @@
 # 如何运行: ruby ./example/2.registerByUsername.rb
 # 其实这个和 "例子1: 邮箱+密码注册" 非常相似，只是换了个方法。  
 
-require './lib/authing_ruby.rb' # 载入 Gem
+require 'authing_ruby'
 require 'dotenv'
 Dotenv.load('.env.example') # 载入环境变量文件
 
@@ -17,7 +17,7 @@ options = {
 authenticationClient = AuthingRuby::AuthenticationClient.new(options)
 
 # 第二步：注册
-username = "user1234" # 邮件地址
+username = "user#{rand(0...9999)}" # 邮件地址
 password = "12345678" # 密码
 resp = authenticationClient.registerByUsername(username, password)
 

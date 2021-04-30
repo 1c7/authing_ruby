@@ -4,7 +4,7 @@
 
 # 如何运行: ruby ./example/3.sendSmsCode.rb
 
-require './lib/authing_ruby.rb' # 载入 Gem
+require 'authing_ruby'
 require 'dotenv'
 Dotenv.load('.env.example') # 载入环境变量文件
 

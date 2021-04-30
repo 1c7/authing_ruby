@@ -4,7 +4,7 @@
 
 # 如何运行: ruby ./example/1.registerByEmail.rb
 
-require './lib/authing_ruby.rb' # 载入 Gem
+require 'authing_ruby'
 require 'dotenv'
 Dotenv.load('.env.example') # 载入环境变量文件
 
@@ -16,7 +16,7 @@ options = {
 authenticationClient = AuthingRuby::AuthenticationClient.new(options)
 
 # 第二步：注册
-email = "haha2@qq.com" # 邮件地址
+email = "haha#{rand(0..1000)}@qq.com" # 邮件地址
 password = "12345678" # 密码
 resp = authenticationClient.registerByEmail(email, password)
 
