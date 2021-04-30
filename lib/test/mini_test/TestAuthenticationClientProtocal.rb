@@ -35,6 +35,7 @@ class TestAuthenticationClientProtocal < Minitest::Test
       appHost: ENV["appHost"],
       appId: ENV["appId"],
 			redirectUri: ENV["redirectUri"],
+			protocol: 'oidc',
 		};
 		@authenticationClient = AuthingRuby::AuthenticationClient.new(options)
 		@authenticationClient.buildAuthorizeUrl({ scope: 'openid profile offline_access' });

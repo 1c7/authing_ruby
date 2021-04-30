@@ -8,6 +8,7 @@
 
 # 我们将这些测试统一放到这个文件里，方便查找
 # 因为这些方法需要手工测试，无法自动化
+# ruby ./lib/test/mini_test/TestSMSandEmail.rb
 
 require "minitest/autorun"
 require "./lib/authing_ruby.rb"
@@ -53,7 +54,7 @@ class TestSMSandEmail < Minitest::Test
     phone = @phone # 手机号
     phoneCode = nil # 先保持为 nil 运行一次, 触发 manual_send_SMS 发个短信，然后自己填一下 phoneCode 为手机短信收到的验证码
     if phoneCode == nil
-      manual_send_SMS(phone)
+      # manual_send_SMS(phone) # 取消这行的注释
     else
       newPassword = '123456789'
       res = @authenticationClient.resetPasswordByPhoneCode(phone, phoneCode, newPassword)
@@ -83,7 +84,7 @@ class TestSMSandEmail < Minitest::Test
     # 第三步
     phoneCode = nil # 先保持为 nil 运行一次, 触发 manual_send_SMS 发个短信，然后自己填一下 phoneCode 为手机短信收到的验证码
     if phoneCode == nil
-      manual_send_SMS(@phone)
+      # manual_send_SMS(@phone) # 取消这行的注释
     else
       res = @authenticationClient.bindPhone(@phone, phoneCode)
       assert(res.dig('id') != nil)
@@ -97,5 +98,4 @@ class TestSMSandEmail < Minitest::Test
     user_id = user['id']
     @managementClient.users.delete(user_id)
   end 
-
 end

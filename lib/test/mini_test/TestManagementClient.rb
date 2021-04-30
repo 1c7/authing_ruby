@@ -158,7 +158,7 @@ class TestManagementClient < Minitest::Test
     userInfo = {
       "username": "bob",
     }
-    user = create_random_user(userInfo)
+    create_random_user(userInfo)
 
     # 第二步：检查是否存在
     managementClient = AuthingRuby::ManagementClient.new(@options)
@@ -178,7 +178,7 @@ class TestManagementClient < Minitest::Test
     userInfo = {
       "username": "alice",
     }
-    user = create_random_user(userInfo)
+    create_random_user(userInfo)
 
     managementClient = AuthingRuby::ManagementClient.new(@options)
     options = { 
