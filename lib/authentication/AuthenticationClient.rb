@@ -31,7 +31,10 @@ module AuthingRuby
 
       # @baseClient = Authentication::BaseAuthenticationClient.new(options)
 
+      # 以下几个参数主要用于 "标准协议认证模块"
       @tokenEndPointAuthMethod = options.fetch(:tokenEndPointAuthMethod, 'client_secret_post')
+      @introspectionEndPointAuthMethod = options.fetch(:introspectionEndPointAuthMethod, 'client_secret_post')
+      @revocationEndPointAuthMethod = options.fetch(:revocationEndPointAuthMethod, 'client_secret_post')
     end
 
     # 使用邮箱+密码注册 (完成, 测试通过)
@@ -42,7 +45,7 @@ module AuthingRuby
     def registerByEmail(email, password, profile = {}, options = {})
       # 第一步：构建 variables
       publicKey = @publicKeyManager.getPublicKey()
-      encryptedPassword = Utils.encrypt(password, publicKey)
+      encryptedPassword = AuthingRuby::Utils.encrypt(password, publicKey)
       variables = {
         "input": {
           "email": email,
@@ -76,7 +79,7 @@ module AuthingRuby
     def registerByUsername(username, password, profile = {}, options = {})
       # 第一步：构建 variables
       publicKey = @publicKeyManager.getPublicKey()
-      encryptedPassword = Utils.encrypt(password, publicKey)
+      encryptedPassword = AuthingRuby::Utils.encrypt(password, publicKey)
       variables = {
         "input": {
           "username": username,
@@ -123,7 +126,7 @@ module AuthingRuby
     def registerByPhoneCode(phone, code, password, profile = {}, options = {})
       # 第一步：构建 variables
       publicKey = @publicKeyManager.getPublicKey()
-      encryptedPassword = Utils.encrypt(password, publicKey)
+      encryptedPassword = AuthingRuby::Utils.encrypt(password, publicKey)
       variables = {
         "input": {
           "phone": phone,
@@ -154,7 +157,7 @@ module AuthingRuby
     def loginByEmail(email, password, options = {})
       # 第一步：构建 variables
       publicKey = @publicKeyManager.getPublicKey()
-      encryptedPassword = Utils.encrypt(password, publicKey)
+      encryptedPassword = AuthingRuby::Utils.encrypt(password, publicKey)
       variables = {
         "input": {
           "email": email,
@@ -190,7 +193,7 @@ module AuthingRuby
     def loginByUsername(username, password, options = {})
       # 第一步：构建 variables
       publicKey = @publicKeyManager.getPublicKey()
-      encryptedPassword = Utils.encrypt(password, publicKey)
+      encryptedPassword = AuthingRuby::Utils.encrypt(password, publicKey)
       variables = {
         "input": {
           "username": username,
@@ -256,7 +259,7 @@ module AuthingRuby
     def loginByPhonePassword(phone, password, options = {})
       # 第一步：构建 variables
       publicKey = @publicKeyManager.getPublicKey()
-      encryptedPassword = Utils.encrypt(password, publicKey)
+      encryptedPassword = AuthingRuby::Utils.encrypt(password, publicKey)
       variables = {
         "input": {
           "phone": phone,
@@ -601,8 +604,8 @@ module AuthingRuby
     # 更新用户密码
     def updatePassword(newPassword, oldPassword)
       publicKey = @publicKeyManager.getPublicKey()
-      newPasswordEncrypted = Utils.encrypt(newPassword, publicKey)
-      oldPasswordEncrypted = Utils.encrypt(oldPassword, publicKey)
+      newPasswordEncrypted = AuthingRuby::Utils.encrypt(newPassword, publicKey)
+      oldPasswordEncrypted = AuthingRuby::Utils.encrypt(oldPassword, publicKey)
       variables = { 
         "newPassword": newPasswordEncrypted,
         "oldPassword": oldPasswordEncrypted,
@@ -635,7 +638,7 @@ module AuthingRuby
     # 通过短信验证码重置密码
     def resetPasswordByPhoneCode(phone, code, newPassword)
       publicKey = @publicKeyManager.getPublicKey()
-      newPasswordEncrypted = Utils.encrypt(newPassword, publicKey)
+      newPasswordEncrypted = AuthingRuby::Utils.encrypt(newPassword, publicKey)
 
       variables = {
         "phone": phone,
@@ -652,8 +655,8 @@ module AuthingRuby
 
     # TODO
     def generateCodeChallenge()
+      return generateRandomString(43);
     end
-
 
   end
 end

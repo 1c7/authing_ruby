@@ -19,7 +19,7 @@ module AuthingRuby
       # 先对密码进行处理
       if password
         publicKey = @publicKeyManager.getPublicKey()
-        encryptedPassword = Utils.encrypt(password, publicKey)
+        encryptedPassword = AuthingRuby::Utils.encrypt(password, publicKey)
         userInfo[:password] = encryptedPassword
       end
 
@@ -39,7 +39,7 @@ module AuthingRuby
       password = updates.fetch(:password, nil)
       if password
         publicKey = @publicKeyManager.getPublicKey()
-        encryptedPassword = Utils.encrypt(password, publicKey)
+        encryptedPassword = AuthingRuby::Utils.encrypt(password, publicKey)
         updates[:password] = encryptedPassword
       end
 
