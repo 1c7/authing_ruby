@@ -1,3 +1,5 @@
+# 这个文件测什么？ManagementTokenProvider
+# 只是管理 accessToken
 # ruby ./lib/test/mini_test/TestManagementTokenProvider.rb
 
 require "minitest/autorun"
@@ -8,8 +10,7 @@ Dotenv.load('.env.test')
 
 class TestManagementTokenProvider < Minitest::Test
 
-  # ruby ./lib/test/mini_test/TestManagementTokenProvider.rb -n test_getToken
-  def test_getToken
+  def setup
     appHost = ENV["appHost"]
     graphqlEndpoint = "#{appHost}/graphql/v2"
     graphqlClient = AuthingRuby::Common::GraphqlClient.new(graphqlEndpoint)
@@ -18,60 +19,31 @@ class TestManagementTokenProvider < Minitest::Test
       userPoolId: ENV["userPoolId"],
       secret: ENV["secret"],
     }
-    managementTokenProvider = AuthingRuby::ManagementTokenProvider.new(options, graphqlClient)
-    token = managementTokenProvider.getToken()
-    puts "token 是 #{token}"
+    @managementTokenProvider = AuthingRuby::ManagementTokenProvider.new(options, graphqlClient)
+  end
 
-    token = managementTokenProvider.getToken()
-    puts "token 是 #{token}"
-    
-    token = managementTokenProvider.getToken()
-    puts "token 是 #{token}"
+  # ruby ./lib/test/mini_test/TestManagementTokenProvider.rb -n test_getToken
+  def test_getToken
+    token = @managementTokenProvider.getToken()
+    assert(token != nil)
   end
 
   # ruby ./lib/test/mini_test/TestManagementTokenProvider.rb -n test_getAccessTokenFromServer
   def test_getAccessTokenFromServer
-    appHost = ENV["appHost"]
-    graphqlEndpoint = "#{appHost}/graphql/v2"
-    graphqlClient = AuthingRuby::Common::GraphqlClient.new(graphqlEndpoint)
-
-    options = {
-      userPoolId: ENV["userPoolId"],
-      secret: ENV["secret"],
-    }
-    managementTokenProvider = AuthingRuby::ManagementTokenProvider.new(options, graphqlClient)
-    result = managementTokenProvider._getAccessTokenFromServer()
-    puts "测试结果是 #{result}"
+    token = @managementTokenProvider._getAccessTokenFromServer()
+    assert(token != nil)
   end
 
-  # Done
+  # ruby ./lib/test/mini_test/TestManagementTokenProvider.rb -n test_getClientWhenSdkInit
   def test_getClientWhenSdkInit
-    appHost = ENV["appHost"]
-    graphqlEndpoint = "#{appHost}/graphql/v2"
-    graphqlClient = AuthingRuby::Common::GraphqlClient.new(graphqlEndpoint)
-
-    options = {
-      userPoolId: ENV["userPoolId"],
-      secret: ENV["secret"],
-    }
-    managementTokenProvider = AuthingRuby::ManagementTokenProvider.new(options, graphqlClient)
-    result = managementTokenProvider.getClientWhenSdkInit()
-    # puts result
+    token = @managementTokenProvider.getClientWhenSdkInit()
+    assert(token != nil)
   end
 
-  # TODO
+  # ruby ./lib/test/mini_test/TestManagementTokenProvider.rb -n test_refreshToken
   def test_refreshToken
-    appHost = ENV["appHost"]
-    graphqlEndpoint = "#{appHost}/graphql/v2"
-    graphqlClient = AuthingRuby::Common::GraphqlClient.new(graphqlEndpoint)
-
-    options = {
-      userPoolId: ENV["userPoolId"],
-      secret: ENV["secret"],
-    }
-    managementTokenProvider = AuthingRuby::ManagementTokenProvider.new(options, graphqlClient)
-    # result = managementTokenProvider.refreshToken()
-    # puts result
+    token = @managementTokenProvider.refreshToken()
+    assert(token != nil)
   end
 
 end
