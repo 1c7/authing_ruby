@@ -381,7 +381,8 @@ module AuthingRuby
 
       map.each do |key, value|
         if options[key.to_sym]
-          if key == 'scope' && options[:scope].include?("offline_access")
+          # 如果 scope 的值里有 offline_access
+          if value == 'scope' && options.fetch(:scope, []).split(' ').include?("offline_access")
             res[:prompt] = 'consent'
           end
           res[value.to_sym] = options[key]
@@ -508,11 +509,58 @@ module AuthingRuby
       return userInfo
     end
 
+    def _getNewAccessTokenByRefreshTokenWithClientSecretPost(refreshToken)
+        qstr = _generateTokenRequest({
+          client_id: @appId,
+          client_secret: @secret,
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken
+        });
+
+        api = ''
+        if @protocol == 'oidc'
+          api = "#{@baseClient.appHost}/oidc/token"
+        elsif @protocol == 'oauth'
+          api = "#{@baseClient.appHost}/oauth/token"
+        end
+
+        tokenSet = @naiveHttpClient.request({
+          method: 'POST',
+          url: api,
+          data: qstr,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
+        return tokenSet;
+    end
+
     # TODO
     # 刷新 Access Token
+    # 使用 Refresh token 获取新的 Access token。
     # 代码参考: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L2296
     def getNewAccessTokenByRefreshToken(refreshToken)
-      # 类似结构
+      # 检查参数合法性
+      if ['oauth', 'oidc'].include?(@protocol) == false
+        raise '初始化 AuthenticationClient 时传入的 protocol 参数必须为 oauth 或 oidc，请检查参数'
+      end
+      if !@secret && @tokenEndPointAuthMethod != nil
+        raise '请在初始化 AuthenticationClient 时传入 appId 和 secret 参数'
+      end
+
+      if @tokenEndPointAuthMethod == 'client_secret_post'
+        return _getNewAccessTokenByRefreshTokenWithClientSecretPost(
+          refreshToken
+        );
+      end
+      if @tokenEndPointAuthMethod == 'client_secret_basic'
+        # return await this._getNewAccessTokenByRefreshTokenWithClientSecretBasic(
+        #   refreshToken
+        # );
+      end
+      if @tokenEndPointAuthMethod == 'none'
+        # return await this._getNewAccessTokenByRefreshTokenWithNone(refreshToken);
+      end
     end
 
     # TODO
