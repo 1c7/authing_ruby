@@ -1,6 +1,9 @@
 # Authing Ruby SDK
 这里是 [Authing](https://www.authing.cn/) 的 Ruby SDK  
 
+## 公告
+好像文件载入有点问题，我也是第一次写 gem，正在修复，稍安勿躁。
+
 ## 如何安装
 Gemfile 中写上
 ```
