@@ -402,16 +402,16 @@ module AuthingRuby
         raise '请在初始化 AuthenticationClient 时传入应用域名 appHost 参数，形如：https://app1.authing.cn'
       end
       protocol = @options.fetch(:protocol, nil)
-      if protocol === 'oidc'
+      if protocol == 'oidc'
         return _buildOidcAuthorizeUrl(options);
       end
-      if protocol === 'oauth'
+      if protocol == 'oauth'
         throw "oauth 协议暂未实现"
       end
-      if protocol === 'saml'
+      if protocol == 'saml'
         throw "saml 协议暂未实现"
       end
-      if protocol === 'cas'
+      if protocol == 'cas'
         throw "cas 协议暂未实现"
       end
       raise '不支持的协议类型，请在初始化 AuthenticationClient 时传入 protocol 参数，可选值为 oidc、oauth、saml、cas'
@@ -563,12 +563,52 @@ module AuthingRuby
       end
     end
 
+    def _introspectTokenWithClientSecretPost(token)
+      qstr = _generateTokenRequest({
+        client_id: @appId,
+        client_secret: @secret,
+        token: token,
+      })
+      api = ''
+      if @protocol == 'oidc'
+        api = "#{@baseClient.appHost}/oidc/token/introspection"
+      elsif @protocol == 'oauth'
+        api = "#{@baseClient.appHost}/oauth/token/introspection"
+      end
+      tokenSet = @naiveHttpClient.request({
+        method: 'POST',
+        url: api,
+        data: qstr,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
+      return tokenSet;
+    end
+
     # TODO
-    # 检查 Access Token
+    # 检查 Access Token 或 Refresh token 的状态
     # 文档: https://docs.authing.cn/v2/reference/sdk-for-node/authentication/StandardProtocol.html#%E6%A3%80%E6%9F%A5-access-token
     # 代码参考: https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/authentication/AuthenticationClient.ts#L2479
     def introspectToken(token)
-      # 类似结构
+      # 检查参数合法性
+      if ['oauth', 'oidc'].include?(@protocol) == false
+        raise '初始化 AuthenticationClient 时传入的 protocol 参数必须为 oauth 或 oidc，请检查参数'
+      end
+      if !@secret && @tokenEndPointAuthMethod != nil
+        raise '请在初始化 AuthenticationClient 时传入 appId 和 secret 参数'
+      end
+
+      if @introspectionEndPointAuthMethod == 'client_secret_post'
+        return _introspectTokenWithClientSecretPost(token)
+      end
+      if @introspectionEndPointAuthMethod == 'client_secret_basic'
+        # return await this._introspectTokenWithClientSecretBasic(token);
+      end
+      if @introspectionEndPointAuthMethod == 'none'
+        # return await this._introspectTokenWithNone(token);
+      end
+      raise '初始化 AuthenticationClient 时传入的 introspectionEndPointAuthMethod 参数可选值为 client_secret_base、client_secret_post、none，请检查参数'
     end
 
     # TODO
@@ -751,12 +791,12 @@ module AuthingRuby
         raise '请提供 options.codeChallenge，值为一个长度大于等于 43 的字符串'
       end
 
-      if method === 'S256'
+      if method == 'S256'
         base64 = Digest::SHA256.base64digest codeChallenge
         result = base64.gsub(/\+/, '-').gsub(/\//, '-').gsub(/=/, '')
         return result
       end
-      if method === 'plain'
+      if method == 'plain'
         return options.codeChallenge;
       end
       raise '不支持的 options.method，可选值为 S256、plain'

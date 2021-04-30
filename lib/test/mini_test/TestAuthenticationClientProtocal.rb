@@ -1,4 +1,5 @@
 # 测试内容: 用户认证模块-标准协议认证模块
+# 这里面的测试几乎全都要手工测
 # 如何运行: ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb
 
 # 这个"标准协议认证模块"是什么？可参考文档: 
@@ -184,6 +185,17 @@ class TestAuthenticationClientProtocal < Minitest::Test
     response_json = JSON.parse(response.body)
     puts response_json
     # {"access_token"=>"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZ6S0U4TUlidkVkdl9Mb3N5a1dHTjdNTmpqbjlQMldvVmxtN0pIcFVZUFUifQ.eyJqdGkiOiJRYUF2ZU9ScUNlS3J0LVpPTWFRSVYiLCJzdWIiOiI2MDhiOWI1MjQxNGJkM2I3MWZhZDA0ZWYiLCJpYXQiOjE2MTk3ODE2NDYsImV4cCI6MTYyMDk5MTI0Niwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyIsImlzcyI6Imh0dHBzOi8vcmFpbHMtZGVtby5hdXRoaW5nLmNuL29pZGMiLCJhdWQiOiI2MDgwMGI5MTUxZDA0MGFmOTAxNmQ2MGIifQ.WNwR3yOx4XoPU-xGwPxPDlJI7V-EZ6aKwxk5tPg1bpfhhxkMW-o6mJU4_n7ZCMSeXJqikD0e5phGkg79brawGCkmBfW6khS5d5xCiPJg20Ru7NQZMVBTrsislnXIZn18cSrZz8MeDLOQTYCNW686Uz-D0eJu_JTeocjijHq3uwZX_5YR7yOgl2lbjZ2jo1zpbtkCrNHMO3HXVvv1zpNFLg6e11u5xFjGq_HugEvbeL-YSCT9g83_C0IAqg-letoJTWxUkWkxlPWrVAnv9KIjPuGaynQTYc0GEuvASt58uS1dzRRQ73G2x5fKHfX8E-0qyuqfsRr5_CpjIlLHMt2c8Q", "expires_in"=>1209600, "id_token"=>"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDhiOWI1MjQxNGJkM2I3MWZhZDA0ZWYiLCJiaXJ0aGRhdGUiOm51bGwsImZhbWlseV9uYW1lIjpudWxsLCJnZW5kZXIiOiJVIiwiZ2l2ZW5fbmFtZSI6bnVsbCwibG9jYWxlIjpudWxsLCJtaWRkbGVfbmFtZSI6bnVsbCwibmFtZSI6bnVsbCwibmlja25hbWUiOm51bGwsInBpY3R1cmUiOiJodHRwczovL2ZpbGVzLmF1dGhpbmcuY28vYXV0aGluZy1jb25zb2xlL2RlZmF1bHQtdXNlci1hdmF0YXIucG5nIiwicHJlZmVycmVkX3VzZXJuYW1lIjpudWxsLCJwcm9maWxlIjpudWxsLCJ1cGRhdGVkX2F0IjoiMjAyMS0wNC0zMFQwNTo1MzoyNi43ODJaIiwid2Vic2l0ZSI6bnVsbCwiem9uZWluZm8iOm51bGwsIm5vbmNlIjoiNDc1MzQ0NDcyNDczODA5MCIsImF0X2hhc2giOiJMUE90dlpiR2lBSjMzanJ5OW9GQ2t3IiwiYXVkIjoiNjA4MDBiOTE1MWQwNDBhZjkwMTZkNjBiIiwiZXhwIjoxNjIwOTkxMjQ2LCJpYXQiOjE2MTk3ODE2NDYsImlzcyI6Imh0dHBzOi8vcmFpbHMtZGVtby5hdXRoaW5nLmNuL29pZGMifQ.u44mKaDN_zAEBuoIXcXH9Nfxx6HSwOzduu5TtOR18VQ", "refresh_token"=>"H7jJXZBHYyhPjMObTzt0VdQz2pKwVCTxIqeCzGHrfPE", "scope"=>"openid profile offline_access", "token_type"=>"Bearer"}
+  end
+
+  # 测试 检查 Access Token 或 Refresh token 的状态
+  # ruby ./lib/test/mini_test/TestAuthenticationClientProtocal.rb -n test_introspectToken
+  def test_introspectToken
+    access_token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZ6S0U4TUlidkVkdl9Mb3N5a1dHTjdNTmpqbjlQMldvVmxtN0pIcFVZUFUifQ.eyJqdGkiOiJRYUF2ZU9ScUNlS3J0LVpPTWFRSVYiLCJzdWIiOiI2MDhiOWI1MjQxNGJkM2I3MWZhZDA0ZWYiLCJpYXQiOjE2MTk3ODE2NDYsImV4cCI6MTYyMDk5MTI0Niwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBvZmZsaW5lX2FjY2VzcyIsImlzcyI6Imh0dHBzOi8vcmFpbHMtZGVtby5hdXRoaW5nLmNuL29pZGMiLCJhdWQiOiI2MDgwMGI5MTUxZDA0MGFmOTAxNmQ2MGIifQ.WNwR3yOx4XoPU-xGwPxPDlJI7V-EZ6aKwxk5tPg1bpfhhxkMW-o6mJU4_n7ZCMSeXJqikD0e5phGkg79brawGCkmBfW6khS5d5xCiPJg20Ru7NQZMVBTrsislnXIZn18cSrZz8MeDLOQTYCNW686Uz-D0eJu_JTeocjijHq3uwZX_5YR7yOgl2lbjZ2jo1zpbtkCrNHMO3HXVvv1zpNFLg6e11u5xFjGq_HugEvbeL-YSCT9g83_C0IAqg-letoJTWxUkWkxlPWrVAnv9KIjPuGaynQTYc0GEuvASt58uS1dzRRQ73G2x5fKHfX8E-0qyuqfsRr5_CpjIlLHMt2c8Q"
+    token = access_token
+    res = @authenticationClient.introspectToken(token)
+    json = JSON.parse(res.body)
+    puts json
+    # {"active"=>true, "sub"=>"608b9b52414bd3b71fad04ef", "client_id"=>"60800b9151d040af9016d60b", "exp"=>1620991246, "iat"=>1619781646, "iss"=>"https://core.authing.cn/oidc", "jti"=>"QaAveORqCeKrt-ZOMaQIV", "scope"=>"openid profile offline_access", "token_type"=>"Bearer"}
   end
 
 end
