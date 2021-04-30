@@ -91,9 +91,9 @@ module AuthingRuby
         }
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.registerByEmail(@graphqlClient, variables)
+      res = graphqlAPI.registerByUsername(@graphqlClient, variables)
       json = JSON.parse(res)
-      user = json.dig('data', 'registerByEmail')
+      user = json.dig('data', 'registerByUsername')
       return user if user
       return json
     end
