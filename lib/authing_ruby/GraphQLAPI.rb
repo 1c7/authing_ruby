@@ -15,7 +15,7 @@ module AuthingRuby
     end
 
     def getCurrentUser(garpqhlClient, tokenProvider, variables)
-      return _graphql_query_request("getCurrentUser", garpqhlClient, nil, variables)
+      return _graphql_query_request("user", garpqhlClient, tokenProvider, variables)
     end
 
     def sendEmail(garpqhlClient, variables)

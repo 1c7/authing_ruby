@@ -1,9 +1,9 @@
 # 测试内容: 用户认证模块-认证核心模块
-# 如何运行: ruby ./lib/test/mini_test/TestAuthenticationClient.rb
+# 如何运行: ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb
 
 require "minitest/autorun" # Minitest
 require "./lib/authing_ruby.rb" # 模块主文件
-require "./lib/test/helper.rb"
+require "./lib/authing_ruby/test/helper.rb"
 require 'dotenv'
 Dotenv.load('.env.test') # 你可以编辑这个文件来修改环境变量
 # 备注: 不要用 staging 或 production 环境的用户池来测试，新建一个用户池专门做测试，因为测试期间会注册随机名字的用户
@@ -19,7 +19,7 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试邮箱+密码注册
-  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_registerByEmail
+  # ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_registerByEmail
   def test_registerByEmail
     random_string = @helper.randomNumString()
     email = "#{random_string}@qq.com"
@@ -34,7 +34,7 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试用户名+密码注册
-  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_registerByUsername
+  # ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_registerByUsername
   def test_registerByUsername
     random_string = @helper.randomString(9)
     username = random_string
@@ -44,7 +44,7 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试邮箱+密码登录
-  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_loginByEmail
+  # ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_loginByEmail
   def test_loginByEmail
     # 第一步：先注册
     random_string = @helper.randomString(9)
@@ -58,7 +58,7 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试用户名+密码登录
-  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_loginByUsername
+  # ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_loginByUsername
   def test_loginByUsername
     random_string = @helper.randomString(9)
     username = random_string
@@ -73,7 +73,7 @@ class TestAuthenticationClient < Minitest::Test
   # end
 
   # 测试获取当前用户
-  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_getCurrentUser
+  # ruby ./lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_getCurrentUser
   def test_getCurrentUser
     # 注册+登录
     username = "test_getCurrentUser_#{@helper.randomString()}"
@@ -87,7 +87,7 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试退出登录
-  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_logout
+  # ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_logout
   def test_logout
     # 如何测试?
     # 1. 先登录, 用身份去做一些事情 （比如修改 nickname）
@@ -119,7 +119,7 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试: 修改用户资料
-  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_updateProfile
+  # ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_updateProfile
   def test_updateProfile
     # 先登录
     username = 'zhengcheng123'
@@ -141,7 +141,7 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试: 检查密码强度
-  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_checkPasswordStrength
+  # ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_checkPasswordStrength
   # 注意, 在 Authing 用户池里 -> "扩展能力" -> "自定义密码加密"，选的是 "用户可使用任意非空字符串作为密码"
   def test_checkPasswordStrength
     password = "123"
@@ -162,7 +162,7 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试: 更新用户密码
-  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_updatePassword
+  # ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_updatePassword
   def test_updatePassword
     # 例子1：如果不登陆，直接改，会提示尚未登录
     # oldPassword = "123456789"
@@ -205,7 +205,7 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试: 检测 Token 登录状态
-  # ruby ./lib/test/mini_test/TestAuthenticationClient.rb -n test_checkLoginStatus
+  # ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_checkLoginStatus
   def test_checkLoginStatus
     # 第一步：先登录然后获取 token
     username = 'zhengcheng123'

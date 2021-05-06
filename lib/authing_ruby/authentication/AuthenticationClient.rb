@@ -39,6 +39,11 @@ module AuthingRuby
       @tokenEndPointAuthMethod = options.fetch(:tokenEndPointAuthMethod, 'client_secret_post')
       @introspectionEndPointAuthMethod = options.fetch(:introspectionEndPointAuthMethod, 'client_secret_post')
       @revocationEndPointAuthMethod = options.fetch(:revocationEndPointAuthMethod, 'client_secret_post')
+
+      token = options.fetch(:token, nil)
+      if token
+        setToken(token)
+      end
     end
 
     # 使用邮箱+密码注册 (完成, 测试通过)
@@ -272,7 +277,7 @@ module AuthingRuby
     # 返回：用户信息
     def getCurrentUser()
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.getCurrentUser(@graphqlClient, @tokenProvider, variables)
+      res = graphqlAPI.getCurrentUser(@graphqlClient, @tokenProvider, {})
       json = JSON.parse(res)
       user = json.dig("data", "user")
       if user
