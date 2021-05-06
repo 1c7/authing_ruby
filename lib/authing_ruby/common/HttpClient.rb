@@ -169,7 +169,8 @@ module AuthingRuby
         config = config.merge({headers: headers_merge})
         # 再把 config 处理一下，把最终 header 合并进去
 
-        return faraday_conn(config)
+        response = faraday_conn(config) # 返回 Faraday::Response
+        return response.body
       end
     end
 
