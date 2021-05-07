@@ -9,6 +9,10 @@ require 'authing_ruby'
 require 'dotenv'
 Dotenv.load('.env.example') # 载入环境变量文件
 
+# 输出 gem 的版本
+authing_ruby_gem_version = Gem.loaded_specs["authing_ruby"].version
+puts "您的 authing_ruby gem 版本是 #{authing_ruby_gem_version}"
+
 # 第一步：初始化
 options = {
   appId: ENV["appId"],

@@ -1,12 +1,9 @@
-#
 # 例子3: 发送手机验证码
-#
-
 # 如何运行: ruby ./example/3.sendSmsCode.rb
 
 require 'authing_ruby'
 require 'dotenv'
-Dotenv.load('.env.example') # 载入环境变量文件
+Dotenv.load('.env.example')
 
 # 第一步：初始化
 options = {
