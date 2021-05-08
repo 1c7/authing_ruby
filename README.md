@@ -43,3 +43,7 @@ puts resp # 返回注册成功的用户信息
 ---
 
 ### [更多文档请阅读](doc/)
+
+## 补充说明
+这个 gem 可以单独使用，但如果你希望在 `Ruby on Rails` 项目中使用这个 Ruby SDK，希望找一些例子参考。  
+可以看： https://github.com/1c7/authing_ruby_rails_example
