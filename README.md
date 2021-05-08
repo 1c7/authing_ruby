@@ -40,10 +40,9 @@ puts resp # 返回注册成功的用户信息
 * 发布 `1.0.0` 版：2021-4-30
 * 写下第一行代码: 2021-4-22
 
----
-
-### [更多文档请阅读](doc/)
-
 ## 补充说明
 这个 gem 可以单独使用，但如果你希望在 `Ruby on Rails` 项目中使用这个 Ruby SDK，希望找一些例子参考。  
 可以看： https://github.com/1c7/authing_ruby_rails_example
+
+---
+### [更多文档请阅读](doc/)
