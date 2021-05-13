@@ -60,7 +60,14 @@
 - [x] 获取应用列表
 - [x] [获取应用详情](https://docs.authing.cn/v2/reference/sdk-for-node/management/ApplicationManagementClient.html#%E8%8E%B7%E5%8F%96%E5%BA%94%E7%94%A8%E8%AF%A6%E6%83%85)
 
+
+## 其他模块
+- [x] [使用指南 -> 常见问题 -> 如何验证用户身份凭证（token） -> 使用应用密钥验证 HS256 算法签名的 Token](https://docs.authing.cn/v2/guides/faqs/how-to-validate-user-token.html#%E4%BD%BF%E7%94%A8%E5%BA%94%E7%94%A8%E5%AF%86%E9%92%A5%E9%AA%8C%E8%AF%81-hs256-%E7%AE%97%E6%B3%95%E7%AD%BE%E5%90%8D%E7%9A%84-token) - 参考代码 `example/15.verify_id_token_locally_with_SDK.rb`
+
 ---
+
+## TODO 待办事项（接下来要做的）
+- [ ] [使用指南 -> 常见问题 -> 如何验证用户身份凭证（token）-> 使用应用公钥验证 RS256 算法签名的 IdToken](https://docs.authing.cn/v2/guides/faqs/how-to-validate-user-token.html#%E4%BD%BF%E7%94%A8%E5%BA%94%E7%94%A8%E5%85%AC%E9%92%A5%E9%AA%8C%E8%AF%81-rs256-%E7%AE%97%E6%B3%95%E7%AD%BE%E5%90%8D%E7%9A%84-idtoken)
 
 ## 如何参与本 gem 的开发
 * 可以在 issue 中留下你的微信，或通过其他渠道和我取得联系（QQ `1003211008`/ 邮件 `chengzheng.apply@gmail.com`）
