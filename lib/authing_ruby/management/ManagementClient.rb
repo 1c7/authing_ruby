@@ -17,7 +17,7 @@ module AuthingRuby
       @accessToken = options.fetch(:accessToken, nil)
       
       if @userPoolId == nil && @appId == nil
-        throw '请提供 userPoolId 或 appId!'
+        raise '请提供 userPoolId 或 appId!'
       end
 
       graphqlApiEndpointV2 = "#{@host}/graphql/v2"
