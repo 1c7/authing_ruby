@@ -2,14 +2,15 @@
 
 require "minitest/autorun"
 require "./lib/authing_ruby.rb"
-require "./lib/test/helper.rb"
+require "./lib/authing_ruby/test/helper.rb"
 require 'dotenv'
 Dotenv.load('.env.test') 
 
 class TestManagementClient < Minitest::Test
   def setup
     @options = {
-      host: 'https://core.authing.cn',
+      # host: 'https://core.authing.cn',
+      host: 'https://core.authing.co', # 2021-5-13 他们临时使用 .co，过几天等他们恢复了 .cn 这里就改回 .cn
       userPoolId: ENV["userPoolId"],
       secret: ENV["secret"],
     }
@@ -93,7 +94,7 @@ class TestManagementClient < Minitest::Test
   end
 
   # 测试通过 ID 获取用户信息
-  # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_detail
+  # ruby ./lib/authing_ruby/test/mini_test/TestManagementClient.rb -n test_detail
   def test_detail
     user = create_random_user()
     user_id = user.dig("id")
