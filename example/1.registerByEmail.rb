@@ -4,13 +4,21 @@
 
 # 如何运行: ruby ./example/1.registerByEmail.rb
 
-require 'authing_ruby'
+# 载入方法1：载入安装的 gem
+# require 'authing_ruby'
+
+# 载入方法2：直接载入本地 gem，适合开发环境
+require_relative '../lib/authing_ruby'
+
 require 'dotenv'
 Dotenv.load('.env.example') # 载入环境变量文件
 
+# puts Gem.loaded_specs
+# return
+
 # 输出 gem 的版本
-authing_ruby_gem_version = Gem.loaded_specs["authing_ruby"].version
-puts "您的 authing_ruby gem 版本是 #{authing_ruby_gem_version}"
+authing_ruby_gem_spec = Gem.loaded_specs.fetch("authing_ruby", nil)
+puts "您的 authing_ruby gem 版本是 #{authing_ruby_gem_spec.version}" if authing_ruby_gem_spec
 
 # 第一步：初始化
 options = {
