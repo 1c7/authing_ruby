@@ -1,5 +1,6 @@
 require 'openssl'
 require "base64"
+require 'jwt'
 
 module AuthingRuby
   class Utils
@@ -34,6 +35,42 @@ module AuthingRuby
         result += chars[random_index]
       end
       return result
+    end
+
+    # verifyIDTokenHS256 函数用于验证 HS256 id_token
+
+    # 文档：使用指南 -> 常见问题 -> 如何验证用户身份凭证（token） -> 使用应用密钥验证 HS256 算法签名的 Token
+    # https://docs.authing.cn/v2/guides/faqs/how-to-validate-user-token.html#%E4%BD%BF%E7%94%A8%E5%BA%94%E7%94%A8%E5%AF%86%E9%92%A5%E9%AA%8C%E8%AF%81-hs256-%E7%AE%97%E6%B3%95%E7%AD%BE%E5%90%8D%E7%9A%84-token
+
+    # 官方文档目前（2021-5-13）是让用户自己处理 HS256 的 token，自己进行验证，但这样比较麻烦，我在 Ruby SDK 这边写一个方便的方法。
+    # verifyIDTokenHS256 返回 Boolean, true 代表 token 有效，false 代表无效
+
+    # 注意: 可以在 "应用 -> 授权 -> id_token 签名算法" 这里看到，选的是不是 HS256
+    # 如果是 HS256 才应该用这个方法来验证
+
+    # 参数 id_token 就是登录返回的 "token"
+    # 参数 appSecret 就是 Authing 里某个应用的 appSecret
+    def self.verifyIDTokenHS256(id_token, appSecret)
+      # 如果解码出错，直接返回 false
+      begin
+        hmac_secret = appSecret
+        decoded = JWT.decode id_token, hmac_secret, true, { algorithm: 'HS256' }
+      rescue => error
+        puts error.message
+        return false
+      end
+
+      payload = decoded[0]
+      header = decoded[1]
+
+      # 从 payload 获得过期时间，然后判断是否过期
+      exp = payload["exp"] # 过期时间
+      current_timestamp = Time.now.to_i
+      if current_timestamp < exp
+        return true # 没过期
+      else
+        return false # 过期了
+      end
     end
 
   end
