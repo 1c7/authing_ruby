@@ -1,3 +1,5 @@
+# 一些工具函数放这里
+
 require 'openssl'
 require "base64"
 require 'jwt'
@@ -56,7 +58,7 @@ module AuthingRuby
         hmac_secret = appSecret
         decoded = JWT.decode id_token, hmac_secret, true, { algorithm: 'HS256' }
       rescue => error
-        puts error.message
+        # puts error.message
         return false
       end
 
@@ -70,6 +72,35 @@ module AuthingRuby
         return true # 没过期
       else
         return false # 过期了
+      end
+    end
+
+    # decodeIdToken 函数用于 解码 id token 得到用户信息
+    # 因为 id token 其实就是一个普通的 JWT，所以 payload 没有加密过，只是 base64 编码了而已，可以当做明文看待 (你可以直接把 id token 粘贴到 https://jwt.io/ 看到 payload 内容）
+    # 所以 payload 不可以直接相信，必须先验证后才能相信。
+    # 函数返回：
+    # 成功：返回用户信息
+    # 失败：返回 nil （比如解码失败 或 token 过期）
+    def self.decodeIdToken(id_token, appSecret)
+      # 如果解码出错，直接返回 false
+      begin
+        hmac_secret = appSecret
+        decoded = JWT.decode id_token, hmac_secret, true, { algorithm: 'HS256' }
+      rescue => error
+        # puts error.message
+        return nil
+      end
+
+      payload = decoded[0]
+      header = decoded[1]
+
+      # 从 payload 获得过期时间，然后判断是否过期
+      exp = payload["exp"] # 过期时间
+      current_timestamp = Time.now.to_i
+      if current_timestamp < exp
+        return payload # 没过期
+      else
+        return nil # 过期了
       end
     end
 
