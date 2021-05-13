@@ -2,5 +2,5 @@
 # https://github.com/Authing/authing.js/blob/cf4757d09de3b44c3c3f4509ae8c8715c9f302a2/src/lib/version.ts
 
 module AuthingRuby
-  VERSION = "1.0.7".freeze
+  VERSION = "1.0.8".freeze
 end
