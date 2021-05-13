@@ -252,9 +252,6 @@ module AuthingRuby
       return json
     end
 
-    def checkLoginStatus
-    end
-
     # 发送邮件
     # a = AuthingRuby::AuthenticationClient.new({appHost: "https://rails-demo.authing.cn", appId: "60800b9151d040af9016d60b"})
     # a.sendEmail('guokrfans@gmail.com', "VERIFY_EMAIL")
