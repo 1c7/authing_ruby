@@ -16,8 +16,8 @@ module AuthingRuby
       @_accessToken = nil
       @_accessTokenExpriredAt = nil # 过期时间
   
-      accessToken = options.fetch(:accessToken, nil)
       # 如果 options 里传入了 accessToken
+      accessToken = options.fetch(:accessToken, nil)
       if accessToken
         @_accessToken = accessToken;
         decoded_token_array = JWT.decode @_accessToken, nil, false # 试着解析一下
@@ -46,6 +46,7 @@ module AuthingRuby
     def _getAccessTokenFromServer
       accessToken = nil;
       secret = @options.fetch(:secret, nil)
+
       if secret
         accessToken = getClientWhenSdkInit()
       else
@@ -74,11 +75,14 @@ module AuthingRuby
       return hash.dig("data", "accessToken", "accessToken")
     end
 
-    # TODO 还需要做什么？
     def refreshToken
       api = AuthingRuby::GraphQLAPI.new
+      accessToken = @options.fetch(:accessToken, nil)
+      if accessToken == nil
+        raise "无法刷新 token, 因为初始化时没有传入 accessToken"
+      end
       res = api.refreshAccessToken(@graphqlClient, {
-        accessToken: @options.fetch(:accessToken, nil)
+        accessToken: accessToken
       })
       hash = JSON.parse(res)
       # puts hash
