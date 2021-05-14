@@ -41,9 +41,9 @@ puts resp # 返回注册成功的用户信息
 * 发布 `1.0.0` 版：2021-4-30
 * 写下第一行代码: 2021-4-22
 
-## 补充说明
-这个 gem 可以单独使用，    
+## Ruby on Rails 参考项目   
+这个 gem 可以单独使用，非 Rails 项目也可以用，因为本质上它只是发 GraphQL HTTP 请求而已。           
 但如果你希望在 `Ruby on Rails` 项目中使用这个 Ruby SDK，希望找例子参考。  
-可以看： https://github.com/1c7/authing_ruby_rails_example
+例子: https://github.com/1c7/authing_ruby_rails_example
 
 ### [更多文档请阅读](doc/)
