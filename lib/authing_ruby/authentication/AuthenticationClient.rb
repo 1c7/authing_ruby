@@ -139,10 +139,13 @@ module AuthingRuby
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
       res = graphqlAPI.registerByPhoneCode(@graphqlClient, variables)
-      json = JSON.parse(res)
-      user = json.dig('data', 'registerByPhoneCode')
-      return user if user
-      return json
+      if res.class.name == "String"
+        json = JSON.parse(res)
+        user = json.dig('data', 'registerByPhoneCode')
+        return user if user
+        return json
+      end
+      return res
     end
 
     # 使用邮箱登录

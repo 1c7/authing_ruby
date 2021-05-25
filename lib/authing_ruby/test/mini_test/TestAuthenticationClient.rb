@@ -11,11 +11,30 @@ Dotenv.load('.env.test') # 你可以编辑这个文件来修改环境变量
 class TestAuthenticationClient < Minitest::Test
   def setup
     options = {
-      appHost: ENV["appHost"], # "https://rails-demo.authing.cn", 
-      appId: ENV["appId"], # "60800b9151d040af9016d60b"
+      # appHost: ENV["appHost"], # "https://rails-demo.authing.cn", 
+      # appId: ENV["appId"], # "60800b9151d040af9016d60b"
+      appId: "60ab26fe5be730bfc1742c68",
+      appHost: "https://hn-staging.authing.cn",
     }
     @authenticationClient = AuthingRuby::AuthenticationClient.new(options)
     @helper = Test::Helper.new
+  end
+
+  # 测试: 手机号+验证码+密码 注册
+  # ruby ./lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_registerByPhoneCode
+  def test_registerByPhoneCode
+    phone = '13556136684'
+    code = '8086' 
+    password = '1234567890'
+    res = @authenticationClient.registerByPhoneCode(phone, code, password)
+    puts '拿到的结果是:-----'
+    puts res
+    # {:code=>2026, :message=>"用户已存在，请直接登录！", :data=>nil}
+    # {:code=>2001, :message=>"验证码不正确！", :data=>nil}
+
+    # 如果成功
+    # {"id"=>"60ad0c49d6e166f9fe23ba4d", "arn"=>"arn:cn:authing:60ab26fe478f98290befefaa:user:60ad0c49d6e166f9fe23ba4d", "userPoolId"=>"60ab26fe478f98290befefaa", "status"=>"Activated", "username"=>nil, "email"=>nil, "emailVerified"=>false, "phone"=>"13556136684", "phoneVerified"=>true, "unionid"=>nil, "openid"=>nil, "nickname"=>nil, "registerSource"=>["basic:phone-code"], "photo"=>"default-user-avatar.png", "password"=>"0361a6088087f31edd172c4f6076c0e6", "oauth"=>nil, "token"=>nil, "tokenExpiredAt"=>nil, "loginsCount"=>0, "lastLogin"=>nil, "lastIP"=>nil, "signedUp"=>nil, "blocked"=>false, "isDeleted"=>false, "device"=>nil, "browser"=>nil, "company"=>nil, "name"=>nil, "givenName"=>nil, "familyName"=>nil, "middleName"=>nil, "profile"=>nil, "preferredUsername"=>nil, "website"=>nil, "gender"=>"U", "birthdate"=>nil, "zoneinfo"=>nil, "locale"=>nil, "address"=>nil, "formatted"=>nil, "streetAddress"=>nil, "locality"=>nil, "region"=>nil, "postalCode"=>nil, "city"=>nil, "province"=>nil, "country"=>nil, "createdAt"=>"2021-05-25T14:40:09+00:00", "updatedAt"=>"2021-05-25T14:40:09+00:00", "externalId"=>nil}
+    assert(res.dig('id'), res)
   end
 
   # 测试邮箱+密码注册
@@ -186,10 +205,6 @@ class TestAuthenticationClient < Minitest::Test
 
     # 第四步：看返回结果对不对
     assert(result.dig('id') != nil, result)
-  end
-
-  # 测试: 解绑手机号
-  def test_unbindPhone
   end
 
   # 测试: 更新用户手机号

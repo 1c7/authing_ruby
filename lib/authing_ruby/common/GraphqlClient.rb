@@ -28,10 +28,47 @@ module AuthingRuby
           headers['Authorization'] = "Bearer #{token}"
         end
 
-        json = options.fetch(:json, nil)
-        # puts "@endpoint 是 #{@endpoint}"
-        response = HTTP.headers(headers).post(@endpoint, json: json)
-        return response.body.to_s
+        option_json = options.fetch(:json, nil)
+        response = HTTP.headers(headers).post(@endpoint, json: option_json)
+
+        # 如果直接拿 body，它的类型是：
+        # puts response.body
+        # puts response.body.class.name # HTTP::Response::Body
+        
+        # 如果转成 String：
+        # puts response.body.to_s
+        # puts response.body.to_s.class.name # String
+
+        json = JSON.parse(response.body.to_s)
+
+        # 这里的错误处理代码参照的 JS SDK （src/lib/common/GraphqlClient.ts）
+        if json['errors'] == nil
+          # 如果没错误，直接返回 body
+          body_as_string = response.body.to_s
+          return body_as_string
+        else
+          # 如果有错误, 最后返回这3个字段就行
+          code = nil
+          message = nil
+          data = nil
+
+          json['errors'].each do |e|
+            if e['message']
+              message = e['message'] 
+              code = message['code']
+              message = message['message']
+              data = message['data']
+            end
+          end
+
+          # 返回 Hash
+          obj = { 
+            code: code,
+            message: message,
+            data: data
+          }
+          return obj
+        end
       end
 
     end
