@@ -14,6 +14,9 @@ module AuthingRuby
         @options = options
       end
 
+      # 发个请求
+      # 如果成功，返回 String
+      # 如果失败，返回 Hash
       def request(options)
         headers = {
           'content-type': 'application/json',
