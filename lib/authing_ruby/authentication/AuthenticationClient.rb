@@ -68,11 +68,10 @@ module AuthingRuby
         }
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.registerByEmail(@graphqlClient, variables)
-      json = JSON.parse(res)
-      user = json.dig('data', 'registerByEmail')
+      hash = graphqlAPI.registerByEmail(@graphqlClient, variables)
+      user = hash.dig('data', 'registerByEmail')
       return user if user
-      return json
+      return hash
     end
 
     # 使用用户名注册
@@ -96,11 +95,10 @@ module AuthingRuby
         }
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.registerByUsername(@graphqlClient, variables)
-      json = JSON.parse(res)
-      user = json.dig('data', 'registerByUsername')
+      hash = graphqlAPI.registerByUsername(@graphqlClient, variables)
+      user = hash.dig('data', 'registerByUsername')
       return user if user
-      return json
+      return hash
     end
 
     # 发送短信验证码
@@ -138,14 +136,10 @@ module AuthingRuby
         }
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.registerByPhoneCode(@graphqlClient, variables)
-      if res.class.name == "String"
-        json = JSON.parse(res)
-        user = json.dig('data', 'registerByPhoneCode')
-        return user if user
-        return json
-      end
-      return res
+      hash = graphqlAPI.registerByPhoneCode(@graphqlClient, variables)
+      user = hash.dig('data', 'registerByPhoneCode')
+      return user if user
+      return hash
     end
 
     # 使用邮箱登录
@@ -166,14 +160,13 @@ module AuthingRuby
         }
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.loginByEmail(@graphqlClient, variables)
-      json = JSON.parse(res)
-      user = json.dig('data', 'loginByEmail')
+      hash = graphqlAPI.loginByEmail(@graphqlClient, variables)
+      user = hash.dig('data', 'loginByEmail')
       if user
         setCurrentUser(user);
         return user 
       end
-      return json
+      return hash
     end
 
     # 使用用户名登录
@@ -194,14 +187,13 @@ module AuthingRuby
         }
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.loginByUsername(@graphqlClient, variables)
-      json = JSON.parse(res)
-      user = json.dig('data', 'loginByUsername')
+      hash = graphqlAPI.loginByUsername(@graphqlClient, variables)
+      user = hash.dig('data', 'loginByUsername')
       if user
         setCurrentUser(user);
         return user 
       end
-      return json
+      return hash
     end
 
     # 使用手机号验证码登录
@@ -218,14 +210,13 @@ module AuthingRuby
         }
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.loginByPhoneCode(@graphqlClient, variables)
-      json = JSON.parse(res)
-      user = json.dig('data', 'loginByPhoneCode')
+      hash = graphqlAPI.loginByPhoneCode(@graphqlClient, variables)
+      user = hash.dig('data', 'loginByPhoneCode')
       if user
         setCurrentUser(user);
         return user 
       end
-      return json
+      return hash
     end
 
     # 使用手机号密码登录
@@ -245,14 +236,13 @@ module AuthingRuby
         }
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.loginByPhonePassword(@graphqlClient, variables)
-      json = JSON.parse(res)
-      user = json.dig('data', 'loginByPhonePassword')
+      hash = graphqlAPI.loginByPhonePassword(@graphqlClient, variables)
+      user = hash.dig('data', 'loginByPhonePassword')
       if user
         setCurrentUser(user);
         return user 
       end
-      return json
+      return hash
     end
 
     # 发送邮件
@@ -265,11 +255,10 @@ module AuthingRuby
         "scene": scene,
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.sendEmail(@graphqlClient, variables)
-      json = JSON.parse(res)
-      data = json.dig('data')
+      hash = graphqlAPI.sendEmail(@graphqlClient, variables)
+      data = hash.dig('data')
       return data if data
-      return json
+      return hash
       # {"sendEmail":{"message":"","code":200}}
     end
 
@@ -277,14 +266,13 @@ module AuthingRuby
     # 返回：用户信息
     def getCurrentUser()
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.getCurrentUser(@graphqlClient, @tokenProvider, {})
-      json = JSON.parse(res)
-      user = json.dig("data", "user")
+      hash = graphqlAPI.getCurrentUser(@graphqlClient, @tokenProvider, {})
+      user = hash.dig("data", "user")
       if user
         setCurrentUser(user)
         return user
       else
-        return json
+        return hash
       end
     end
 
@@ -609,9 +597,8 @@ module AuthingRuby
         "id": userId,
         "input": updates
       }
-      res = graphqlAPI.updateUser(@graphqlClient, @tokenProvider, variables)
-      json = JSON.parse(res)
-      updated_user = json.dig('data', 'updateUser')
+      hash = graphqlAPI.updateUser(@graphqlClient, @tokenProvider, variables)
+      updated_user = hash.dig('data', 'updateUser')
       if updated_user
         # 如果更新成功，返回更新后的用户
         setCurrentUser(updated_user)
@@ -619,7 +606,7 @@ module AuthingRuby
       else
         # 如果更新失败，返回原结果
         # {"errors"=>[{"message"=>{"code"=>2020, "message"=>"尚未登录，无访问权限"}, "locations"=>[{"line"=>2, "column"=>3}], "path"=>["updateUser"], "extensions"=>{"code"=>"INTERNAL_SERVER_ERROR"}}], "data"=>nil}
-        return json
+        return hash
       end
     end
 
@@ -661,18 +648,16 @@ module AuthingRuby
     def checkPasswordStrength(password)
       graphqlAPI = AuthingRuby::GraphQLAPI.new
       variables = { "password": password }
-      res = graphqlAPI.checkPasswordStrength(@graphqlClient, @tokenProvider, variables)
-      json = JSON.parse(res)
-      return json.dig("data", "checkPasswordStrength")
+      hash = graphqlAPI.checkPasswordStrength(@graphqlClient, @tokenProvider, variables)
+      return hash.dig("data", "checkPasswordStrength")
     end
 
     # 检测 Token 登录状态
     def checkLoginStatus(token)
       graphqlAPI = AuthingRuby::GraphQLAPI.new
       variables = { "token": token }
-      res = graphqlAPI.checkLoginStatus(@graphqlClient, @tokenProvider, variables)
-      json = JSON.parse(res)
-      return json.dig("data", "checkLoginStatus")
+      hash = graphqlAPI.checkLoginStatus(@graphqlClient, @tokenProvider, variables)
+      return hash.dig("data", "checkLoginStatus")
     end
 
     # 更新用户密码
@@ -685,9 +670,8 @@ module AuthingRuby
         "oldPassword": oldPasswordEncrypted,
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.updatePassword(@graphqlClient, @tokenProvider, variables)
-      json = JSON.parse(res)
-      return json.dig("data", "updatePassword")
+      hash = graphqlAPI.updatePassword(@graphqlClient, @tokenProvider, variables)
+      return hash.dig("data", "updatePassword")
     end
 
     # 绑定手机号
@@ -698,14 +682,13 @@ module AuthingRuby
         "phone": phone,
         "phoneCode": phoneCode,
       }
-      res = graphqlAPI.bindPhone(@graphqlClient, @tokenProvider, variables)
-      json = JSON.parse(res)
-      user = json.dig("data", "bindPhone")
+      hash = graphqlAPI.bindPhone(@graphqlClient, @tokenProvider, variables)
+      user = hash.dig("data", "bindPhone")
       if user
         setCurrentUser(user);
         return user;
       else
-        return json
+        return hash
       end
     end
 
@@ -720,11 +703,10 @@ module AuthingRuby
         "newPassword": newPasswordEncrypted,
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      resp = graphqlAPI.resetPassword(@graphqlClient, @tokenProvider, variables)
-      json = JSON.parse(resp)
-      result = json.dig("data", "resetPassword") # {"message":"重置密码成功！","code":200}
+      hash = graphqlAPI.resetPassword(@graphqlClient, @tokenProvider, variables)
+      result = hash.dig("data", "resetPassword") # {"message":"重置密码成功！","code":200}
       return result if result
-      return json
+      return hash
     end
 
     def generateCodeChallenge()

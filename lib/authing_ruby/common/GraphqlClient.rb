@@ -14,9 +14,8 @@ module AuthingRuby
         @options = options
       end
 
-      # 发个请求
-      # 如果成功，返回 String
-      # 如果失败，返回 Hash
+      # 发请求
+      # 成功或失败都返回 Hash
       def request(options)
         headers = {
           'content-type': 'application/json',
@@ -42,20 +41,19 @@ module AuthingRuby
         # puts response.body.to_s
         # puts response.body.to_s.class.name # String
 
-        json = JSON.parse(response.body.to_s)
+        hash = JSON.parse(response.body.to_s)
 
         # 这里的错误处理代码参照的 JS SDK （src/lib/common/GraphqlClient.ts）
-        if json['errors'] == nil
-          # 如果没错误，直接返回 body
-          body_as_string = response.body.to_s
-          return body_as_string
+        if hash['errors'] == nil
+          # 如果没错误
+          return hash
         else
           # 如果有错误, 最后返回这3个字段就行
           code = nil
           message = nil
           data = nil
 
-          json['errors'].each do |e|
+          hash['errors'].each do |e|
             if e['message']
               message = e['message'] 
               code = message['code']

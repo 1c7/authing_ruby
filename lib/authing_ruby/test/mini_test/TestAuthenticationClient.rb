@@ -1,5 +1,5 @@
 # 测试内容: 用户认证模块-认证核心模块
-# 如何运行: ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb
+# 如何运行: ruby ./lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb
 
 require "minitest/autorun" # Minitest
 require "./lib/authing_ruby.rb" # 模块主文件
@@ -21,20 +21,20 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试: 手机号+验证码+密码 注册
+  # 需要手动测试（填验证码）
   # ruby ./lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_registerByPhoneCode
   def test_registerByPhoneCode
     phone = '13556136684'
     code = '8086' 
     password = '1234567890'
     res = @authenticationClient.registerByPhoneCode(phone, code, password)
-    puts '拿到的结果是:-----'
-    puts res
+    # puts '拿到的结果是:-----'
+    # puts res
     # {:code=>2026, :message=>"用户已存在，请直接登录！", :data=>nil}
     # {:code=>2001, :message=>"验证码不正确！", :data=>nil}
 
     # 如果成功
     # {"id"=>"60ad0c49d6e166f9fe23ba4d", "arn"=>"arn:cn:authing:60ab26fe478f98290befefaa:user:60ad0c49d6e166f9fe23ba4d", "userPoolId"=>"60ab26fe478f98290befefaa", "status"=>"Activated", "username"=>nil, "email"=>nil, "emailVerified"=>false, "phone"=>"13556136684", "phoneVerified"=>true, "unionid"=>nil, "openid"=>nil, "nickname"=>nil, "registerSource"=>["basic:phone-code"], "photo"=>"default-user-avatar.png", "password"=>"0361a6088087f31edd172c4f6076c0e6", "oauth"=>nil, "token"=>nil, "tokenExpiredAt"=>nil, "loginsCount"=>0, "lastLogin"=>nil, "lastIP"=>nil, "signedUp"=>nil, "blocked"=>false, "isDeleted"=>false, "device"=>nil, "browser"=>nil, "company"=>nil, "name"=>nil, "givenName"=>nil, "familyName"=>nil, "middleName"=>nil, "profile"=>nil, "preferredUsername"=>nil, "website"=>nil, "gender"=>"U", "birthdate"=>nil, "zoneinfo"=>nil, "locale"=>nil, "address"=>nil, "formatted"=>nil, "streetAddress"=>nil, "locality"=>nil, "region"=>nil, "postalCode"=>nil, "city"=>nil, "province"=>nil, "country"=>nil, "createdAt"=>"2021-05-25T14:40:09+00:00", "updatedAt"=>"2021-05-25T14:40:09+00:00", "externalId"=>nil}
-    assert(res.dig('id'), res)
   end
 
   # 测试邮箱+密码注册
@@ -138,11 +138,13 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试: 修改用户资料
-  # ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_updateProfile
+  # 需要手动测试（确保用户名+密码账号的确存在）
+  # ruby ./lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_updateProfile
   def test_updateProfile
     # 先登录
     username = 'zhengcheng123'
     password = "123456789"
+    @authenticationClient.registerByUsername(username, password)
     @authenticationClient.loginByUsername(username, password)
 
     # 进行第一次修改
@@ -220,11 +222,12 @@ class TestAuthenticationClient < Minitest::Test
   end
 
   # 测试: 检测 Token 登录状态
-  # ruby /lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_checkLoginStatus
+  # ruby ./lib/authing_ruby/test/mini_test/TestAuthenticationClient.rb -n test_checkLoginStatus
   def test_checkLoginStatus
     # 第一步：先登录然后获取 token
     username = 'zhengcheng123'
     password = "123456789"
+    @authenticationClient.registerByUsername(username, password)
     user = @authenticationClient.loginByUsername(username, password)
     token = user.dig("token")
 

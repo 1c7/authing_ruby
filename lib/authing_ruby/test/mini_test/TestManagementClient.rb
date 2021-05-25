@@ -9,8 +9,8 @@ Dotenv.load('.env.test')
 class TestManagementClient < Minitest::Test
   def setup
     @options = {
-      # host: 'https://core.authing.cn',
-      host: 'https://core.authing.co', # 2021-5-13 他们临时使用 .co，过几天等他们恢复了 .cn 这里就改回 .cn
+      host: 'https://core.authing.cn',
+      # host: 'https://core.authing.co', # 2021-5-13 他们临时使用 .co，过几天等他们恢复了 .cn 这里就改回 .cn
       userPoolId: ENV["userPoolId"],
       secret: ENV["secret"],
     }
