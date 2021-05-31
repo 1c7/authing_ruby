@@ -1,0 +1,13 @@
+query roles($namespace: String, $page: Int, $limit: Int, $sortBy: SortByEnum) {
+  roles(namespace: $namespace, page: $page, limit: $limit, sortBy: $sortBy) {
+    totalCount
+    list {
+      namespace
+      code
+      arn
+      description
+      createdAt
+      updatedAt
+    }
+  }
+}

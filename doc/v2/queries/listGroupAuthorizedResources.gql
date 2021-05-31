@@ -1,0 +1,16 @@
+query listGroupAuthorizedResources(
+  $code: String!
+  $namespace: String
+  $resourceType: String
+) {
+  group(code: $code) {
+    authorizedResources(namespace: $namespace, resourceType: $resourceType) {
+      totalCount
+      list {
+        code
+        type
+        actions
+      }
+    }
+  }
+}

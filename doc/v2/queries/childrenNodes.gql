@@ -1,0 +1,18 @@
+query childrenNodes($orgId: String!, $nodeId: String!) {
+  childrenNodes(orgId: $orgId, nodeId: $nodeId) {
+    id
+    orgId
+    name
+    nameI18n
+    description
+    descriptionI18n
+    order
+    code
+    root
+    depth
+    path
+    createdAt
+    updatedAt
+    children
+  }
+}

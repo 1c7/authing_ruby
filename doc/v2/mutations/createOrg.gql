@@ -1,0 +1,37 @@
+mutation createOrg($name: String!, $code: String, $description: String){
+    createOrg(name: $name, code: $code, description: $description){
+        id
+        rootNode{
+            id
+            orgId
+            name
+            nameI18n
+            description
+            descriptionI18n
+            order
+            code
+            root
+            depth
+            path
+            createdAt
+            updatedAt
+            children
+        }
+        nodes{
+            id
+            orgId
+            name
+            nameI18n
+            description
+            descriptionI18n
+            order
+            code
+            root
+            depth
+            path
+            createdAt
+            updatedAt
+            children
+        }
+    }
+}

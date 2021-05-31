@@ -1,0 +1,22 @@
+query policies($page: Int, $limit: Int, $namespace: String) {
+  policies(page: $page, limit: $limit, namespace: $namespace) {
+    totalCount
+    list {
+      namespace
+      code
+      description
+      createdAt
+      updatedAt
+      statements {
+        resource
+        actions
+        effect
+        condition {
+          param
+          operator
+          value
+        }
+      }
+    }
+  }
+}

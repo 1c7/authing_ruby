@@ -1,0 +1,16 @@
+query listUserAuthorizedResources(
+  $id: String!
+  $namespace: String
+  $resourceType: String
+) {
+  user(id: $id) {
+    authorizedResources(namespace: $namespace, resourceType: $resourceType) {
+      totalCount
+      list {
+        code
+        type
+        actions
+      }
+    }
+  }
+}

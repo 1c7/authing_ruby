@@ -1,0 +1,23 @@
+query getUserRoles($id: String!, $namespace: String) {
+  user(id: $id) {
+    roles(namespace: $namespace) {
+      totalCount
+      list {
+        code
+        namespace
+        arn
+        description
+        createdAt
+        updatedAt
+        parent {
+          code
+          namespace
+          arn
+          description
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  }
+}

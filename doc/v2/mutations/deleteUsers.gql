@@ -1,0 +1,6 @@
+mutation deleteUsers($ids: [String!]!){
+    deleteUsers(ids: $ids){
+        message
+        code
+    }
+}

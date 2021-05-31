@@ -1,0 +1,20 @@
+query rootNode($orgId: String!) {
+  rootNode(orgId: $orgId) {
+    id
+    orgId
+    name
+    nameI18n
+    description
+    descriptionI18n
+    order
+    code
+    root
+    depth
+    path
+    codePath
+    namePath
+    createdAt
+    updatedAt
+    children
+  }
+}

@@ -1,0 +1,18 @@
+query nodeById($id: String!) {
+  nodeById(id: $id) {
+    id
+    orgId
+    name
+    nameI18n
+    description
+    descriptionI18n
+    order
+    code
+    root
+    depth
+    path
+    createdAt
+    updatedAt
+    children
+  }
+}

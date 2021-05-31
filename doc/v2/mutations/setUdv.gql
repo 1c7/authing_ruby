@@ -1,0 +1,8 @@
+mutation setUdv($targetType: UDFTargetType!, $targetId: String!, $key: String!, $value: String!){
+    setUdv(targetType: $targetType, targetId: $targetId, key: $key, value: $value){
+        key
+        dataType
+        value
+        label
+    }
+}

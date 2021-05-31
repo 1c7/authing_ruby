@@ -1,0 +1,31 @@
+mutation updatePolicy(
+  $namespace: String
+  $code: String!
+  $description: String
+  $statements: [PolicyStatementInput!]
+  $newCode: String
+) {
+  updatePolicy(
+    namespace: $namespace
+    code: $code
+    description: $description
+    statements: $statements
+    newCode: $newCode
+  ) {
+    namespace
+    code
+    description
+    statements {
+      resource
+      actions
+      effect
+      condition {
+        param
+        operator
+        value
+      }
+    }
+    createdAt
+    updatedAt
+  }
+}

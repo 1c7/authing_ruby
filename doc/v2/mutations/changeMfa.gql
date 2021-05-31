@@ -1,0 +1,9 @@
+mutation changeMfa($enable: Boolean, $id: String, $userId: String, $userPoolId: String, $refresh: Boolean){
+    changeMfa(enable: $enable, id: $id, userId: $userId, userPoolId: $userPoolId, refresh: $refresh){
+        id
+        userId
+        userPoolId
+        enable
+        secret
+    }
+}

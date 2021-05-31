@@ -1,0 +1,16 @@
+mutation authorizeResource(
+  $namespace: String
+  $resource: String
+  $resourceType: ResourceType
+  $opts: [AuthorizeResourceOpt]
+) {
+  authorizeResource(
+    namespace: $namespace
+    resource: $resource
+    resourceType: $resourceType
+    opts: $opts
+  ) {
+    code
+    message
+  }
+}

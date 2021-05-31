@@ -1,0 +1,6 @@
+mutation deleteFunction($id: String!){
+    deleteFunction(id: $id){
+        message
+        code
+    }
+}

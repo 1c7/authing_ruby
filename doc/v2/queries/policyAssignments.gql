@@ -1,0 +1,24 @@
+query policyAssignments(
+  $namespace: String
+  $code: String
+  $targetType: PolicyAssignmentTargetType
+  $targetIdentifier: String
+  $page: Int
+  $limit: Int
+) {
+  policyAssignments(
+    namespace: $namespace
+    code: $code
+    targetType: $targetType
+    targetIdentifier: $targetIdentifier
+    page: $page
+    limit: $limit
+  ) {
+    totalCount
+    list {
+      code
+      targetType
+      targetIdentifier
+    }
+  }
+}

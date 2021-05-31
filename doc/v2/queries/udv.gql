@@ -1,0 +1,8 @@
+query udv($targetType: UDFTargetType!, $targetId: String!){
+    udv(targetType: $targetType, targetId: $targetId){
+        key
+        dataType
+        value
+        label
+    }
+}

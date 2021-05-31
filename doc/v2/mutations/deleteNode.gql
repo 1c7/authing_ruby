@@ -1,0 +1,6 @@
+mutation deleteNode($orgId: String!, $nodeId: String!){
+    deleteNode(orgId: $orgId, nodeId: $nodeId){
+        message
+        code
+    }
+}

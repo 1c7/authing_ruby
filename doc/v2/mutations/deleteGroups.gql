@@ -1,0 +1,6 @@
+mutation deleteGroups($codeList: [String!]!){
+    deleteGroups(codeList: $codeList){
+        message
+        code
+    }
+}

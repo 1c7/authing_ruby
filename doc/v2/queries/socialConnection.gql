@@ -1,0 +1,14 @@
+query socialConnection($provider: String!){
+    socialConnection(provider: $provider){
+        provider
+        name
+        logo
+        description
+        fields{
+            key
+            label
+            type
+            placeholder
+        }
+    }
+}

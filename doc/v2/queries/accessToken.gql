@@ -1,0 +1,7 @@
+query accessToken($userPoolId: String!, $secret: String!){
+    accessToken(userPoolId: $userPoolId, secret: $secret){
+        accessToken
+        exp
+        iat
+    }
+}

@@ -1,0 +1,7 @@
+mutation removeWhitelist($type: WhitelistType!, $list: [String!]!){
+    removeWhitelist(type: $type, list: $list){
+        createdAt
+        updatedAt
+        value
+    }
+}

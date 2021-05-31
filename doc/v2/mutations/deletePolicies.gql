@@ -1,0 +1,6 @@
+mutation deletePolicies($codeList: [String!]!, $namespace: String){
+    deletePolicies(codeList: $codeList, namespace: $namespace){
+        message
+        code
+    }
+}

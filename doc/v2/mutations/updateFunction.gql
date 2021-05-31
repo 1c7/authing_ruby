@@ -1,0 +1,9 @@
+mutation updateFunction($input: UpdateFunctionInput!){
+    updateFunction(input: $input){
+        id
+        name
+        sourceCode
+        description
+        url
+    }
+}

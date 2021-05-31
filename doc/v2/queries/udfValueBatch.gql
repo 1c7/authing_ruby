@@ -1,0 +1,11 @@
+query udfValueBatch($targetType: UDFTargetType!, $targetIds: [String!]!) {
+  udfValueBatch(targetType: $targetType, targetIds: $targetIds) {
+    targetId
+    data {
+      key
+      dataType
+      value
+      label
+    }
+  }
+}

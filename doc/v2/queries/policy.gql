@@ -1,0 +1,20 @@
+query policy($namespace: String, $code: String!) {
+  policy(code: $code, namespace: $namespace) {
+    namespace
+    code
+    isDefault
+    description
+    statements {
+      resource
+      actions
+      effect
+      condition {
+        param
+        operator
+        value
+      }
+    }
+    createdAt
+    updatedAt
+  }
+}

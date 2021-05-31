@@ -1,0 +1,3 @@
+query isActionDenied($resource: String!, $action: String!, $userId: String!){
+    isActionDenied(resource: $resource, action: $action, userId: $userId)
+}

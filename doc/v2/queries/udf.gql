@@ -1,0 +1,9 @@
+query udf($targetType: UDFTargetType!){
+    udf(targetType: $targetType){
+        targetType
+        dataType
+        key
+        label
+        options
+    }
+}

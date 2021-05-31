@@ -1,0 +1,28 @@
+mutation createRole(
+  $namespace: String
+  $code: String!
+  $description: String
+  $parent: String
+) {
+  createRole(
+    namespace: $namespace
+    code: $code
+    description: $description
+    parent: $parent
+  ) {
+    namespace
+    code
+    arn
+    description
+    createdAt
+    updatedAt
+    parent {
+      namespace
+      code
+      arn
+      description
+      createdAt
+      updatedAt
+    }
+  }
+}

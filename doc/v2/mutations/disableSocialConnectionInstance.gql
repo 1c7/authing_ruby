@@ -1,0 +1,10 @@
+mutation disableSocialConnectionInstance($provider: String!){
+    disableSocialConnectionInstance(provider: $provider){
+        provider
+        enabled
+        fields{
+            key
+            value
+        }
+    }
+}

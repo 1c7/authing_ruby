@@ -1,0 +1,3 @@
+query previewEmail($type: EmailTemplateType!){
+    previewEmail(type: $type)
+}

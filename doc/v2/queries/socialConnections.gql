@@ -1,0 +1,14 @@
+query socialConnections{
+    socialConnections{
+        provider
+        name
+        logo
+        description
+        fields{
+            key
+            label
+            type
+            placeholder
+        }
+    }
+}

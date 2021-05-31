@@ -1,0 +1,6 @@
+mutation deleteRole($code: String!, $namespace: String){
+    deleteRole(code: $code, namespace: $namespace){
+        message
+        code
+    }
+}

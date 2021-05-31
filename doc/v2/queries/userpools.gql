@@ -1,0 +1,29 @@
+query userpools($page: Int, $limit: Int, $sortBy: SortByEnum){
+    userpools(page: $page, limit: $limit, sortBy: $sortBy){
+        totalCount
+        list{
+            id
+            name
+            domain
+            ownerId
+            description
+            secret
+            jwtSecret
+            logo
+            createdAt
+            updatedAt
+            emailVerifiedDefault
+            sendWelcomeEmail
+            registerDisabled
+            appSsoEnabled
+            showWxQRCodeWhenRegisterDisabled
+            allowedOrigins
+            tokenExpiresAfter
+            isDeleted
+            packageType
+            useCustomUserStore
+            loginRequireEmailVerified
+            verifyCodeLength
+        }
+    }
+}

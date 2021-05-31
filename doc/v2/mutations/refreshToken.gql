@@ -1,0 +1,7 @@
+mutation refreshToken($id: String){
+    refreshToken(id: $id){
+        token
+        iat
+        exp
+    }
+}

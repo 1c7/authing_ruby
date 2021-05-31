@@ -1,0 +1,21 @@
+mutation updateNode($page: Int, $limit: Int, $sortBy: SortByEnum, $includeChildrenNodes: Boolean, $id: String!, $name: String, $code: String, $description: String){
+    updateNode(id: $id, name: $name, code: $code, description: $description){
+        id
+        orgId
+        name
+        nameI18n
+        description
+        descriptionI18n
+        order
+        code
+        root
+        depth
+        path
+        createdAt
+        updatedAt
+        children
+        users(page: $page, limit: $limit, sortBy: $sortBy, includeChildrenNodes: $includeChildrenNodes){
+            totalCount
+        }
+    }
+}

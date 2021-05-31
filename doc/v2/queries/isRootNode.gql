@@ -1,0 +1,3 @@
+query isRootNode($nodeId: String!, $orgId: String!){
+    isRootNode(nodeId: $nodeId, orgId: $orgId)
+}

@@ -1,0 +1,20 @@
+query policyWithAssignments($page: Int, $limit: Int, $code: String!) {
+  policy(code: $code) {
+    code
+    isDefault
+    description
+    statements {
+      resource
+      actions
+      effect
+    }
+    createdAt
+    updatedAt
+    assignmentsCount
+    assignments(page: $page, limit: $limit) {
+      code
+      targetType
+      targetIdentifier
+    }
+  }
+}

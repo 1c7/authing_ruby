@@ -1,0 +1,6 @@
+mutation addUserToGroup($userIds: [String!]!, $code: String){
+    addUserToGroup(userIds: $userIds, code: $code){
+        message
+        code
+    }
+}

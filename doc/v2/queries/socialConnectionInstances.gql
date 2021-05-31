@@ -1,0 +1,10 @@
+query socialConnectionInstances{
+    socialConnectionInstances{
+        provider
+        enabled
+        fields{
+            key
+            value
+        }
+    }
+}

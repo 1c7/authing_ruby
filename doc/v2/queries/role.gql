@@ -1,0 +1,18 @@
+query role($code: String!, $namespace: String) {
+  role(code: $code, namespace: $namespace) {
+    namespace
+    code
+    arn
+    description
+    createdAt
+    updatedAt
+    parent {
+      namespace
+      code
+      arn
+      description
+      createdAt
+      updatedAt
+    }
+  }
+}

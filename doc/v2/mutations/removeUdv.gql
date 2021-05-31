@@ -1,0 +1,8 @@
+mutation removeUdv($targetType: UDFTargetType!, $targetId: String!, $key: String!){
+    removeUdv(targetType: $targetType, targetId: $targetId, key: $key){
+        key
+        dataType
+        value
+        label
+    }
+}

@@ -1,0 +1,6 @@
+mutation setMainDepartment($userId: String!, $departmentId: String){
+    setMainDepartment(userId: $userId, departmentId: $departmentId){
+        message
+        code
+    }
+}

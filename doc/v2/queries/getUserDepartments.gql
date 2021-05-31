@@ -1,0 +1,29 @@
+query getUserDepartments($id: String!, $orgId: String) {
+  user(id: $id) {
+    departments(orgId: $orgId) {
+      totalCount
+      list {
+        department {
+          id
+          orgId
+          name
+          nameI18n
+          description
+          descriptionI18n
+          order
+          code
+          root
+          depth
+          path
+          codePath
+          namePath
+          createdAt
+          updatedAt
+          children
+        }
+        isMainDepartment
+        joinedAt
+      }
+    }
+  }
+}

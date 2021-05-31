@@ -1,0 +1,14 @@
+query checkLoginStatus($token: String){
+    checkLoginStatus(token: $token){
+        code
+        message
+        status
+        exp
+        iat
+        data{
+            id
+            userPoolId
+            arn
+        }
+    }
+}

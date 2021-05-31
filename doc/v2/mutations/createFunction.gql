@@ -1,0 +1,9 @@
+mutation createFunction($input: CreateFunctionInput!){
+    createFunction(input: $input){
+        id
+        name
+        sourceCode
+        description
+        url
+    }
+}

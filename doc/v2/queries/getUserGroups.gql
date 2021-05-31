@@ -1,0 +1,14 @@
+query getUserGroups($id: String!) {
+  user(id: $id) {
+    groups {
+      totalCount
+      list {
+        code
+        name
+        description
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+mutation setUdvBatch($targetType: UDFTargetType!, $targetId: String!, $udvList: [UserDefinedDataInput!]){
+    setUdvBatch(targetType: $targetType, targetId: $targetId, udvList: $udvList){
+        key
+        dataType
+        value
+        label
+    }
+}

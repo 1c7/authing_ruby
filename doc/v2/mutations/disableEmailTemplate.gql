@@ -1,0 +1,14 @@
+mutation disableEmailTemplate($type: EmailTemplateType!){
+    disableEmailTemplate(type: $type){
+        type
+        name
+        subject
+        sender
+        content
+        redirectTo
+        hasURL
+        expiresIn
+        enabled
+        isSystem
+    }
+}

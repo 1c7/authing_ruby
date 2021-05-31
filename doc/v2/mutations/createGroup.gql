@@ -1,0 +1,9 @@
+mutation createGroup($code: String!, $name: String!, $description: String) {
+  createGroup(code: $code, name: $name, description: $description) {
+    code
+    name
+    description
+    createdAt
+    updatedAt
+  }
+}

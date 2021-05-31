@@ -1,0 +1,9 @@
+mutation updateGroup($code: String!, $name: String, $description: String, $newCode: String) {
+  updateGroup(code: $code, name: $name, description: $description, newCode: $newCode) {
+    code
+    name
+    description
+    createdAt
+    updatedAt
+  }
+}

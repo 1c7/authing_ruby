@@ -1,0 +1,20 @@
+query searchNodes($keyword: String!) {
+  searchNodes(keyword: $keyword) {
+    id
+    orgId
+    name
+    nameI18n
+    description
+    descriptionI18n
+    order
+    code
+    root
+    depth
+    path
+    codePath
+    namePath
+    createdAt
+    updatedAt
+    children
+  }
+}

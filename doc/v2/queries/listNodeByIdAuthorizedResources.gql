@@ -1,0 +1,16 @@
+query listNodeByIdAuthorizedResources(
+  $id: String!
+  $namespace: String
+  $resourceType: String
+) {
+  nodeById(id: $id) {
+    authorizedResources(namespace: $namespace, resourceType: $resourceType) {
+      totalCount
+      list {
+        code
+        type
+        actions
+      }
+    }
+  }
+}

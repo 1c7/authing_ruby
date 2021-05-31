@@ -1,0 +1,9 @@
+mutation setUdfValueBatch(
+  $targetType: UDFTargetType!
+  $input: [SetUdfValueBatchInput!]!
+) {
+  setUdfValueBatch(targetType: $targetType, input: $input) {
+    code
+    message
+  }
+}

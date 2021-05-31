@@ -1,0 +1,9 @@
+mutation setUdf($targetType: UDFTargetType!, $key: String!, $dataType: UDFDataType!, $label: String!, $options: String){
+    setUdf(targetType: $targetType, key: $key, dataType: $dataType, label: $label, options: $options){
+        targetType
+        dataType
+        key
+        label
+        options
+    }
+}

@@ -1,0 +1,10 @@
+mutation createSocialConnectionInstance($input: CreateSocialConnectionInstanceInput!){
+    createSocialConnectionInstance(input: $input){
+        provider
+        enabled
+        fields{
+            key
+            value
+        }
+    }
+}

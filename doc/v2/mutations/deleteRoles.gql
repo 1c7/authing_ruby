@@ -1,0 +1,6 @@
+mutation deleteRoles($codeList: [String!]!, $namespace: String){
+    deleteRoles(codeList: $codeList, namespace: $namespace){
+        message
+        code
+    }
+}

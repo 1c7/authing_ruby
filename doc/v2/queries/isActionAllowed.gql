@@ -1,0 +1,13 @@
+query isActionAllowed(
+  $resource: String!
+  $action: String!
+  $userId: String!
+  $namespace: String
+) {
+  isActionAllowed(
+    resource: $resource
+    action: $action
+    userId: $userId
+    namespace: $namespace
+  )
+}

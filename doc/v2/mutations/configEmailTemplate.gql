@@ -1,0 +1,14 @@
+mutation configEmailTemplate($input: ConfigEmailTemplateInput!){
+    configEmailTemplate(input: $input){
+        type
+        name
+        subject
+        sender
+        content
+        redirectTo
+        hasURL
+        expiresIn
+        enabled
+        isSystem
+    }
+}

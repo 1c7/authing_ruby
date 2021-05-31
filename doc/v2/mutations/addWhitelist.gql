@@ -1,0 +1,7 @@
+mutation addWhitelist($type: WhitelistType!, $list: [String!]!){
+    addWhitelist(type: $type, list: $list){
+        createdAt
+        updatedAt
+        value
+    }
+}

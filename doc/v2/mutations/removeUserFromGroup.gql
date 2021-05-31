@@ -1,0 +1,6 @@
+mutation removeUserFromGroup($userIds: [String!]!, $code: String){
+    removeUserFromGroup(userIds: $userIds, code: $code){
+        message
+        code
+    }
+}

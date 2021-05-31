@@ -1,0 +1,28 @@
+mutation updateRole(
+  $code: String!
+  $description: String
+  $newCode: String
+  $namespace: String
+) {
+  updateRole(
+    code: $code
+    description: $description
+    newCode: $newCode
+    namespace: $namespace
+  ) {
+    namespace
+    code
+    arn
+    description
+    createdAt
+    updatedAt
+    parent {
+      namespace
+      code
+      arn
+      description
+      createdAt
+      updatedAt
+    }
+  }
+}

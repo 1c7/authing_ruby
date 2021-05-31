@@ -1,0 +1,9 @@
+query function($id: String){
+    function(id: $id){
+        id
+        name
+        sourceCode
+        description
+        url
+    }
+}

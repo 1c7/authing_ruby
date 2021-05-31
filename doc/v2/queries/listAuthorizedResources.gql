@@ -1,0 +1,20 @@
+query authorizedResources(
+  $targetType: PolicyAssignmentTargetType
+  $targetIdentifier: String
+  $namespace: String
+  $resourceType: String
+) {
+  authorizedResources(
+    targetType: $targetType
+    targetIdentifier: $targetIdentifier
+    namespace: $namespace
+    resourceType: $resourceType
+  ) {
+    totalCount
+    list {
+      code
+      type
+      actions
+    }
+  }
+}

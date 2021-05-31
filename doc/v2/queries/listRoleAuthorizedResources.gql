@@ -1,0 +1,16 @@
+query listRoleAuthorizedResources(
+  $code: String!
+  $namespace: String
+  $resourceType: String
+) {
+  role(code: $code, namespace: $namespace) {
+    authorizedResources(resourceType: $resourceType) {
+      totalCount
+      list {
+        code
+        type
+        actions
+      }
+    }
+  }
+}

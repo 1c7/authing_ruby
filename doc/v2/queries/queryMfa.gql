@@ -1,0 +1,9 @@
+query queryMfa($id: String, $userId: String, $userPoolId: String){
+    queryMfa(id: $id, userId: $userId, userPoolId: $userPoolId){
+        id
+        userId
+        userPoolId
+        enable
+        secret
+    }
+}

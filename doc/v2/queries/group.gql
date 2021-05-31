@@ -1,0 +1,9 @@
+query group($code: String!) {
+  group(code: $code) {
+    code
+    name
+    description
+    createdAt
+    updatedAt
+  }
+}

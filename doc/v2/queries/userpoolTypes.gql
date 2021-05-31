@@ -1,0 +1,9 @@
+query userpoolTypes{
+    userpoolTypes{
+        code
+        name
+        description
+        image
+        sdks
+    }
+}

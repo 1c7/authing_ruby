@@ -1,0 +1,12 @@
+query functions($page: Int, $limit: Int, $sortBy: SortByEnum){
+    functions(page: $page, limit: $limit, sortBy: $sortBy){
+        list{
+            id
+            name
+            sourceCode
+            description
+            url
+        }
+        totalCount
+    }
+}

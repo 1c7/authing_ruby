@@ -1,0 +1,10 @@
+query socialConnectionInstance($provider: String!){
+    socialConnectionInstance(provider: $provider){
+        provider
+        enabled
+        fields{
+            key
+            value
+        }
+    }
+}

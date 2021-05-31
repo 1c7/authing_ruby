@@ -1,0 +1,14 @@
+query emailTemplates{
+    emailTemplates{
+        type
+        name
+        subject
+        sender
+        content
+        redirectTo
+        hasURL
+        expiresIn
+        enabled
+        isSystem
+    }
+}

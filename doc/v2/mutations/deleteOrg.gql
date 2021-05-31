@@ -1,0 +1,6 @@
+mutation deleteOrg($id: String!){
+    deleteOrg(id: $id){
+        message
+        code
+    }
+}

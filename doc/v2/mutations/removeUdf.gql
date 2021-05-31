@@ -1,0 +1,6 @@
+mutation removeUdf($targetType: UDFTargetType!, $key: String!){
+    removeUdf(targetType: $targetType, key: $key){
+        message
+        code
+    }
+}

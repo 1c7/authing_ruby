@@ -1,0 +1,37 @@
+query org($id: String!){
+    org(id: $id){
+        id
+        rootNode{
+            id
+            orgId
+            name
+            nameI18n
+            description
+            descriptionI18n
+            order
+            code
+            root
+            depth
+            path
+            createdAt
+            updatedAt
+            children
+        }
+        nodes{
+            id
+            orgId
+            name
+            nameI18n
+            description
+            descriptionI18n
+            order
+            code
+            root
+            depth
+            path
+            createdAt
+            updatedAt
+            children
+        }
+    }
+}
