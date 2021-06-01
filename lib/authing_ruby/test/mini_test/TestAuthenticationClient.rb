@@ -209,10 +209,6 @@ class TestAuthenticationClient < Minitest::Test
     assert(result.dig('id') != nil, result)
   end
 
-  # 测试: 更新用户手机号
-  def test_updatePhone
-  end
-
   # 绑定邮箱
   def test_bindEmail
   end

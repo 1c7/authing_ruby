@@ -1,9 +1,14 @@
-# 类似于 JS SDK 里 src/lib/graphqlapi.ts 的用途
-# 把一些 garpqhlClient.request 封装起来，里面包含了 const query = AccessTokenDocument;
+# 类似 JS SDK 里 src/lib/graphqlapi.ts 的用途，把请求进行封装
 
 # 使用示例
 # graphqlAPI = AuthingRuby::GraphQLAPI.new
 # graphqlAPI.getAccessToken(graphqlClient, variables)
+
+# 一共有三个参数
+# (garpqhlClient, tokenProvider = nil, variables = nil)
+  # garpqhlClient 是 lib/authing_ruby/common/GraphqlClient.rb
+  # tokenProvider 是 lib/authing_ruby/authentication/AuthenticationTokenProvider.rb
+  # variables 就是参数
 
 module AuthingRuby
   class GraphQLAPI
@@ -123,6 +128,7 @@ module AuthingRuby
 
     # 太多同样写法的 method 了，稍微抽象一下
     # 这个负责发 mutation 的 request
+    # 第一个参数 gql_file_name 就是文件名
     def _graphql_mutation_request(gql_file_name, garpqhlClient, tokenProvider, variables)
       file = File.open("#{@folder_mutation}/#{gql_file_name}.gql");
       return _graphql_request(file, garpqhlClient, tokenProvider, variables)
