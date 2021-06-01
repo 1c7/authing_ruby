@@ -103,16 +103,17 @@ class TestSMSandEmail < Minitest::Test
   # ruby ./lib/authing_ruby/test/mini_test/TestSMSandEmail.rb -n test_updatePhone
   # 文档: https://docs.authing.cn/v2/reference/sdk-for-node/authentication/AuthenticationClient.html#%E6%9B%B4%E6%96%B0%E7%94%A8%E6%88%B7%E6%89%8B%E6%9C%BA%E5%8F%B7
   def test_updatePhone
-    # 前提条件：先确保有一个用户是自己的手机号，可以直接进 Authing 手工新建一个用户。新建时给设定手机号和密码，手机号可以随便填比如13511112222
-    # 填写对应手机号, 以及密码
+    # 前提条件：先确保有一个现有用户，可以进 Authing 手工新建一个，新建时设定手机号和密码，手机号随便填如 13511112222 密码 123456789
+    
+    # 先登录：
     phone = '13511112222'
     password = '123456789'
-    # 登录
     user = @authenticationClient.loginByPhonePassword(phone, password)
-    # 填写另一个要绑定的新手机号（可以填你自己的，这样才能收到短信）
+
+    # 填写要绑定的新手机号（可以填你自己的，这样才能收到短信）
     phone = '13556136684'
 
-    # 发送验证码 (把下面发短信这一行先取消注释, 收到短信后再注释上)
+    # 给新手机号发送短信验证码 (把下面这行先取消注释, 收到短信后再注释上)
     # puts manual_send_SMS(phone); return;
 
     # 填写收到的短信验证码
