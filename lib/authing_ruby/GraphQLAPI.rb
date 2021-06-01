@@ -112,6 +112,11 @@ module AuthingRuby
       return _graphql_mutation_request("resetPassword", garpqhlClient, tokenProvider, variables)
     end
 
+    # 更新用户手机号码
+    def updatePhone(garpqhlClient, tokenProvider = nil, variables = nil)
+      return _graphql_mutation_request("updatePhone", garpqhlClient, tokenProvider, variables)
+    end
+
     def bindPhone(garpqhlClient, tokenProvider = nil, variables = nil)
       return _graphql_mutation_request("bindPhone", garpqhlClient, tokenProvider, variables)
     end
