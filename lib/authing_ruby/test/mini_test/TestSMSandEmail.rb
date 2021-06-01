@@ -97,5 +97,40 @@ class TestSMSandEmail < Minitest::Test
     # 清理工作：测完了删除第一步注册的用户
     user_id = user['id']
     @managementClient.users.delete(user_id)
-  end 
+  end
+
+  # 测试: 更新用户手机号
+  def test_updatePhone
+    # 前提条件：先确保有一个用户是自己的手机号，可以直接进 Authing 手工新建一个用户。
+    # 填写对应手机号, 以及密码
+    username = '15111111111'
+    password = '123456789'
+    # 登录
+    user = @authenticationClient.loginByUsername(username, password)
+    # 填写另一个测试号码
+    phone = '15311111111'
+    # 发送验证码
+    manual_send_SMS(phone)
+    # 填写发送的验证码
+    code = '2206'
+
+    # 默认情况下，如果用户当前已经绑定了手机号，需要同时验证原有手机号
+    # 开发者也可以选择不开启 “验证原有手机号“ ，可以在 Authing 控制台 的 设置目录下的安全信息模块进行关闭。
+    oldPhone = nil
+    oldPhoneCode = nil
+
+    res = @authenticationClient.updatePhone(phone, code, oldPhone, oldPhoneCode)
+
+    # 错误情况
+    #
+    # {:code=>500, :message=>"该手机号已被绑定", :data=>nil}
+    #
+    # 错误情况
+    # {:code=>2230, :message=>"新手机号和旧手机号一样", :data=>nil}
+
+    puts res
+    user_id = user['id']
+    @managementClient.users.delete(user_id)
+  end
+
 end

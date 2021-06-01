@@ -692,6 +692,30 @@ module AuthingRuby
       end
     end
 
+    # 更新用户手机号
+    # 更新用户手机号。和修改邮箱一样，默认情况下，如果用户当前已经绑定了手机号，需要同时验证原有手机号（目前账号绑定的手机号）和当前邮箱（将要绑定的手机号）。
+    # 也就是说，用户 A 当前绑定的手机号为 15888888888，想修改为 15899999999，那么就需要同时验证这两个手机号。
+    # 开发者也可以选择不开启 “验证原有手机号“ ，可以在 Authing 控制台 的 设置目录下的安全信息模块进行关闭。
+    # 用户首次绑定手机号请使用 bindPhone 接口。
+    def updatePhone(phone, phoneCode, oldPhone, oldPhoneCode)
+      graphqlAPI = AuthingRuby::GraphQLAPI.new
+      variables = {
+        "phone": phone,
+        "phoneCode": phoneCode,
+      }
+      variables['oldPhone'] = oldPhone if oldPhone
+      variables['oldPhoneCode'] = oldPhoneCode if oldPhoneCode
+
+      hash = graphqlAPI.updatePhone(@graphqlClient, @tokenProvider, variables)
+      user = hash.dig("data", "updatePhone")
+      if user
+        setCurrentUser(user)
+        return user
+      else
+        return hash
+      end
+    end
+
     # 通过短信验证码重置密码
     def resetPasswordByPhoneCode(phone, code, newPassword)
       publicKey = @publicKeyManager.getPublicKey()
