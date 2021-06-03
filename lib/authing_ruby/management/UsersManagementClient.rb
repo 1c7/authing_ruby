@@ -116,9 +116,8 @@ module AuthingRuby
         "phone": phone,
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.isUserExists(@graphqlClient, @tokenProvider, variables)
-      json = JSON.parse(res)
-      return json.dig('data', "isUserExists")
+      hash = graphqlAPI.isUserExists(@graphqlClient, @tokenProvider, variables)
+      return hash.dig('data', "isUserExists")
     end
 
     # 查找用户
@@ -138,9 +137,8 @@ module AuthingRuby
         "externalId": externalId,
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.findUser(@graphqlClient, @tokenProvider, variables)
-      json = JSON.parse(res)
-      return json
+      hash = graphqlAPI.findUser(@graphqlClient, @tokenProvider, variables)
+      return hash
     end
 
     # TODO

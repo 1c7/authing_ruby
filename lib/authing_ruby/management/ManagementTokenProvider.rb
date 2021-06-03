@@ -69,9 +69,8 @@ module AuthingRuby
         secret: @options.fetch(:secret, nil),
       }
       api = AuthingRuby::GraphQLAPI.new
-      res = api.getAccessToken(@graphqlClient, variables)
+      hash = api.getAccessToken(@graphqlClient, variables)
       # {"data":{"accessToken":{"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InR5cGUiOiJ1[省略]ZWE2NjE3IiwidXNlcks2lkIjoiNjA3YjBiMTVhYWIzYTgwNWY3ZWE2NjE3IiwiX2lkIjoiNjA3YjBiMTVhYWIzYTgwNWY3ZWE2NjE3IiwicGhvbmz3Mzk5M30.K7pwyvbxypeiOlYRsTIlLXY2xyk94tTd-CATQ85jYqM","exp":1620873993,"iat":1619577993}}}
-      hash = JSON.parse(res)
       return hash.dig("data", "accessToken", "accessToken")
     end
 
@@ -81,11 +80,9 @@ module AuthingRuby
       if accessToken == nil
         raise "无法刷新 token, 因为初始化时没有传入 accessToken"
       end
-      res = api.refreshAccessToken(@graphqlClient, {
+      hash = api.refreshAccessToken(@graphqlClient, {
         accessToken: accessToken
       })
-      hash = JSON.parse(res)
-      # puts hash
       # {"errors"=>[{"message"=>{"code"=>500, "message"=>"该 token 在黑名单中"}, "locations"=>[{"line"=>2, "column"=>5}], "path"=>["refreshAccessToken"], "extensions"=>{"code"=>"INTERNAL_SERVER_ERROR", "exception"=>{"name"=>"TokenInBlackListError"}}}], "data"=>nil}
       if hash.dig("errors")
         return hash
