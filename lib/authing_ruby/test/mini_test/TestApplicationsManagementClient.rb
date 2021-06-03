@@ -1,8 +1,8 @@
-# ruby ./lib/test/mini_test/TestApplicationsManagementClient.rb
+# ruby ./lib/authing_ruby/test/mini_test/TestApplicationsManagementClient.rb
 
 require "minitest/autorun"
 require "./lib/authing_ruby.rb"
-require "./lib/test/helper.rb"
+require "./lib/authing_ruby/test/helper.rb"
 require 'dotenv'
 Dotenv.load('.env.test') 
 
