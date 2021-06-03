@@ -29,8 +29,10 @@ module AuthingRuby
         "userInfo": userInfo,
         "keepPassword": keepPassword,
       }
-      res = graphqlAPI.createUser(@graphqlClient, @tokenProvider, variables)
-      return res
+      hash = graphqlAPI.createUser(@graphqlClient, @tokenProvider, variables)
+      user = hash.dig("data", "createUser")
+      return user if user
+      return hash
     end
 
     # 修改用户资料
@@ -49,8 +51,10 @@ module AuthingRuby
         "id": id,
         "input": updates
       }
-      res = graphqlAPI.updateUser(@graphqlClient, @tokenProvider, variables)
-      return res
+      hash = graphqlAPI.updateUser(@graphqlClient, @tokenProvider, variables)
+      user = hash.dig("data", "updateUser")
+      return user if user
+      return hash
     end
 
     # 通过 ID 获取用户信息
@@ -59,8 +63,10 @@ module AuthingRuby
       variables = {
         "id": user_id,
       }
-      res = graphqlAPI.user(@graphqlClient, @tokenProvider, variables)
-      return res
+      hash = graphqlAPI.user(@graphqlClient, @tokenProvider, variables)
+      user = hash.dig("data", "user")
+      return user if user
+      return hash
     end
 
     # 删除用户
@@ -69,9 +75,11 @@ module AuthingRuby
         "id": user_id,
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.deleteUser(@graphqlClient, @tokenProvider, variables)
-      return res
+      hash = graphqlAPI.deleteUser(@graphqlClient, @tokenProvider, variables)
       # {"data":{"deleteUser":{"message":"删除成功！","code":200}}}
+      data = hash.dig("data", "deleteUser")
+      return data if data
+      return hash
     end
 
     # 批量删除用户
@@ -80,9 +88,11 @@ module AuthingRuby
         "ids": user_ids,
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.deleteUsers(@graphqlClient, @tokenProvider, variables)
-      return res
+      hash = graphqlAPI.deleteUsers(@graphqlClient, @tokenProvider, variables)
       # {"data":{"deleteUsers":{"message":"删除成功！","code":200}}}
+      data = hash.dig("data", "deleteUsers")
+      return data if data
+      return hash
     end
 
     # 获取用户列表
@@ -92,8 +102,10 @@ module AuthingRuby
         "limit": limit,
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
-      res = graphqlAPI.users(@graphqlClient, @tokenProvider, variables)
-      return res
+      hash = graphqlAPI.users(@graphqlClient, @tokenProvider, variables)
+      data = hash.dig("data", "users")
+      return data if data
+      return hash
     end
 
     # TODO
@@ -117,7 +129,9 @@ module AuthingRuby
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
       hash = graphqlAPI.isUserExists(@graphqlClient, @tokenProvider, variables)
-      return hash.dig('data', "isUserExists")
+      data = hash.dig("data", "isUserExists")
+      return data if data
+      return hash
     end
 
     # 查找用户
@@ -138,6 +152,8 @@ module AuthingRuby
       }
       graphqlAPI = AuthingRuby::GraphQLAPI.new
       hash = graphqlAPI.findUser(@graphqlClient, @tokenProvider, variables)
+      data = hash.dig("data", "findUser")
+      return data if data
       return hash
     end
 

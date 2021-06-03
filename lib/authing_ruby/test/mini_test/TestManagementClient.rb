@@ -1,4 +1,4 @@
-# ruby ./lib/test/mini_test/TestManagementClient.rb
+# ruby ./lib/authing_ruby/test/mini_test/TestManagementClient.rb
 
 require "minitest/autorun"
 require "./lib/authing_ruby.rb"
@@ -28,16 +28,15 @@ class TestManagementClient < Minitest::Test
       phone: random_phone,
       password: '123456789',
     }
-    puts userInfo
     hash = managementClient.users.create(userInfo)
     
     # 成功
-    # {"data":{"createUser":{"id":"608ab9828eab7e35e81bd732","arn":"arn:cn:authing:60800b8ee5b66b23128b4980:user:608ab9828eab7e35e81bd732","userPoolId":"60800b8ee5b66b23128b4980","status":"Activated","username":"SpongeBob2","email":null,"emailVerified":false,"phone":null,"phoneVerified":false,"unionid":null,"openid":null,"nickname":null,"registerSource":["import:manual"],"photo":"default-user-avatar.png","password":"91b133c2e13e40852505946b7e0c2f04","oauth":null,"token":null,"tokenExpiredAt":null,"loginsCount":0,"lastLogin":null,"lastIP":null,"signedUp":null,"blocked":false,"isDeleted":false,"device":null,"browser":null,"company":null,"name":null,"givenName":null,"familyName":null,"middleName":null,"profile":null,"preferredUsername":null,"website":null,"gender":"U","birthdate":null,"zoneinfo":null,"locale":null,"address":null,"formatted":null,"streetAddress":null,"locality":null,"region":null,"postalCode":null,"city":null,"province":null,"country":null,"createdAt":"2021-04-29T13:49:54+00:00","updatedAt":"2021-04-29T13:49:54+00:00","externalId":null}}}
+    # {"id":"608ab9828eab7e35e81bd732","arn":"arn:cn:authing:60800b8ee5b66b23128b4980:user:608ab9828eab7e35e81bd732","userPoolId":"60800b8ee5b66b23128b4980","status":"Activated","username":"SpongeBob2","email":null,"emailVerified":false,"phone":null,"phoneVerified":false,"unionid":null,"openid":null,"nickname":null,"registerSource":["import:manual"],"photo":"default-user-avatar.png","password":"91b133c2e13e40852505946b7e0c2f04","oauth":null,"token":null,"tokenExpiredAt":null,"loginsCount":0,"lastLogin":null,"lastIP":null,"signedUp":null,"blocked":false,"isDeleted":false,"device":null,"browser":null,"company":null,"name":null,"givenName":null,"familyName":null,"middleName":null,"profile":null,"preferredUsername":null,"website":null,"gender":"U","birthdate":null,"zoneinfo":null,"locale":null,"address":null,"formatted":null,"streetAddress":null,"locality":null,"region":null,"postalCode":null,"city":null,"province":null,"country":null,"createdAt":"2021-04-29T13:49:54+00:00","updatedAt":"2021-04-29T13:49:54+00:00","externalId":null}
     
     # 失败
     # {"errors":[{"message":{"code":2026,"message":"用户已存在，请勿重复创建！"},"locations":[{"line":2,"column":3}],"path":["createUser"],"extensions":{"code":"INTERNAL_SERVER_ERROR"}}],"data":null}
 
-    assert(hash.dig("data", "createUser") != nil, hash)
+    assert(hash.dig("id") != nil, hash)
   end
 
   # 创建用户
@@ -52,7 +51,7 @@ class TestManagementClient < Minitest::Test
       signedUp: '2020-10-15T17:55:37+08:00' # 原有用户系统记录的用户注册时间
     }
     hash = managementClient.users.create(userInfo)
-    assert(hash.dig("data", "createUser") != nil, hash)
+    assert(hash.dig("id") != nil, hash)
   end
 
   # 创建一个用户, 并返回这个用户
@@ -67,8 +66,7 @@ class TestManagementClient < Minitest::Test
     end
 
     managementClient = AuthingRuby::ManagementClient.new(@options)
-    hash = managementClient.users.create(userInfo)
-    user = hash.dig("data", "createUser")
+    user = managementClient.users.create(userInfo)
     return user
   end
 
@@ -84,11 +82,14 @@ class TestManagementClient < Minitest::Test
     hash = managementClient.users.update(user_id, {
       nickname: 'Nick',
     })
-    # puts res2
+    # puts hash
+    # 成功
+    # {"id"=>"60b902e844428416be3a25b8", "arn"=>"arn:cn:authing:60800b8ee5b66b23128b4980:user:60b902e844428416be3a25b8", "userPoolId"=>"60800b8ee5b66b23128b4980", "status"=>"Activated", "username"=>nil, "email"=>nil, "emailVerified"=>false, "phone"=>"17600009338", "phoneVerified"=>false, "unionid"=>nil, "openid"=>nil, "nickname"=>"Nick", "registerSource"=>["import:manual"], "photo"=>"https://files.authing.co/authing-console/default-user-avatar.png", "password"=>nil, "oauth"=>nil, "token"=>nil, "tokenExpiredAt"=>nil, "loginsCount"=>0, "lastLogin"=>nil, "lastIP"=>nil, "signedUp"=>"2021-06-03T16:27:20+00:00", "blocked"=>false, "isDeleted"=>false, "device"=>nil, "browser"=>nil, "company"=>nil, "name"=>nil, "givenName"=>nil, "familyName"=>nil, "middleName"=>nil, "profile"=>nil, "preferredUsername"=>nil, "website"=>nil, "gender"=>"U", "birthdate"=>nil, "zoneinfo"=>nil, "locale"=>nil, "address"=>nil, "formatted"=>nil, "streetAddress"=>nil, "locality"=>nil, "region"=>nil, "postalCode"=>nil, "city"=>nil, "province"=>nil, "country"=>nil, "createdAt"=>"2021-06-03T16:27:20+00:00", "updatedAt"=>"2021-06-03T16:27:22+00:00", "externalId"=>nil}
+
     # 如果失败
     # {"errors":[{"message":{"code":2004,"message":"用户不存在"},"locations":[{"line":2,"column":3}],"path":["updateUser"],"extensions":{"code":"INTERNAL_SERVER_ERROR"}}],"data":null}
 
-    assert(hash.dig("data", "updateUser") != nil, hash)
+    assert(hash.dig("id") != nil, hash)
   end
 
   # 测试通过 ID 获取用户信息
@@ -99,7 +100,7 @@ class TestManagementClient < Minitest::Test
 
     managementClient = AuthingRuby::ManagementClient.new(@options)
     hash = managementClient.users.detail(user_id)
-    assert(hash.dig("data", "user") != nil, hash)
+    assert(hash.dig("id") != nil, hash)
   end
   
   # 测试删除用户
@@ -110,8 +111,8 @@ class TestManagementClient < Minitest::Test
 
     managementClient = AuthingRuby::ManagementClient.new(@options)
     hash = managementClient.users.delete(user_id)
-    # {"data":{"deleteUser":{"message":"删除成功！","code":200}}}
-    assert(hash.dig("data", "deleteUser") != nil, hash)
+    # {"message":"删除成功！","code":200}
+    assert(hash.dig("code") == 200, hash)
   end
 
   # 测试删除多个用户
@@ -127,16 +128,16 @@ class TestManagementClient < Minitest::Test
 
     managementClient = AuthingRuby::ManagementClient.new(@options)
     hash = managementClient.users.deleteMany(user_ids)
-    # {"data":{"deleteUsers":{"message":"删除成功！","code":200}}}
-    assert(hash.dig("data", "deleteUsers") != nil, hash)
+    # {"message":"删除成功！","code":200}
+    assert(hash.dig("code") == 200, hash)
   end
 
   # 测试获取用户列表
-  # ruby ./lib/test/mini_test/TestManagementClient.rb -n test_list
+  # ruby ./lib/authing_ruby/test/mini_test/TestManagementClient.rb -n test_list
   def test_list
     managementClient = AuthingRuby::ManagementClient.new(@options)
     hash = managementClient.users.list()
-    assert(hash.dig("data", "users") != nil, hash)
+    assert(hash.dig("totalCount") != nil, hash)
   end
 
   # 测试 检查用户是否存在 (返回 true | false)
@@ -174,8 +175,8 @@ class TestManagementClient < Minitest::Test
       # "email": "haha2@qq.com",
       # "phone": "13700001111",
     }
-    result = managementClient.users.find(options)
-    assert(result.dig("data", "findUser"), result)
+    hash = managementClient.users.find(options)
+    assert(hash.dig("id"), hash)
   end
 
 end
