@@ -1,7 +1,11 @@
 # 使用用户名登录
 # ruby ./example/7.loginByUsername.rb
 
-require 'authing_ruby'
+# require 'authing_ruby'
+
+# 载入方法2：直接载入本地 gem，适合开发环境
+require_relative '../lib/authing_ruby'
+
 require 'dotenv'
 Dotenv.load('.env.example') # 载入环境变量文件
 
