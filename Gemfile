@@ -1,12 +1,13 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+ruby ">=2.5.1"
 
 gem 'minitest', '~> 5.14', '>= 5.14.4' # 负责做测试
 gem 'dotenv', '~> 2.7', '>= 2.7.6' # 负责从 .env 文件中读取变量
 
 # 发 http 请求
-gem 'faraday' 
-gem "http"
+gem 'faraday', '~> 1.4', '>= 1.4.3'
+gem 'http', '~> 5.0', '>= 5.0.1'
 # 是先用了 http，发现不够用，才加上 faraday
 
 gem 'jwt'

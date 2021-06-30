@@ -6,6 +6,8 @@ Gem::Specification.new do |s|
   s.version     = AuthingRuby::VERSION
   s.summary     = "Authing 的 Ruby SDK"
   s.description = "Authing 的 Ruby SDK"
+
+  s.required_ruby_version = '>= 2.5'
   
   s.authors     = ["郑诚(Zheng Cheng)"]
   # 如果你参与了开发，请在作者列表里留下你的名字
@@ -15,8 +17,8 @@ Gem::Specification.new do |s|
 
   # 运行时依赖
   s.add_runtime_dependency 'minitest', ['~> 5.14', '>= 5.14.4']
-  s.add_runtime_dependency 'faraday', ['~> 1.4', '>= 1.4.1']
-  s.add_runtime_dependency 'http', ['~> 4.4', '>= 4.4.1']
+  s.add_runtime_dependency 'faraday', ['~> 1.4', '>= 1.4.3']
+  s.add_runtime_dependency 'http', ['~> 5.0', '>= 5.0.1']
   s.add_runtime_dependency 'jwt', ['~> 2.2', '>= 2.2.3']
   s.add_runtime_dependency 'uri-query_params', ['~> 0.7.2']
   s.add_runtime_dependency 'logging', ['~> 2.3']
